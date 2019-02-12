@@ -1,0 +1,20 @@
+{
+    "name": "startplats/startplats",
+    "homepage": "https://github.com/Ejdamm/startplats",
+    "platform": {
+        "php": "^7.2"
+    },
+    "require": {
+        "slim/slim": "^3.12"
+    },
+    "require-dev": {
+        "pds/skeleton": "^1.0",
+        "friendsofphp/php-cs-fixer": "^2.14",
+        "phpunit/phpunit": "^8"
+    },
+    "autoload": {
+        "psr-4": {
+            "startplats\\": "src/"
+        }
+    }
+}
