@@ -14,7 +14,11 @@
     },
     "autoload": {
         "psr-4": {
-            "startplats\\": "src/"
+            "startplats\\": "src/",
+            "Tests\\": "tests/"
         }
+    },
+    "scripts":{
+        "test": "phpunit"
     }
 }

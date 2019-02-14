@@ -21,7 +21,20 @@ Setup a virtual host in /etc/apache2/sites-enabled/000-default.conf
 
 Restart apache2 `systemctl restart apache2`
 
+### Install
+* Run `composer install` and `composer update` inside the git repository root folder.
+
 [Ref.](http://docs.slimframework.com/routing/rewrite/)
+
+
+## Test
+* `./phpunit.xml` defines the path of where phpunit should look.
+* "other important information"
+
+
+### Execute:
+* Run all test `composer test`
+* Run single test `composer test tests/Functional/HomepageTest.php`
 
 
 ## Standards
