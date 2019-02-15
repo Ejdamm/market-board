@@ -19,12 +19,14 @@ Setup a virtual host in /etc/apache2/sites-enabled/000-default.conf
 </VirtualHost>
 ```
 
+[Ref.](http://docs.slimframework.com/routing/rewrite/)
+
 Restart apache2 `systemctl restart apache2`
 
 ### Install
 * Run `composer install` and `composer update` inside the git repository root folder.
+* copy /config/config.php.example to /config/config.php and change the credentials to your database setup
 
-[Ref.](http://docs.slimframework.com/routing/rewrite/)
 
 
 ## Test

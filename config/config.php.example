@@ -1,0 +1,12 @@
+<?php
+#Display errors, true in dev mode and false in prod mode
+$config['displayErrorDetails'] = true;
+
+#Allows the web server to set the Content-Length header which makes Slim behave more predictably.
+$config['addContentLengthHeader'] = false;
+
+#Database credentials and connection parameters
+$config['db']['host']   = 'localhost';
+$config['db']['user']   = 'user';
+$config['db']['pass']   = 'password';
+$config['db']['dbname'] = 'exampleapp';
