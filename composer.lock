@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "97bb54dcd735f26a91c75cdc3cf14b1f",
+    "content-hash": "7d416476da3d0779607a65d6a24a4e9f",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -36,6 +36,52 @@
             "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
             "homepage": "https://github.com/container-interop/container-interop",
             "time": "2017-02-14T19:40:03+00:00"
+        },
+        {
+            "name": "mos/cdatabase",
+            "version": "v0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mosbth/cdatabase.git",
+                "reference": "bbe525520457d5f115aa4b0784f9fe6f2731b3ad"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mosbth/cdatabase/zipball/bbe525520457d5f115aa4b0784f9fe6f2731b3ad",
+                "reference": "bbe525520457d5f115aa4b0784f9fe6f2731b3ad",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Mos\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mikael Roos",
+                    "email": "me@mikaelroos.se",
+                    "homepage": "http://mikaelroos.se",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP classes for database handling upon PDO",
+            "homepage": "http://dbwebb.se",
+            "keywords": [
+                "education",
+                "framework",
+                "micro",
+                "module",
+                "mvc"
+            ],
+            "time": "2015-09-17T13:03:38+00:00"
         },
         {
             "name": "nikic/fast-route",
