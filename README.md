@@ -38,6 +38,12 @@ Restart apache2 `systemctl restart apache2`
 * Run all test `composer test`
 * Run single test `composer test tests/Functional/HomepageTest.php`
 
+#### Troubleshooting for test
+* `Error: Class 'path/to/class' not found`
+  * Try running: `composer update`
+  * Are the tests located under `./tests/` folder?
+  * Is the wanted class to test included in the test (`use src\objects\classToTest;`)?
+
 
 ## Standards
 * Code style: [PSR-2](https://www.php-fig.org/psr/psr-2/)
