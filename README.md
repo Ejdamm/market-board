@@ -29,6 +29,16 @@ Restart apache2 `systemctl restart apache2`
 ### Database
 * run /bin/init.sh to build the database structure
 
+### Git hooks
+* To enable that all tests are executed and green before every commit is done (`git commit`).
+* run the script: `./bin/install-hooks.sh`
+  * This will create a symlink from your .git-directory to the ./bin/pre-commit.sh script.
+    * Reason for the symlink is to ease the maintenance of the script since the content of the .git-folder is not included in the repository.
+  * Under your .git/hooks there should after executed `ìnstall-hooks.sh` be a symlink like this: ` pre-commit -> ../../bin/pre-commit.sh`
+  * Could be that the sample script need to be removed before it works. `rm .git/hooks/pre-commit.sample`
+* "But, I really need to push my changes, a testcase is failing and its not my fault!"
+  * Cheating is not allowed, but having that said, `git commit --no-verify -m "commit message"` will ignore the git hook.
+
 ## Test
 * `./phpunit.xml` defines the path of where phpunit should look.
 * "other important information"
