@@ -5,6 +5,8 @@ use src\objects\Email as Email;
 
 /**
  * Only a template for unittesting
+ *
+ * Why is classmap needed in composer.json for this to work?
  */
 final class EmailTest extends TestCase
 {

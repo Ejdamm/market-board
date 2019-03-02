@@ -16,7 +16,10 @@
     "autoload": {
         "psr-4": {
             "startplats\\": "src/"
-        }
+        },
+        "classmap": [
+            "src/"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
