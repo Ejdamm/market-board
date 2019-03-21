@@ -11,7 +11,7 @@
                 "host" => 'localhost',
                 "name" => 'startplats',
                 "user" => getenv('STARTPLATS_DBUSER'),
-                "pass" => getenv('STARTPLATS_DB_PASS'),
+                "pass" => getenv('STARTPLATS_DBPASS'),
                 "port" => getenv('STARTPLATS_DBPASS')
             ]
         ]
