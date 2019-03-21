@@ -2,3 +2,4 @@ vendor
 .php_cs.cache
 .phpunit.*
 config/config.php
+config/phinxDatabaseConfig.php

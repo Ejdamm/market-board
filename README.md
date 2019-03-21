@@ -27,7 +27,16 @@ Restart apache2 `systemctl restart apache2`
 * copy /config/config.php.example to /config/config.php and change the credentials to your database setup
 
 ### Database
-* run /bin/init.sh to build the database structure
+* run /bin/init.sh to build the database structure // Still needed with phinx?
+
+### Phinx
+* `bin/phinx create <MyTable>` (Note CamelCase)
+  * Will create a file for migration under db/migration. This file will be used to create/migrate/rollback tables.
+  * One file for each table.
+* `bin/phinx migrate` will migrate whatever config that is written under the function `create()` in `db/migrate`
+* `bin/phinx rollback` will rollback whatever config that is written `create()` in `db/migrate`
+* Database settings are located under phinx.yaml.
+* More info [link]{http://docs.phinx.org/en/latest/intro.html}
 
 ### Git hooks
 * To enable that all tests are executed and green before every commit is done (`git commit`).
