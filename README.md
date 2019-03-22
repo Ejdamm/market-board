@@ -23,13 +23,11 @@ Restart apache2 `systemctl restart apache2`
 
 [Ref.](http://docs.slimframework.com/routing/rewrite/)
 ### Install
-* Run `composer install` and `composer update` inside the git repository root folder.
+* Run `composer install` inside the git repository root folder.
 * copy /config/config.php.example to /config/config.php and change the credentials to your database setup
 
-### Database
-* run /bin/init.sh to build the database structure // Still needed with phinx?
-
-### Phinx
+### Database migration
+Database migration is done with phinx. Usage:
 * `bin/phinx create <MyTable>` (Note CamelCase)
   * Will create a file for migration under db/migration. This file will be used to create/migrate/rollback tables.
   * One file for each table.
