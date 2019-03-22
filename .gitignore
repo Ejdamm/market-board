@@ -3,3 +3,4 @@ vendor
 .phpunit.*
 config/config.php
 config/phinxDatabaseConfig.php
+composer.phar

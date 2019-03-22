@@ -1,7 +1,9 @@
 <?php
 
+namespace Startplats\Tests\Unit;
+
 use PHPUnit\Framework\TestCase;
-use src\objects\Email as Email;
+use Startplats\Email;
 
 /**
  * Only a template for unittesting
