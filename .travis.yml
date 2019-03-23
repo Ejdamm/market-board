@@ -2,7 +2,8 @@ language: php
 
 php:
     - 7.2
-    
+
 script:
     - composer install
     - composer test
+    - ./vendor/bin/php-cs-fixer fix -v --diff --dry-run --stop-on-violation .
