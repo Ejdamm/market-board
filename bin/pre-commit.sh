@@ -14,7 +14,7 @@ else
 fi
 
 # Make sure PSR-2 code style standard is followed
-./vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix . --dry-run
+./bin/psr-2.sh --dry-run
 if [ $? -ne 0 ]; then
     echo -e "\e[31mSomething is wrong with the code style!\e[0m"
     echo "To see what is wrong, run bin/psr-2.sh -v --dry-run --diff"
