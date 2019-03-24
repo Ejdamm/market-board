@@ -63,5 +63,10 @@ Database migration is done with phinx. Usage:
 
 
 ## Standards
-* Code style: [PSR-2](https://www.php-fig.org/psr/psr-2/)
-* File structure: [pds/skeleton](https://github.com/php-pds/skeleton)
+### Code style
+[PSR-2](https://www.php-fig.org/psr/psr-2/) code style standard is used.
+
+Run `bin/psr-2.sh` to automatically fix code style or `bin/psr-2.sh -v --dry-run --diff` to see errors.
+
+### File structure
+Using the file structure described in [pds/skeleton](https://github.com/php-pds/skeleton) should be applied to the extent possible.

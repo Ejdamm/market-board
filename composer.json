@@ -16,15 +16,13 @@
     },
     "autoload": {
         "psr-4": {
-            "startplats\\": "src/"
-        },
-        "classmap": [
-            "src/"
-        ]
+            "Startplats\\": "src/"
+        }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Startplats\\Tests\\Functional\\": "tests/functional",
+            "Startplats\\Tests\\Unit\\": "tests/unit"
         }
     },
     "scripts":{

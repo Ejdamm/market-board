@@ -1,4 +1,6 @@
-<?php namespace src\objects;
+<?php
+
+namespace Startplats;
 
 /**
  * Only a template for unittesting

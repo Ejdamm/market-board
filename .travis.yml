@@ -6,4 +6,4 @@ php:
 script:
     - composer install
     - composer test
-    - ./vendor/bin/php-cs-fixer fix -v --diff --dry-run --stop-on-violation .
+    - ./bin/psr-2.sh -v --diff --dry-run --stop-on-violation
