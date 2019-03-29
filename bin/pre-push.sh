@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-echo "Running pre-commit hook"
+echo "Running pre-push hook"
 
 # Make sure all tests pass
 result=`composer test`
 if [ $? -ne 0 ]; then
     echo -e "\e[31mTest failed\e[0m"
     echo $result
-    echo "Tests must pass before commit!"
+    echo "Tests must pass before push!"
     exit 1
 else
     echo -e "\e[32mTest OK!\e[0m"
