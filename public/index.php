@@ -1,35 +1,43 @@
 <?php
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
-use \Mos\Database\CDatabaseBasic as Database;
+
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use \Mos\Database\CDatabaseBasic;
+use Slim\App;
+use Slim\Container;
+use Slim\Http\Environment;
+use Slim\Http\Uri;
+use Slim\Views\Twig;
+use Slim\Views\TwigExtension;
 
 require __DIR__ . '/../vendor/autoload.php';
-require __DIR__ . '/../config/config.php';
 
-$app = new \Slim\App(['settings' => $config]);
+$config = include __DIR__ . '/../config/config.php';
+$app = new App(['settings' => $config['settings']]);
 
 $container = $app->getContainer();
-$container['db'] = function ($c) {
-    $conf = $c['settings']['db'];
-    $db = new Database(['dsn' => 'mysql:host=' . $conf['host'] . ';dbname=' . $conf['dbname'],
+$container['db'] = function (Container $container) {
+    $conf = $container->get('settings')['db'];
+    $db = new CDatabaseBasic(['dsn' => 'mysql:host=' . $conf['host'] . ';dbname=' . $conf['dbname'],
         'username' => $conf['user'], 'password' => $conf['pass']]);
     $db->connect();
     return $db;
 };
 
-$container['view'] = function ($container) {
-    $view = new \Slim\Views\Twig(__DIR__ . '/../resources/views/', [
+$container['view'] = function (Container $container) {
+    $view = new Twig(__DIR__ . '/../resources/views/', [
         'cache' => false
     ]);
     $router = $container->get('router');
-    $uri = \Slim\Http\Uri::createFromEnvironment(new \Slim\Http\Environment($_SERVER));
-    $view->addExtension(new \Slim\Views\TwigExtension($router, $uri));
+    $uri = Uri::createFromEnvironment(new Environment($_SERVER));
+    $view->addExtension(new TwigExtension($router, $uri));
     return $view;
 };
 
-$container['logger'] = function ($c) {
-    $logger = new \Monolog\Logger('startplats');
-    $file_handler = new \Monolog\Handler\StreamHandler('../logs/app.log');
+$container['logger'] = function (Container $container) {
+    $conf = $container->get('settings')['logger'];
+    $logger = new Logger($conf['name']);
+    $file_handler = new StreamHandler($conf['path'], $conf['level']);
     $logger->pushHandler($file_handler);
     return $logger;
 };
