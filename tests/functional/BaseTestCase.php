@@ -50,6 +50,14 @@ class BaseTestCase extends \PHPUnit\Framework\TestCase // https://github.com/sym
         $app = new App();
 
         $container = $app->getContainer();
+        $container['db'] = function ($c) {
+            $conf = $c['settings']['db'];
+            $db = new Database(['dsn' => 'mysql:host=' . $conf['host'] . ';dbname=' . $conf['dbname'],
+                'username' => $conf['user'], 'password' => $conf['pass']]);
+            $db->connect();
+            return $db;
+        };
+
         $container['view'] = function ($container) {
             $view = new \Slim\Views\Twig(__DIR__ . '/../../resources/views/', [
                 'cache' => false
@@ -58,6 +66,13 @@ class BaseTestCase extends \PHPUnit\Framework\TestCase // https://github.com/sym
             $uri = \Slim\Http\Uri::createFromEnvironment(new \Slim\Http\Environment($_SERVER));
             $view->addExtension(new \Slim\Views\TwigExtension($router, $uri));
             return $view;
+        };
+
+        $container['logger'] = function ($c) {
+            $logger = new \Monolog\Logger('functional_test');
+            $file_handler = new \Monolog\Handler\StreamHandler('logs/app.log');
+            $logger->pushHandler($file_handler);
+            return $logger;
         };
 
         // Register routes

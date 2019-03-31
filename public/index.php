@@ -27,6 +27,14 @@ $container['view'] = function ($container) {
     return $view;
 };
 
+$container['logger'] = function ($c) {
+    $logger = new \Monolog\Logger('startplats');
+    $file_handler = new \Monolog\Handler\StreamHandler('../logs/app.log');
+    $logger->pushHandler($file_handler);
+    return $logger;
+};
+
+
 // Register routes
 require __DIR__ . '/../src/routes.php';
 
