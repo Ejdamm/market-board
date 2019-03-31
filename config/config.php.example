@@ -1,12 +1,28 @@
 <?php
-#Display errors, true in dev mode and false in prod mode
-$config['displayErrorDetails'] = true;
 
-#Allows the web server to set the Content-Length header which makes Slim behave more predictably.
-$config['addContentLengthHeader'] = false;
+use Monolog\Logger;
 
-#Database credentials and connection parameters
-$config['db']['host']   = 'localhost';
-$config['db']['user']   = 'user';
-$config['db']['pass']   = 'password';
-$config['db']['dbname'] = 'startplats';
+return [
+    'settings' => [
+        # Display errors, true in dev mode and false in prod mode.
+        'displayErrorDetails' => true,
+
+        # Allows the web server to set the Content-Length header which makes Slim behave more predictably.
+        'addContentLengthHeader' => false,
+
+        # Database credentials and connection parameters.
+        'db' => [
+            'host' => 'localhost',
+            'user' => 'root',
+            'pass' => 'password',
+            'dbname' => 'startplats'
+        ],
+
+        # Monolog logger config. Log folder and file must be writable
+        'logger' => [
+            'name' => 'startplats',
+            'level' => Logger::DEBUG,
+            'path' => __DIR__ . '/../logs/app.log',
+        ],
+    ]
+];
