@@ -35,7 +35,8 @@ class UserSeeder extends AbstractSeed
         $users->insert($data)->save();
     }
 
-    private function generateFakeData() {
+    private function generateFakeData()
+    {
         $faker = Faker\Factory::create();
         $data = [];
 
@@ -53,7 +54,8 @@ class UserSeeder extends AbstractSeed
         return $data;
     }
 
-    private function generateConstantData(){
+    private function generateConstantData()
+    {
         $data = [
             [
                 'email'    => 'test@test.com',
@@ -73,4 +75,3 @@ class UserSeeder extends AbstractSeed
         return $data;
     }
 }
-
