@@ -1,7 +1,8 @@
 <?php
     return [
         "paths" => [
-            "migrations" => "db/migrations"
+            "migrations" => "db/migrations",
+            "seeds" => "db/seeds"
         ],
         "environments" => [
             "default_migration_table" => "phinxlog",
@@ -12,7 +13,7 @@
                 "name" => 'startplats',
                 "user" => getenv('STARTPLATS_DBUSER'),
                 "pass" => getenv('STARTPLATS_DBPASS'),
-                "port" => getenv('STARTPLATS_DBPASS')
+                "port" => getenv('STARTPLATS_DBPORT')
             ]
         ]
     ];
