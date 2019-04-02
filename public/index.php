@@ -13,12 +13,13 @@ use Slim\Views\TwigExtension;
 require __DIR__ . '/../vendor/autoload.php';
 
 $config = include __DIR__ . '/../config/config.php';
-$app = new App(['settings' => $config['settings']]);
+$app = new App($config);
 
 $container = $app->getContainer();
 $container['db'] = function (Container $container) {
-    $conf = $container->get('settings')['db'];
-    $db = new CDatabaseBasic(['dsn' => 'mysql:host=' . $conf['host'] . ';dbname=' . $conf['dbname'],
+    $default = $container->get('environments')['default_database'];
+    $conf = $container->get('environments')[$default];
+    $db = new CDatabaseBasic(['dsn' => $conf['adapter'] . ':host=' . $conf['host'] . ';dbname=' . $conf['name'],
         'username' => $conf['user'], 'password' => $conf['pass']]);
     $db->connect();
     return $db;
