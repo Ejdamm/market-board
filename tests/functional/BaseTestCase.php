@@ -17,6 +17,14 @@ use Slim\Http\Environment;
  */
 class BaseTestCase extends \PHPUnit\Framework\TestCase // https://github.com/symfony/symfony/issues/21816
 {
+    private $logFile;
+    public function __construct(String $logFile = "logs/app.log")
+    {
+        //TODO: Should we always use a test log?
+        parent::__construct();
+        $this->logFile = $logFile;
+    }
+
     /**
      * Process the application given a request method and URI
      *
@@ -70,7 +78,7 @@ class BaseTestCase extends \PHPUnit\Framework\TestCase // https://github.com/sym
 
         $container['logger'] = function ($c) {
             $logger = new \Monolog\Logger('functional_test');
-            $file_handler = new \Monolog\Handler\StreamHandler('logs/app.log');
+            $file_handler = new \Monolog\Handler\StreamHandler('logs/apptest.log');
             $logger->pushHandler($file_handler);
             return $logger;
         };
@@ -83,5 +91,14 @@ class BaseTestCase extends \PHPUnit\Framework\TestCase // https://github.com/sym
 
         // Return the response
         return $response;
+    }
+
+    /**
+     * Clear the content of target log file
+     * @param String $logName Full path to logfile
+     */
+    public function clearLog($logName)
+    {
+        file_put_contents($logName, "");
     }
 }
