@@ -46,7 +46,6 @@ class UserSeeder extends AbstractSeed
                 'password'      => sha1($faker->password),
                 //'password_salt' => sha1('foo'), // Guess we need this later
                 'email'         => $faker->email,
-                'username'    => $faker->firstName,
                 'created_at'       => date('Y-m-d H:i:s'),
             ];
         }
