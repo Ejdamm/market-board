@@ -3,7 +3,7 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class Users extends AbstractMigration
+class Listings extends AbstractMigration
 {
     /**
      * Change Method.
@@ -32,12 +32,14 @@ class Users extends AbstractMigration
      */
     public function change()
     {
-        $users = $this->table('users');
-        $users->addColumn('email', 'string', ['limit' => 75 ])
-            ->addColumn('username', 'string', ['limit' => 128])
-            ->addColumn('password', 'string', ['limit' => 128])
-            ->addColumn('active', 'integer', ['limit' =>  1, 'signed' => false, 'default' => 0])
-            ->addColumn('created_at', 'datetime')
+        $listings = $this->table('listings');
+        $listings->addColumn('email', 'string', ['limit' => 75 ])
+            ->addColumn('category', 'string', ['limit' => 128])
+            ->addColumn('subcategory', 'string', ['limit' => 128])
+            ->addColumn('price', 'decimal', ['signed' => true])
+            ->addColumn('quantity', 'integer')
+            ->addColumn('removal_code', 'string', ['limit' => 6])
+            ->addColumn('created_at', 'timestamp', ['default' => 'CURRENT_TIMESTAMP'])
             ->create();
     }
 }

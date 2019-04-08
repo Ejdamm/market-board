@@ -19,7 +19,8 @@ return [
     ],
 
     'paths' => [
-        'migrations' => 'db/migrations'
+        'migrations' => 'db/migrations',
+        "seeds" => "db/seeds"
     ],
 
     # Phinx and database
