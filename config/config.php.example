@@ -10,19 +10,30 @@ return [
         # Allows the web server to set the Content-Length header which makes Slim behave more predictably.
         'addContentLengthHeader' => false,
 
-        # Database credentials and connection parameters.
-        'db' => [
-            'host' => 'localhost',
-            'user' => 'root',
-            'pass' => 'password',
-            'dbname' => 'startplats'
-        ],
-
         # Monolog logger config. Log folder and file must be writable
         'logger' => [
             'name' => 'startplats',
             'level' => Logger::DEBUG,
             'path' => __DIR__ . '/../logs/app.log',
         ],
+    ],
+
+    'paths' => [
+        'migrations' => 'resources/db/migrations',
+        "seeds" => "resources/db/seeds"
+    ],
+
+    # Phinx and database
+    'environments' => [
+        'default_migration_table' => 'phinxlog',
+        'default_database' => 'dev',
+        'dev' => [
+            'adapter' => 'mysql',
+            'host' => 'localhost',
+            'name' => 'startplats',
+            'user' => 'root',
+            'pass' => 'password',
+            'port' => '3306'
+        ]
     ]
 ];
