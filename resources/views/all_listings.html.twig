@@ -1,0 +1,12 @@
+{% extends 'templates/base.html.twig' %}
+
+{% block content %}
+
+    {% for listing in listings %}
+        <div>
+            {% for field in listing|castToArray %}
+                <span style="padding-right:15px">{{ field }} </span>
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% endblock %}
