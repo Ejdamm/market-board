@@ -51,7 +51,7 @@ class ListingPageTest extends BaseTestCase
         $baseTest->assertLogDoesNotContain(['ERROR']);
         $baseTest->assertLogContains(["INFO: Parameters inserted"]);
 
-        $baseTest->verifyEntryInserted("listings",$data);
+        $baseTest->verifyEntryInserted("listings", $data);
 
         $baseTest->clearLog();
         $baseTest->clearDatabaseOf("listings", $data);
