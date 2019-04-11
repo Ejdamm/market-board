@@ -1,9 +1,26 @@
 language: php
 
+addons:
+    apt:
+        sources:
+            - mysql-5.7-trusty
+        packages:
+            - mysql-server
+            - mysql-client
+
 php:
     - 7.2
+services:
+    - mysql
+
+before_install:
+    - sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('password') where User='root'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
+    - sudo mysql_upgrade -u root -ppassword
+    - sudo service mysql restart
+    - mysql -e 'CREATE DATABASE IF NOT EXISTS startplats;'
 
 script:
     - composer install
+    - ./bin/phinx migrate
     - composer test
     - ./bin/psr-2.sh -v --diff --dry-run --stop-on-violation
