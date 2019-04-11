@@ -20,6 +20,7 @@ before_install:
     - mysql -e 'CREATE DATABASE IF NOT EXISTS startplats;'
 
 script:
+    - cp config/config.php.example config/config.php
     - composer install
     - ./bin/phinx migrate
     - composer test
