@@ -17,8 +17,8 @@ $app->get('/listings/new', function (Request $request, Response $response) {
 
 $app->post('/listings/new', function (Request $request, Response $response) {
     $query = "INSERT INTO listings(email, category, subcategory, price, quantity) VALUES(?,?,?,?,?);";
-    $params = $request->getParams();
-    $this->db->execute($query, $params);
+    $statement = $this->db->prepare($query);
+    $statement->execute($request->getParams());
     $insertedId = $this->db->lastInsertId();
     return $this->view->render($response, 'new_listing.html.twig', [
         'insertedId' => $insertedId
@@ -27,8 +27,9 @@ $app->post('/listings/new', function (Request $request, Response $response) {
 
 $app->get('/listings/', function (Request $request, Response $response) {
     $query = "SELECT * FROM listings;";
-    $params = $request->getParams();
-    $result = $this->db->executeFetchAll($query, $params);
+    $statement = $this->db->prepare($query);
+    $statement->execute($request->getParams());
+    $result = $statement->fetchAll();
     return $this->view->render($response, 'all_listings.html.twig', [
         'listings' => $result
     ]);
@@ -36,9 +37,9 @@ $app->get('/listings/', function (Request $request, Response $response) {
 
 $app->get('/listings/{id}', function (Request $request, Response $response, $args = []) {
     $query = "SELECT * FROM listings WHERE id = ?;";
-    $params = [$args['id']];
-    $this->db->execute($query, $params);
-    $result = $this->db->fetchOne();
+    $statement = $this->db->prepare($query);
+    $statement->execute([$args['id']]);
+    $result = $statement->fetch();
     return $this->view->render($response, 'single_listing.html.twig', [
         'listing' => $result
     ]);
