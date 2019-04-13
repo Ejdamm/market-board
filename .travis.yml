@@ -14,13 +14,13 @@ services:
     - mysql
 
 before_install:
+    - cp config/config.php.example config/config.php
     - sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('password') where User='root'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
     - sudo mysql_upgrade -u root -ppassword
     - sudo service mysql restart
     - mysql -e 'CREATE DATABASE IF NOT EXISTS startplats;'
 
 script:
-    - cp config/config.php.example config/config.php
     - composer install
     - ./bin/phinx migrate
     - composer test
