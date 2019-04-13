@@ -62,7 +62,7 @@ class UserSeeder extends AbstractSeed
                 'password'    => 'test',
                 'active'    => 1,
                 'created_at' => date('Y-m-d H:i:s'),
-            ],[
+            ], [
                 'email'    => 'test2@test.com',
                 'username'    => 'test2',
                 'password'    => 'test2',

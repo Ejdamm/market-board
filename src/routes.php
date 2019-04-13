@@ -1,4 +1,5 @@
 <?php
+
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -29,10 +30,40 @@ $app->post('/listings/new', function (Request $request, Response $response) {
 
         $this->logger->addInfo("Parameters inserted");
         return $this->view->render($response, 'new_listing.html.twig', [
-        'message' => "New listing inserted."
-
-    ]);
+            'message' => "New listing inserted."
+        ]);
     } catch (Exception $e) {
         $this->logger->addError("/listings/new POST throw exception: " . $e);
+        //TODO: return something
+    }
+});
+
+$app->get('/listings/', function (Request $request, Response $response) {
+    try {
+        $query = "SELECT * FROM listings;";
+        $params = $request->getParams();
+        $result = $this->db->executeFetchAll($query, $params);
+        return $this->view->render($response, 'all_listings.html.twig', [
+            'listings' => $result
+        ]);
+    } catch (Exception $e) {
+        $this->logger->addError("/listings/ GET throw exception: " . $e);
+        //TODO: return something
+    }
+});
+
+$app->get('/listings/{id}', function (Request $request, Response $response, $args = []) {
+    try {
+        $query = "SELECT * FROM listings WHERE id = ?;";
+        $params = [$args['id']];
+        $this->db->execute($query, $params);
+        $result = $this->db->fetchOne();
+        return $this->view->render($response, 'single_listing.html.twig', [
+            'listing' => $result
+        ]);
+    } catch (Exception $e) {
+        //TODO: send requested id to logging. But what if it is $args['id'] that caused the exception?
+        $this->logger->addError("/listings/{id} GET throw exception: " . $e);
+        //TODO: return something
     }
 });

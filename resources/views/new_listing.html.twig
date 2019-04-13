@@ -1,7 +1,10 @@
 {% extends 'templates/base.html.twig' %}
 
 {% block content %}
-  {{message}}
+  {% if insertedId is defined %}
+    New listing inserted. It can be found <a href='/listings/{{ insertedId }}'>here</a>
+  {% endif %}
+
   <form method="post">
     <div class="form-group">
       <label for="new_listing_email">Email address</label>
