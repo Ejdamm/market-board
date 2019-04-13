@@ -26,7 +26,7 @@ $app->post('/listings/new', function (Request $request, Response $response) {
 
         $query = "INSERT INTO listings(email, category, subcategory, price, quantity) VALUES(?,?,?,?,?);";
         $statement = $this->db->prepare($query);
-        $statement->execute($request->getParams());
+        $statement->execute(array_values($request->getParams()));
         $insertedId = $this->db->lastInsertId();
 
         $this->logger->addInfo("Parameters inserted");
