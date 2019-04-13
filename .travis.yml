@@ -22,6 +22,6 @@ before_install:
 
 script:
     - composer install
-    - ./bin/phinx migrate
+    - ./bin/phinx.sh migrate
     - composer test
-    - ./bin/psr-2 -v --diff --dry-run --stop-on-violation
+    - ./bin/psr-2.sh -v --diff --dry-run --stop-on-violation
