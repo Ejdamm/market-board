@@ -38,6 +38,7 @@ class Listings extends AbstractMigration
             ->addColumn('subcategory', 'string', ['limit' => 128])
             ->addColumn('price', 'decimal', ['signed' => true])
             ->addColumn('quantity', 'integer')
+            ->addColumn('removal_code', 'string', ['limit' => 6])
             ->addColumn('created_at', 'timestamp', ['default' => 'CURRENT_TIMESTAMP'])
             ->create();
     }
