@@ -16,17 +16,3 @@
             ]
         ]
     ];
-
-    /**
-     *
-     * TODO: maybe config and this file can be combined?
-     *
-     * Fill in values directly here or use env variables instead, as shown
-     * below.
-     *
-     *  export STARTPLATS_DBHOST=localhost;
-     *  export STARTPLATS_DBNAME=startplats;
-     *  export STARTPLATS_DBUSER=user;
-     *  export STARTPLATS_DB_PASS=pass;
-     *  export STARTPLATS_DBPASS=3309:
-     */
