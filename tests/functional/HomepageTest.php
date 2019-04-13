@@ -6,7 +6,8 @@ class HomepageTest extends BaseTestCase
 {
     public function testGetHomepageWithoutName()
     {
-        $response = $this->runApp('GET', '/name');
+        $baseTest = new BaseTestCase();
+        $response = $baseTest->runApp('GET', '/name');
         $this->assertEquals(200, $response->getStatusCode());
 
         $htmlBody = (string)$response->getBody();
