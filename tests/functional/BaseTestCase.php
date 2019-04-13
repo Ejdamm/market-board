@@ -60,15 +60,19 @@ class BaseTestCase extends \PHPUnit\Framework\TestCase // https://github.com/sym
 
         // Instantiate the application
         $config = include __DIR__ . '/../../config/config.php';
-        $app = new App(['settings' => $config['settings']]);
+        $app = new App($config);
 
         self::$container =  $app->getContainer();
-        self::$container['db'] = function ($c) {
-            $conf = $c['settings']['db'];
-            $db = new CDatabaseBasic([
-                'dsn' => 'mysql:host=' . $conf['host'] . ';dbname=' . $conf['dbname'],
-                'username' => $conf['user'],
-                'password' => $conf['pass']]);
+        self::$container['db'] = function ($container) {
+            $default = $container->get('environments')['default_database'];
+            $conf = $container->get('environments')[$default];
+            $db = new CDatabaseBasic(
+                [
+                        'dsn' => $conf['adapter'] . ':host=' . $conf['host'] . ';dbname=' . $conf['name'],
+                        'username' => $conf['user'],
+                        'password' => $conf['pass']
+                    ]
+            );
             $db->connect();
             return $db;
         };
