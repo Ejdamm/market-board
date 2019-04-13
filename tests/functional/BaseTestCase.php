@@ -59,7 +59,7 @@ class BaseTestCase extends \PHPUnit\Framework\TestCase // https://github.com/sym
         $response = new Response();
 
         // Instantiate the application
-        $config = include '/var/www/html/webb/startplats/config/config.php'; //TODO: fix
+        $config = include __DIR__ . '/../../config/config.php';
         $app = new App(['settings' => $config['settings']]);
 
         self::$container =  $app->getContainer();
