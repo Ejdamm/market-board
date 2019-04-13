@@ -10,9 +10,9 @@
                 "adapter" => "mysql",
                 "host" => 'localhost',
                 "name" => 'startplats',
-                "user" => getenv('STARTPLATS_DBUSER'),
-                "pass" => getenv('STARTPLATS_DBPASS'),
-                "port" => getenv('STARTPLATS_DBPASS')
+                "user" => 'root',
+                "pass" => 'password',
+                "port" => 3306
             ]
         ]
     ];
