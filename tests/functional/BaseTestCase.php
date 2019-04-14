@@ -77,8 +77,11 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
         self::$container['db'] = function ($container) {
             $default = $container->get('environments')['default_database'];
             $conf = $container->get('environments')[$default];
-            $pdo = new PDO($conf['adapter'] . ':host=' . $conf['host'] . ';dbname=' . $conf['name'],
-                $conf['user'], $conf['pass']);
+            $pdo = new PDO(
+                $conf['adapter'] . ':host=' . $conf['host'] . ';dbname=' . $conf['name'],
+                $conf['user'],
+                $conf['pass']
+            );
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
             return $pdo;
