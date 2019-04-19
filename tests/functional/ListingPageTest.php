@@ -8,7 +8,7 @@ class ListingPageTest extends BaseTestCase
      * Verify correct html element are displayed when
      * viewing webpage on  '/listings/new'
      */
-    public function testGETListing()
+    public function testGETNewListing()
     {
         $baseTest = new BaseTestCase();
         $baseTest->clearLog();
@@ -31,9 +31,9 @@ class ListingPageTest extends BaseTestCase
 
     /**
      * Verify that values are correctly inserted into the database
-     * when recieved as POST on '/listings/new'
+     * when received as POST on '/listings/new'
      */
-    public function testPOSTListing()
+    public function testPOSTNewListing()
     {
         $baseTest = new BaseTestCase();
         $baseTest->clearLog();
@@ -55,5 +55,106 @@ class ListingPageTest extends BaseTestCase
 
         $baseTest->clearLog();
         $baseTest->clearDatabaseOf("listings", $data);
+    }
+
+    /**
+     * Verify that multiple listings are displayed when
+     * viewing webpage on  '/listings/listings/'
+     */
+    public function testGETAllListings()
+    {
+        $baseTest = new BaseTestCase();
+        $baseTest->clearLog();
+
+        $data1 = [
+            "email" => "test1@test.com",
+            "category" => "testcategory",
+            "subcategory" => "testsubcategory",
+            "price" => "123",
+            "quantity" => "123",
+        ];
+        $data2 = [
+            "email" => "test2@test.com",
+            "category" => "testcategory",
+            "subcategory" => "testsubcategory",
+            "price" => "456",
+            "quantity" => "456",
+        ];
+
+        // TODO Use POST /listings/new instead of "manually" inserting data?
+        $query = "INSERT INTO listings(email, category, subcategory, price, quantity) VALUES(?,?,?,?,?);";
+        $statement1 = self::$container['db']->prepare($query);
+        $statement1->execute(array_values($data1));
+        $statement2 = self::$container['db']->prepare($query);
+        $statement2->execute(array_values($data2));
+
+        $response = $baseTest->runApp('GET', '/listings/');
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $baseTest->assertLogDoesNotContain(['ERROR']);
+
+        $htmlBody = (string)$response->getBody();
+
+        // Verify input fields
+        foreach ($data1 as $value) {
+            $this->assertStringContainsString($value, $htmlBody);
+        }
+        foreach ($data2 as $value) {
+            $this->assertStringContainsString($value, $htmlBody);
+        }
+
+        $baseTest->clearLog();
+        $baseTest->clearDatabaseOf("listings", $data1);
+        $baseTest->clearDatabaseOf("listings", $data2);
+    }
+
+    /**
+     * Verify that a single listing are displayed when
+     * viewing webpage on  '/listings/{id}/'
+     */
+    public function testGETSingleListing()
+    {
+        $baseTest = new BaseTestCase();
+        $baseTest->clearLog();
+
+        $data1 = [
+            "email" => "test1@test.com",
+            "category" => "testcategory",
+            "subcategory" => "testsubcategory",
+            "price" => "123",
+            "quantity" => "123",
+        ];
+        $data2 = [
+            "email" => "test2@test.com",
+            "category" => "testcategory",
+            "subcategory" => "testsubcategory",
+            "price" => "456",
+            "quantity" => "456",
+        ];
+
+        // TODO Use POST /listings/new instead of "manually" inserting data?
+        $query = "INSERT INTO listings(email, category, subcategory, price, quantity) VALUES(?,?,?,?,?);";
+        $statement1 = self::$container['db']->prepare($query);
+        $statement1->execute(array_values($data1));
+        $insertedId = self::$container['db']->lastInsertId();
+        $statement2 = self::$container['db']->prepare($query);
+        $statement2->execute(array_values($data2));
+
+        $response = $baseTest->runApp('GET', "/listings/$insertedId");
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $baseTest->assertLogDoesNotContain(['ERROR']);
+
+        $htmlBody = (string)$response->getBody();
+
+        // Verify input fields
+        foreach ($data1 as $value) {
+            $this->assertStringContainsString($value, $htmlBody);
+        }
+        $this->assertStringNotContainsString($data2['email'], $htmlBody);
+
+        $baseTest->clearLog();
+        $baseTest->clearDatabaseOf("listings", $data1);
+        $baseTest->clearDatabaseOf("listings", $data2);
     }
 }

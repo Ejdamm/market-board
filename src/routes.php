@@ -22,7 +22,7 @@ $app->get('/listings/new', function (Request $request, Response $response) {
 
 $app->post('/listings/new', function (Request $request, Response $response) {
     try {
-        $this->logger->addInfo("Recieved post params:" . print_r($request->getParams(), true));
+        $this->logger->addInfo("Received post params:" . print_r($request->getParams(), true));
 
         $query = "INSERT INTO listings(email, category, subcategory, price, quantity) VALUES(?,?,?,?,?);";
         $statement = $this->db->prepare($query);
