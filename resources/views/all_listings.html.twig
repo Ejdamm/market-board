@@ -1,11 +1,14 @@
 {% extends 'templates/base.html.twig' %}
 
 {% block content %}
-
     {% for listing in listings %}
         <div>
-            {% for field in listing|castToArray %}
+            {% for key, field in listing|castToArray %}
+              {% if key == 'id' %}
+                <span style="padding-right:15px"><a href="/listings/{{ field }}">{{ field }}</a></span>
+              {% else %}
                 <span style="padding-right:15px">{{ field }} </span>
+              {% endif %}
             {% endfor %}
         </div>
     {% endfor %}
