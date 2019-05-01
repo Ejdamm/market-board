@@ -4,6 +4,23 @@ namespace Startplats\Tests\Functional;
 
 class ListingPageTest extends BaseTestCase
 {
+    private static $listing_data1 = [
+        "email" => "test@test.com",
+        "category" => "testcategory",
+        "subcategory" => "testsubcategory",
+        "price" => "123",
+        "quantity" => "123",
+    ];
+
+    private static $listing_data2 = [
+        "email" => "test2@test.com",
+        "category" => "testcategory",
+        "subcategory" => "testsubcategory",
+        "price" => "456",
+        "quantity" => "456",
+    ];
+
+
     /**
      * Verify correct html element are displayed when
      * viewing webpage on  '/listings/new'
@@ -37,24 +54,17 @@ class ListingPageTest extends BaseTestCase
     {
         $baseTest = new BaseTestCase();
         $baseTest->clearLog();
-        $data = [
-            "email" => "test@test.com",
-            "category" => "testcategory",
-            "subcategory" => "testsubcategory",
-            "price" => "123",
-            "quantity" => "123",
-            ];
 
-        $response = $baseTest->runApp('POST', '/listings/new', $data);
+        $response = $baseTest->runApp('POST', '/listings/new', self::$listing_data1);
         $this->assertEquals(200, $response->getStatusCode());
 
         $baseTest->assertLogDoesNotContain(['ERROR']);
         $baseTest->assertLogContains(["INFO: Parameters inserted"]);
 
-        $baseTest->verifyEntryInserted("listings", $data);
+        $baseTest->verifyEntryInserted("listings", self::$listing_data1);
 
         $baseTest->clearLog();
-        $baseTest->clearDatabaseOf("listings", $data);
+        $baseTest->clearDatabaseOf("listings", self::$listing_data1);
     }
 
     /**
@@ -66,27 +76,11 @@ class ListingPageTest extends BaseTestCase
         $baseTest = new BaseTestCase();
         $baseTest->clearLog();
 
-        $data1 = [
-            "email" => "test1@test.com",
-            "category" => "testcategory",
-            "subcategory" => "testsubcategory",
-            "price" => "123",
-            "quantity" => "123",
-        ];
-        $data2 = [
-            "email" => "test2@test.com",
-            "category" => "testcategory",
-            "subcategory" => "testsubcategory",
-            "price" => "456",
-            "quantity" => "456",
-        ];
-
-        // TODO Use POST /listings/new instead of "manually" inserting data?
         $query = "INSERT INTO listings(email, category, subcategory, price, quantity) VALUES(?,?,?,?,?);";
         $statement1 = self::$container['db']->prepare($query);
-        $statement1->execute(array_values($data1));
+        $statement1->execute(array_values(self::$listing_data1));
         $statement2 = self::$container['db']->prepare($query);
-        $statement2->execute(array_values($data2));
+        $statement2->execute(array_values(self::$listing_data2));
 
         $response = $baseTest->runApp('GET', '/listings/');
         $this->assertEquals(200, $response->getStatusCode());
@@ -96,16 +90,16 @@ class ListingPageTest extends BaseTestCase
         $htmlBody = (string)$response->getBody();
 
         // Verify input fields
-        foreach ($data1 as $value) {
+        foreach (self::$listing_data1 as $value) {
             $this->assertStringContainsString($value, $htmlBody);
         }
-        foreach ($data2 as $value) {
+        foreach (self::$listing_data2 as $value) {
             $this->assertStringContainsString($value, $htmlBody);
         }
 
         $baseTest->clearLog();
-        $baseTest->clearDatabaseOf("listings", $data1);
-        $baseTest->clearDatabaseOf("listings", $data2);
+        $baseTest->clearDatabaseOf("listings", self::$listing_data1);
+        $baseTest->clearDatabaseOf("listings", self::$listing_data2);
     }
 
     /**
@@ -117,28 +111,12 @@ class ListingPageTest extends BaseTestCase
         $baseTest = new BaseTestCase();
         $baseTest->clearLog();
 
-        $data1 = [
-            "email" => "test1@test.com",
-            "category" => "testcategory",
-            "subcategory" => "testsubcategory",
-            "price" => "123",
-            "quantity" => "123",
-        ];
-        $data2 = [
-            "email" => "test2@test.com",
-            "category" => "testcategory",
-            "subcategory" => "testsubcategory",
-            "price" => "456",
-            "quantity" => "456",
-        ];
-
-        // TODO Use POST /listings/new instead of "manually" inserting data?
         $query = "INSERT INTO listings(email, category, subcategory, price, quantity) VALUES(?,?,?,?,?);";
         $statement1 = self::$container['db']->prepare($query);
-        $statement1->execute(array_values($data1));
+        $statement1->execute(array_values(self::$listing_data1));
         $insertedId = self::$container['db']->lastInsertId();
         $statement2 = self::$container['db']->prepare($query);
-        $statement2->execute(array_values($data2));
+        $statement2->execute(array_values(self::$listing_data2));
 
         $response = $baseTest->runApp('GET', "/listings/$insertedId");
         $this->assertEquals(200, $response->getStatusCode());
@@ -148,13 +126,13 @@ class ListingPageTest extends BaseTestCase
         $htmlBody = (string)$response->getBody();
 
         // Verify input fields
-        foreach ($data1 as $value) {
+        foreach (self::$listing_data1 as $value) {
             $this->assertStringContainsString($value, $htmlBody);
         }
-        $this->assertStringNotContainsString($data2['email'], $htmlBody);
+        $this->assertStringNotContainsString(self::$listing_data2['email'], $htmlBody);
 
         $baseTest->clearLog();
-        $baseTest->clearDatabaseOf("listings", $data1);
-        $baseTest->clearDatabaseOf("listings", $data2);
+        $baseTest->clearDatabaseOf("listings", self::$listing_data1);
+        $baseTest->clearDatabaseOf("listings", self::$listing_data2);
     }
 }

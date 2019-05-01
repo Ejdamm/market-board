@@ -35,7 +35,6 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
 
     public function __construct(string $logFile = null)
     {
-        //TODO: Should we always use a test log?
         parent::__construct();
         $this->config = include __DIR__ . '/../../config/config.php';
         if ($logFile == null) {
@@ -45,11 +44,7 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
         }
     }
 
-    /**
-     * @param $data
-     * @return array
-     */
-    protected static function makePreparedStatement($data)
+    private static function createPDOPreparedConditions($data)
     {
         $index = 0;
         $conditions = "";
@@ -161,14 +156,14 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
 
     public function clearDatabaseOf($table, $data)
     {
-        $prepare = self::makePreparedStatement($data);
+        $prepare = self::createPDOPreparedConditions($data);
         $statement = self::$container['db']->prepare("DELETE FROM $table WHERE " . $prepare['conditions'] . ";");
         $statement->execute($prepare['params']);
     }
 
     public function verifyEntryInserted($table, $data)
     {
-        $prepare = self::makePreparedStatement($data);
+        $prepare = self::createPDOPreparedConditions($data);
         $statement = self::$container['db']->prepare("SELECT * FROM $table WHERE " . $prepare['conditions'] . ";");
         $statement->execute($prepare['params']);
         $queryResult = $statement->fetch();
