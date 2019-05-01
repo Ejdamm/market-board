@@ -12,6 +12,6 @@ class HomepageTest extends BaseTestCase
 
         $htmlBody = (string)$response->getBody();
         $this->assertStringContainsString('Hello name', $htmlBody);
-        $this->assertStringNotContainsString('Godbye name', $htmlBody);
+        $this->assertStringNotContainsString('Goodbye name', $htmlBody);
     }
 }

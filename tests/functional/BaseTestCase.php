@@ -16,6 +16,7 @@ use Slim\Http\Response;
 use Slim\Http\Uri;
 use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
+use Twig\TwigFilter;
 
 /**
  * Class created by slims framework
@@ -28,14 +29,35 @@ use Slim\Views\TwigExtension;
 class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues/21816
 {
     private $logFile;
+    private $config;
 
-    private static $container;
+    protected static $container;
 
-    public function __construct(string $logFile = "logs/apptest.log")
+    public function __construct(string $logFile = null)
     {
-        //TODO: Should we always use a test log?
         parent::__construct();
-        $this->logFile = $logFile;
+        $this->config = include __DIR__ . '/../../config/config.php';
+        if ($logFile == null) {
+            $this->logFile = $this->config['settings']['logger']['test_path'];
+        } else {
+            $this->logFile = $logFile;
+        }
+    }
+
+    private static function createPDOPreparedConditions($data)
+    {
+        $index = 0;
+        $conditions = "";
+        $params = [];
+        foreach ($data as $value => $key) {
+            $conditions .= "$value=?";
+            $params[] = $key;
+            $index++;
+            if ($index != sizeof($data)) {
+                $conditions .= " AND ";
+            }
+        }
+        return ["conditions" => $conditions, "params" => $params];
     }
 
     /**
@@ -70,8 +92,7 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
         $response = new Response();
 
         // Instantiate the application
-        $config = include __DIR__ . '/../../config/config.php';
-        $app = new App($config);
+        $app = new App($this->config);
 
         self::$container =  $app->getContainer();
         self::$container['db'] = function ($container) {
@@ -95,12 +116,22 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
             $router = $container->get('router');
             $uri = Uri::createFromEnvironment(new Environment($_SERVER));
             $view->addExtension(new TwigExtension($router, $uri));
+            $filter = new TwigFilter('castToArray', function ($stdClassObject) {
+                $response = array();
+                if ($stdClassObject) {
+                    foreach ($stdClassObject as $key => $value) {
+                        $response[] = $value;
+                    }
+                }
+                return $response;
+            });
+            $view->getEnvironment()->addFilter($filter);
             return $view;
         };
 
         self::$container['logger'] = function ($c) {
             $logger = new Logger('functional_test');
-            $file_handler = new StreamHandler('logs/apptest.log');
+            $file_handler = new StreamHandler($this->logFile);
             $logger->pushHandler($file_handler);
             return $logger;
         };
@@ -125,30 +156,16 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
 
     public function clearDatabaseOf($table, $data)
     {
-        $index = 0;
-        $conditions = "";
-        foreach ($data as $value => $key) {
-            $conditions .= "$value='$key'";
-            $index ++;
-            if ($index != sizeof($data)) {
-                $conditions .= " AND ";
-            }
-        }
-        self::$container['db']->query("DELETE FROM $table WHERE $conditions;");
+        $prepare = self::createPDOPreparedConditions($data);
+        $statement = self::$container['db']->prepare("DELETE FROM $table WHERE " . $prepare['conditions'] . ";");
+        $statement->execute($prepare['params']);
     }
 
     public function verifyEntryInserted($table, $data)
     {
-        $index = 0;
-        $conditions = "";
-        foreach ($data as $value => $key) {
-            $conditions .= "$value='$key'";
-            $index ++;
-            if ($index != sizeof($data)) {
-                $conditions .= " AND ";
-            }
-        }
-        $statement = self::$container['db']->query("SELECT * FROM $table WHERE $conditions;");
+        $prepare = self::createPDOPreparedConditions($data);
+        $statement = self::$container['db']->prepare("SELECT * FROM $table WHERE " . $prepare['conditions'] . ";");
+        $statement->execute($prepare['params']);
         $queryResult = $statement->fetch();
 
         // False if no data was found. An object full of data if found.
