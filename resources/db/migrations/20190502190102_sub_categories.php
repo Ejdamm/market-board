@@ -30,31 +30,14 @@ class SubCategories extends AbstractMigration
      * Remember to call "create()" or "update()" and NOT "save()" when working
      * with the Table class.
      */
-    // public function change()
-    // {
-
-    // }
-
     public function change()
     {
-        $exist = $this->hasTable('subcategories');
-        if (!$exist) {
-
-
         $subcategories = $this->table('subcategories', ['id' => false, 'primary_key' => ['subcategory_id']]);
         $subcategories
-                ->addColumn('subcategory_id', 'integer', ['identity' =>true, 'signed' => false])
-                ->addColumn('subcategory_name', 'string', ['limit' => 128])
-                ->addColumn('category_id', 'integer', ['signed' => false])
-
-                //Hm maybe this should be added after the table is created?
-                ->addForeignKey('category_id', 'categories', 'category_id', array('delete'=> 'SET_NULL', 'update'=> 'NO_ACTION'))
-                ->create();
-            }
+            ->addColumn('subcategory_id', 'integer', ['identity' =>true, 'signed' => false])
+            ->addColumn('subcategory_name', 'string', ['limit' => 128])
+            ->addColumn('category_id', 'integer', ['signed' => false])
+            ->addForeignKey('category_id', 'categories', 'category_id', array('delete'=> 'NO_ACTION', 'update'=> 'NO_ACTION'))
+            ->create();
     }
-
-    // public function down()
-    // {
-    //      $this->table('subcategories')->drop();
-    // }
 }
