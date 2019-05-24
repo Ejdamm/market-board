@@ -32,10 +32,8 @@ class Categories extends AbstractMigration
      */
     public function change()
     {
-            $categories = $this->table('categories', ['id' => false, 'primary_key' => ['category_id']]);
-            $categories
-                    ->addColumn('category_id', 'integer', ['identity' =>true, 'signed' => false])
-                    ->addColumn('category_name', 'string', ['limit' => 128])
-                    ->create();
+        $categories = $this->table('categories');
+        $categories->addColumn('category_name', 'string', ['limit' => 128])
+            ->create();
     }
 }

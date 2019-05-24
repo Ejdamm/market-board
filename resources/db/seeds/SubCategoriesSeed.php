@@ -3,7 +3,7 @@
 
 use Phinx\Seed\AbstractSeed;
 
-class SubCategories extends AbstractSeed
+class SubCategoriesSeed extends AbstractSeed
 {
     /**
      * Run Method.
@@ -16,28 +16,21 @@ class SubCategories extends AbstractSeed
     public function run()
     {
         $users = $this->table('subcategories');
-        $users->truncate(); //Empty table to avoid duplicated users
+        $users->truncate(); //Empty table to avoid duplicates
 
 
-        $data = $this->generateFakeData();
+        $data = $this->generateConstantData();
         $users->insert($data)->save();
     }
 
-    private function generateFakeData()
+    private function generateConstantData()
     {
-        $faker = Faker\Factory::create();
-        $data = [];
-
-        for ($i = 0; $i < 100; $i++) {
-            $data[] = [
-                'username'      => $faker->userName,
-                'password'      => sha1($faker->password),
-                //'password_salt' => sha1('foo'), // Guess we need this later
-                'email'         => $faker->email,
-                'created_at'       => date('Y-m-d H:i:s'),
-            ];
-        }
-
-        return $data;
+        return [
+            ['subcategory_name' => 'Göteborgsvarvet', 'category_id' => 1],
+            ['subcategory_name' => 'Lidingöloppet', 'category_id' => 1],
+            ['subcategory_name' => 'Vasaloppet', 'category_id' => 5],
+            ['subcategory_name' => 'Vätternrundan', 'category_id' => 4],
+            ['subcategory_name' => 'Vansbrosimningen', 'category_id' => 2]
+        ];
     }
 }

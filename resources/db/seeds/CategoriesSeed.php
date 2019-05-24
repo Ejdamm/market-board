@@ -3,7 +3,7 @@
 
 use Phinx\Seed\AbstractSeed;
 
-class Categories extends AbstractSeed
+class CategoriesSeed extends AbstractSeed
 {
     /**
      * Run Method.
@@ -16,27 +16,22 @@ class Categories extends AbstractSeed
     public function run()
     {
         $users = $this->table('categories');
-        $users->truncate(); //Empty table to avoid duplicated users
+        $this->execute('SET foreign_key_checks=0');
+        $users->truncate(); //Empty table to avoid duplicates
+        $this->execute('SET foreign_key_checks=1');
 
-
-        $data = $this->generateFakeData();
+        $data = $this->generateConstantData();
         $users->insert($data)->save();
     }
     
-    private function generateCategories()
+    private function generateConstantData()
     {
-        $data[] = [
-                [
-                    'category_name'      => "Löpning",
-                ],[
-                    'category_name'      => "Simning",
-                ],[
-                    'category_name'      => "Triahtlong",
-                ],[
-                    'category_name'      => "Cykling",
-                ],[
-                    'category_name'      => "Skidor",
-                ]
-            ];
+        return [
+            ['category_name' => 'Löpning'],
+            ['category_name' => 'Simning'],
+            ['category_name' => 'Triathlon'],
+            ['category_name' => 'Cykling'],
+            ['category_name' => 'Skidor']
+        ];
     }
 }

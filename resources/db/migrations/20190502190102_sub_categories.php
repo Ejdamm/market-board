@@ -32,12 +32,10 @@ class SubCategories extends AbstractMigration
      */
     public function change()
     {
-        $subcategories = $this->table('subcategories', ['id' => false, 'primary_key' => ['subcategory_id']]);
-        $subcategories
-            ->addColumn('subcategory_id', 'integer', ['identity' =>true, 'signed' => false])
-            ->addColumn('subcategory_name', 'string', ['limit' => 128])
-            ->addColumn('category_id', 'integer', ['signed' => false])
-            ->addForeignKey('category_id', 'categories', 'category_id', array('delete'=> 'NO_ACTION', 'update'=> 'NO_ACTION'))
+        $subcategories = $this->table('subcategories');
+        $subcategories->addColumn('subcategory_name', 'string', ['limit' => 128])
+            ->addColumn('category_id', 'integer')
+            ->addForeignKey('category_id', 'categories', 'id')
             ->create();
     }
 }
