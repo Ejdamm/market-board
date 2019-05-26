@@ -16,7 +16,9 @@ class SubCategoriesSeed extends AbstractSeed
     public function run()
     {
         $users = $this->table('subcategories');
+        $this->execute('SET foreign_key_checks=0');
         $users->truncate(); //Empty table to avoid duplicates
+        $this->execute('SET foreign_key_checks=1');
 
 
         $data = $this->generateConstantData();

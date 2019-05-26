@@ -29,15 +29,15 @@ Restart apache2 `systemctl restart apache2`
 ## Database migration
 Database migration is done with phinx. Usage:
 * Migrate
-    * `bin/phinx create <MyTable>` (Note CamelCase)
+    * `bin/phinx.sh create <MyTable>` (Note CamelCase)
         * Will create a file for migration under db/migration. This file will be used to create/migrate/rollback tables.
         * One file for each table.
-    * `bin/phinx migrate` will migrate whatever config that is written under the function `create()` in `db/migrate`
-    * `bin/phinx rollback` will rollback whatever config that is written `create()` in `resources/db/migrate`
-    * `bin/phinx migrate -e dev -t 0` will reset all migrations
+    * `bin/phinx.sh migrate` will migrate whatever config that is written under the function `create()` in `db/migrate`
+    * `bin/phinx.sh rollback` will rollback whatever config that is written `create()` in `resources/db/migrate`
+    * `bin/phinx.sh migrate -e dev -t 0` will reset all migrations
 * Seed
     * Seeding will populate the database with predefined data. Located under db/seed
-    * To create a new seed, execute `./bin/phinx seed:create YourSeedName` (Note camelCase).
-    * All seeds are executed with `./bin/phinx.sh seed:run`
-    * Single seed is executed with `./bin/phinx.sh seed:run -s <yourSeedClass>`
+    * To create a new seed, execute `bin/phinx.sh seed:create YourSeedName` (Note camelCase).
+    * All seeds are executed with `bin/phinx.sh seed:run`
+    * Single seed is executed with `bin/phinx.sh seed:run -s <yourSeedClass>`
 * More info [link](http://docs.phinx.org/en/latest/intro.html)

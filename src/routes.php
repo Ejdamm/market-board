@@ -24,7 +24,7 @@ $app->post('/listings/new', function (Request $request, Response $response) {
     try {
         $this->logger->addInfo("Received post params:" . print_r($request->getParams(), true));
 
-        $query = "INSERT INTO listings(email, category, subcategory, price, quantity) VALUES(?,?,?,?,?);";
+        $query = "INSERT INTO listings(email, subcategory_id, price, quantity) VALUES(?,?,?,?);";
         $statement = $this->db->prepare($query);
         $statement->execute(array_values($request->getParams()));
         $insertedId = $this->db->lastInsertId();
@@ -56,7 +56,10 @@ $app->get('/listings/', function (Request $request, Response $response) {
 
 $app->get('/listings/{id}', function (Request $request, Response $response, $args = []) {
     try {
-        $query = "SELECT * FROM listings WHERE id = ?;";
+        $query = "SELECT * FROM listings 
+            INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
+            INNER JOIN categories ON subcategories.category_id = categories.id
+            WHERE listings.id = ?;";
         $statement = $this->db->prepare($query);
         $statement->execute([$args['id']]);
         $result = $statement->fetch();
@@ -64,8 +67,8 @@ $app->get('/listings/{id}', function (Request $request, Response $response, $arg
             'listing' => $result
         ]);
     } catch (Exception $e) {
-        //TODO: send requested id to logging. But what if it is $args['id'] that caused the exception?
-        $this->logger->addError("/listings/{id} GET throw exception: " . $e);
+        //TODO: addWarning if id does not exist
+        $this->logger->addError("/listings/" . $args['id'] . " GET throw exception: " . $e);
         //TODO: return something
     }
 });

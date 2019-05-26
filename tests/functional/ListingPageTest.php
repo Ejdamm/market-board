@@ -6,16 +6,14 @@ class ListingPageTest extends BaseTestCase
 {
     private static $listing_data1 = [
         "email" => "test@test.com",
-        "category" => "testcategory",
-        "subcategory" => "testsubcategory",
+        "subcategory_id" => 1,
         "price" => "123",
         "quantity" => "123",
     ];
 
     private static $listing_data2 = [
         "email" => "test2@test.com",
-        "category" => "testcategory",
-        "subcategory" => "testsubcategory",
+        "subcategory_id" => 1,
         "price" => "456",
         "quantity" => "456",
     ];
@@ -76,7 +74,7 @@ class ListingPageTest extends BaseTestCase
         $baseTest = new BaseTestCase();
         $baseTest->clearLog();
 
-        $query = "INSERT INTO listings(email, category, subcategory, price, quantity) VALUES(?,?,?,?,?);";
+        $query = "INSERT INTO listings(email, subcategory_id, price, quantity) VALUES(?,?,?,?);";
         $statement1 = self::$container['db']->prepare($query);
         $statement1->execute(array_values(self::$listing_data1));
         $statement2 = self::$container['db']->prepare($query);
@@ -111,7 +109,7 @@ class ListingPageTest extends BaseTestCase
         $baseTest = new BaseTestCase();
         $baseTest->clearLog();
 
-        $query = "INSERT INTO listings(email, category, subcategory, price, quantity) VALUES(?,?,?,?,?);";
+        $query = "INSERT INTO listings(email, subcategory_id, price, quantity) VALUES(?,?,?,?);";
         $statement1 = self::$container['db']->prepare($query);
         $statement1->execute(array_values(self::$listing_data1));
         $insertedId = self::$container['db']->lastInsertId();
