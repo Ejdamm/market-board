@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "59276108b9765488f69b82091d03b7d8",
+    "content-hash": "fdde033b939919bd8103b5a079cf26f8",
     "packages": [
         {
             "name": "cakephp/cache",
@@ -500,52 +500,6 @@
                 "psr-3"
             ],
             "time": "2018-11-05T09:00:11+00:00"
-        },
-        {
-            "name": "mos/cdatabase",
-            "version": "v0.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mosbth/cdatabase.git",
-                "reference": "bbe525520457d5f115aa4b0784f9fe6f2731b3ad"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mosbth/cdatabase/zipball/bbe525520457d5f115aa4b0784f9fe6f2731b3ad",
-                "reference": "bbe525520457d5f115aa4b0784f9fe6f2731b3ad",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Mos\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Mikael Roos",
-                    "email": "me@mikaelroos.se",
-                    "homepage": "http://mikaelroos.se",
-                    "role": "Developer"
-                }
-            ],
-            "description": "PHP classes for database handling upon PDO",
-            "homepage": "http://dbwebb.se",
-            "keywords": [
-                "education",
-                "framework",
-                "micro",
-                "module",
-                "mvc"
-            ],
-            "time": "2015-09-17T13:03:38+00:00"
         },
         {
             "name": "nikic/fast-route",
@@ -1331,7 +1285,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "BackEndTea@gmail.com"
+                    "email": "backendtea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -3775,6 +3729,11 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": []
+    "platform": {
+        "ext-pdo": "*"
+    },
+    "platform-dev": [],
+    "platform-overrides": {
+        "php": "7.2"
+    }
 }

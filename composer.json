@@ -1,16 +1,18 @@
 {
     "name": "startplats/startplats",
     "homepage": "https://github.com/Ejdamm/startplats",
-    "platform": {
-        "php": "^7.2"
+    "config": {
+        "platform": {
+            "php": "7.2"
+        }
     },
     "require": {
         "slim/slim": "^3.12",
-        "mos/cdatabase": "^0.1.1",
         "robmorgan/phinx": "^0.10.6",
         "slim/twig-view": "^2.4",
         "monolog/monolog": "^1.24",
-        "fzaninotto/faker": "^1.8"
+        "fzaninotto/faker": "^1.8",
+        "ext-pdo": "*"
     },
     "require-dev": {
         "pds/skeleton": "^1.0",
