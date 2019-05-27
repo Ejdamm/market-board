@@ -3,7 +3,7 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class Listings extends AbstractMigration
+class Categories extends AbstractMigration
 {
     /**
      * Change Method.
@@ -25,21 +25,15 @@ class Listings extends AbstractMigration
      *    addForeignKey
      *
      * Any other destructive changes will result in an error when trying to
-     * rollback the migration.
+     * rollback the migration.a
      *
      * Remember to call "create()" or "update()" and NOT "save()" when working
      * with the Table class.
      */
     public function change()
     {
-        $listings = $this->table('listings');
-        $listings->addColumn('email', 'string', ['limit' => 75])
-            ->addColumn('category', 'string', ['limit' => 128])
-            ->addColumn('subcategory', 'string', ['limit' => 128])
-            ->addColumn('price', 'decimal', ['signed' => true])
-            ->addColumn('quantity', 'integer')
-            ->addColumn('removal_code', 'string', ['limit' => 6, 'null' => true])
-            ->addColumn('created_at', 'timestamp', ['default' => 'CURRENT_TIMESTAMP'])
+        $categories = $this->table('categories');
+        $categories->addColumn('category_name', 'string', ['limit' => 128])
             ->create();
     }
 }
