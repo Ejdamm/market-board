@@ -31,6 +31,7 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
     private $logFile;
     private $config;
 
+    protected $app;
     protected static $container;
 
     public function __construct(string $logFile = null)
@@ -42,6 +43,7 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
         } else {
             $this->logFile = $logFile;
         }
+        $this->app = $this->runApp();
     }
 
     private static function createPDOPreparedConditions($data)
@@ -60,37 +62,9 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
         return ["conditions" => $conditions, "params" => $params];
     }
 
-    /**
-     * Process the application given a request method and URI
-     *
-     * @param string $requestMethod the request method (e.g. GET, POST, etc.)
-     * @param string $requestUri the request URI
-     * @param array|object|null $requestData the request data
-     * @return ResponseInterface
-     * @throws MethodNotAllowedException
-     * @throws NotFoundException
-     */
-    public function runApp($requestMethod, $requestUri, $requestData = null)
+
+    public function runApp()
     {
-        // Create a mock environment for testing with
-        $environment = Environment::mock(
-            [
-                'REQUEST_METHOD' => $requestMethod,
-                'REQUEST_URI' => $requestUri
-            ]
-        );
-
-        // Set up a request object based on the environment
-        $request = Request::createFromEnvironment($environment);
-
-        // Add request data, if it exists
-        if (isset($requestData)) {
-            $request = $request->withParsedBody($requestData);
-        }
-
-        // Set up a response object
-        $response = new Response();
-
         // Instantiate the application
         $app = new App($this->config);
 
@@ -142,8 +116,42 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
         // Register routes
         require __DIR__ . '/../../src/routes.php';
 
+        return $app;
+    }
+
+    /**
+     * Process the application given a request method and URI
+     *
+     * @param string $requestMethod the request method (e.g. GET, POST, etc.)
+     * @param string $requestUri the request URI
+     * @param array|object|null $requestData the request data
+     * @return ResponseInterface
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     */
+    public function processRequest($requestMethod, $requestUri, $requestData = null)
+    {
+        // Create a mock environment for testing with
+        $environment = Environment::mock(
+            [
+                'REQUEST_METHOD' => $requestMethod,
+                'REQUEST_URI' => $requestUri
+            ]
+        );
+
+        // Set up a request object based on the environment
+        $request = Request::createFromEnvironment($environment);
+
+        // Add request data, if it exists
+        if (isset($requestData)) {
+            $request = $request->withParsedBody($requestData);
+        }
+
+        // Set up a response object
+        $response = new Response();
+
         // Process the application
-        $response = $app->process($request, $response);
+        $response = $this->app->process($request, $response);
 
         // Return the response
         return $response;
