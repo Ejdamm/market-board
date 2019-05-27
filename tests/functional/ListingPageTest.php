@@ -36,8 +36,8 @@ class ListingPageTest extends BaseTestCase
 
         // Verify input fields
         $this->assertStringContainsString('<input type="email" class="form-control" id="new_listing_email" placeholder="Enter email" name="email">', $htmlBody);
-        $this->assertStringContainsString('<input type="text" class="form-control" id="new_listing_category"', $htmlBody);
-        $this->assertStringContainsString('<input type="text" class="form-control" id="new_listing_subcategory" placeholder="Enter subcategory" name="subcategory">', $htmlBody);
+        $this->assertStringContainsString('<select class="form-control" id="new_listing_category" name="category_id" required>', $htmlBody);
+        $this->assertStringContainsString('<select class="form-control" id="new_listing_category" name="subcategory_id" required>', $htmlBody);
         $this->assertStringContainsString('<input type="text" class="form-control" id="new_listing_amount" placeholder="Enter number of items" name="quantity">', $htmlBody);
         $this->assertStringContainsString('<button type="submit" class="btn btn-primary">Submit</button>', $htmlBody);
 

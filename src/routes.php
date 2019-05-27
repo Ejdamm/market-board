@@ -3,6 +3,8 @@
 use Slim\Http\Request;
 use Slim\Http\Response;
 
+include_once __DIR__ . '/utils.php';
+
 $app->get('/{name}', function (Request $request, Response $response, $args = []) {
     $name = $args['name'];
     $this->logger->addInfo('Hello ' . $name);
@@ -13,7 +15,12 @@ $app->get('/{name}', function (Request $request, Response $response, $args = [])
 
 $app->get('/listings/new', function (Request $request, Response $response) {
     try {
-        return $this->view->render($response, 'new_listing.html.twig');
+        $categories = get_categories($this->db);
+        $subcategories = get_subcategories($this->db);
+        return $this->view->render($response, 'new_listing.html.twig', [
+            'categories' => $categories,
+            'subcategories' => $subcategories
+        ]);
     } catch (Exception $e) {
         //TODO: redirect?
         $this->logger->addError("/listings/new GET throw exception: " . $e);
@@ -26,12 +33,22 @@ $app->post('/listings/new', function (Request $request, Response $response) {
 
         $query = "INSERT INTO listings(email, subcategory_id, price, quantity) VALUES(?,?,?,?);";
         $statement = $this->db->prepare($query);
-        $statement->execute(array_values($request->getParams()));
-        $insertedId = $this->db->lastInsertId();
-
+        $params = $request->getParams();
+        $statement->execute(array_values([
+            $params['email'],
+            $params['subcategory_id'],
+            $params['price'],
+            $params['quantity']
+        ]));
         $this->logger->addInfo("Parameters inserted");
+
+        $insertedId = $this->db->lastInsertId();
+        $categories = get_categories($this->db);
+        $subcategories = get_subcategories($this->db);
         return $this->view->render($response, 'new_listing.html.twig', [
-            'insertedId' => $insertedId
+            'insertedId' => $insertedId,
+            'categories' => $categories,
+            'subcategories' => $subcategories
         ]);
     } catch (Exception $e) {
         $this->logger->addError("/listings/new POST throw exception: " . $e);
@@ -43,7 +60,7 @@ $app->get('/listings/', function (Request $request, Response $response) {
     try {
         $query = "SELECT * FROM listings;";
         $statement = $this->db->prepare($query);
-        $statement->execute($request->getParams());
+        $statement->execute();
         $result = $statement->fetchAll();
         return $this->view->render($response, 'all_listings.html.twig', [
             'listings' => $result
