@@ -12,11 +12,21 @@
     </div>
     <div class="form-group">
       <label for="new_listing_category">Category</label>
-      <input type="text" class="form-control" id="new_listing_category" placeholder="Enter category" name="category">
+      <select class="form-control" id="new_listing_category" name="category_id" required>
+        <option value="">Choose category</option>
+        {% for category in categories %}
+          <option value="{{ category.id }}">{{ category.category_name }}</option>
+        {% endfor %}
+      </select>
     </div>
-    <div class="form-group">
+    <div class="form-group"> {# TODO only show associated subcategories when category is selected #}
       <label for="new_listing_subcategory">Subcategory</label>
-      <input type="text" class="form-control" id="new_listing_subcategory" placeholder="Enter subcategory" name="subcategory">
+      <select class="form-control" id="new_listing_category" name="subcategory_id" required>
+        <option value="">Choose subcategory</option>
+        {% for subcategory in subcategories %}
+          <option value="{{ subcategory.id }}">{{ subcategory.subcategory_name }}</option>
+        {% endfor %}
+      </select>
     </div>
     <div class="form-group">
       <label for="new_listing_price">Price</label>

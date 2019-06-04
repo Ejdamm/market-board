@@ -15,6 +15,7 @@ return [
             'name' => 'startplats',
             'level' => Logger::DEBUG,
             'path' => __DIR__ . '/../logs/app.log',
+            'test_path' => __DIR__ . '/../logs/apptest.log',
         ],
     ],
 
