@@ -1,15 +1,23 @@
 {% extends 'templates/base.html.twig' %}
 
 {% block content %}
+  <div class="list-group">
+    <div class="list-group-item font-weight-bold">
+      <div class="row">
+        <span class="px-1 col-8">Tävling</span>
+        <span class="px-1 col-2 text-center">Styckpris</span>
+        <span class="px-1 col-2 text-right">Tillagd</span>
+      </div>
+    </div>
     {% for listing in listings %}
-        <div>
-            {% for key, field in listing|castToArray %}
-              {% if key == 'id' %}
-                <span style="padding-right:15px"><a href="/listings/{{ field }}">{{ field }}</a></span>
-              {% else %}
-                <span style="padding-right:15px">{{ field }} </span>
-              {% endif %}
-            {% endfor %}
+      <a class="list-group-item" href="/listings/{{ listing.id }}">
+        <div class="row">
+          <span class="px-1 col-8">{{ listing.subcategory_name }}</span>
+          <span class="px-1 col-2 text-center">{{ listing.price / listing.quantity }}</span>
+          <span class="px-1 col-2 text-right">{{ listing.created_at }}</span>
         </div>
+      </a>
     {% endfor %}
+  </div>
+
 {% endblock %}

@@ -5,14 +5,6 @@ use Slim\Http\Response;
 
 include_once __DIR__ . '/utils.php';
 
-$app->get('/{name}', function (Request $request, Response $response, $args = []) {
-    $name = $args['name'];
-    $this->logger->addInfo('Hello ' . $name);
-    return $this->view->render($response, 'hello.html.twig', [
-        'name' => $name
-    ]);
-});
-
 $app->get('/listings/new', function (Request $request, Response $response) {
     try {
         $categories = get_categories($this->db);
@@ -58,10 +50,13 @@ $app->post('/listings/new', function (Request $request, Response $response) {
 
 $app->get('/[listings/]', function (Request $request, Response $response) {
     try {
-        $query = "SELECT * FROM listings;";
+        $query = "SELECT listings.id, price, quantity, created_at, subcategory_name 
+            FROM listings INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
+            ORDER BY created_at DESC;";
         $statement = $this->db->prepare($query);
         $statement->execute();
         $result = $statement->fetchAll();
+        $this->logger->addDebug(print_r($result, true));
         return $this->view->render($response, 'all_listings.html.twig', [
             'listings' => $result
         ]);
@@ -73,7 +68,7 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
 
 $app->get('/listings/{id}', function (Request $request, Response $response, $args = []) {
     try {
-        $query = "SELECT * FROM listings 
+        $query = "SELECT subcategory_name, category_name, email, price, quantity, created_at FROM listings 
             INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
             INNER JOIN categories ON subcategories.category_id = categories.id
             WHERE listings.id = ?;";
