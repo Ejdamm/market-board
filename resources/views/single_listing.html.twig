@@ -1,9 +1,14 @@
 {% extends 'templates/base.html.twig' %}
 
 {% block content %}
-    <div>
-        {% for field in listing|castToArray %}
-            <span style="padding-right:15px">{{ field }} </span>
-        {% endfor %}
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">{{ listing.subcategory_name }}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">{{ listing.category_name }}</h6>
+        <p class="card-text">Här ska vi ha ett e-post-formulär till {{ listing.email }}</p>
+        <div>Pris: {{ listing.price }}</div>
+        <div>Antal: {{ listing.quantity }}</div>
+        <div>Skapad: {{ listing.created_at }}</div>
+      </div>
     </div>
 {% endblock %}

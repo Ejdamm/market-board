@@ -8,14 +8,14 @@ class ListingPageTest extends BaseTestCase
         "email" => "test@test.com",
         "subcategory_id" => null,
         "price" => "123",
-        "quantity" => "123",
+        "quantity" => "2",
     ];
 
     private static $listing_data2 = [
         "email" => "test2@test.com",
         "subcategory_id" => null,
         "price" => "456",
-        "quantity" => "456",
+        "quantity" => "3",
     ];
 
     private $category = [
@@ -73,7 +73,7 @@ class ListingPageTest extends BaseTestCase
         $this->assertStringContainsString('<input type="email" class="form-control" id="new_listing_email" placeholder="Enter email" name="email">', $htmlBody);
         $this->assertStringContainsString('<select class="form-control" id="new_listing_category" name="category_id" required>', $htmlBody);
         $this->assertStringContainsString('<select class="form-control" id="new_listing_category" name="subcategory_id" required>', $htmlBody);
-        $this->assertStringContainsString('<input type="text" class="form-control" id="new_listing_amount" placeholder="Enter number of items" name="quantity">', $htmlBody);
+        $this->assertStringContainsString('<input type="number" class="form-control" id="new_listing_amount" placeholder="Enter number of items" name="quantity" value=1 min="1">', $htmlBody);
         $this->assertStringContainsString('<button type="submit" class="btn btn-primary">Submit</button>', $htmlBody);
     }
 
@@ -112,12 +112,11 @@ class ListingPageTest extends BaseTestCase
         $htmlBody = (string)$response->getBody();
 
         // Verify input fields
-        foreach (self::$listing_data1 as $value) {
-            $this->assertStringContainsString($value, $htmlBody);
-        }
-        foreach (self::$listing_data2 as $value) {
-            $this->assertStringContainsString($value, $htmlBody);
-        }
+        $unit_price1 = self::$listing_data1['price'] / self::$listing_data1['quantity'];
+        $unit_price2 = self::$listing_data2['price'] / self::$listing_data2['quantity'];
+        $this->assertStringContainsString($unit_price1, $htmlBody);
+        $this->assertStringContainsString($unit_price2, $htmlBody);
+        $this->assertStringContainsString($this->subcategory['subcategory_name'], $htmlBody);
     }
 
     /**
@@ -141,9 +140,11 @@ class ListingPageTest extends BaseTestCase
         $htmlBody = (string)$response->getBody();
 
         // Verify input fields
-        foreach (self::$listing_data1 as $value) {
-            $this->assertStringContainsString($value, $htmlBody);
-        }
+        $this->assertStringContainsString(self::$listing_data1['email'], $htmlBody);
+        $this->assertStringContainsString(self::$listing_data1['price'], $htmlBody);
+        $this->assertStringContainsString(self::$listing_data1['quantity'], $htmlBody);
+        $this->assertStringContainsString($this->subcategory['subcategory_name'], $htmlBody);
+        $this->assertStringContainsString($this->category['category_name'], $htmlBody);
         $this->assertStringNotContainsString(self::$listing_data2['email'], $htmlBody);
     }
 }
