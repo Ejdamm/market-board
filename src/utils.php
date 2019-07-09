@@ -12,7 +12,7 @@ function get_categories($db)
 
 function get_subcategories($db)
 {
-    $query = "SELECT id, subcategory_name FROM subcategories;";
+    $query = "SELECT id, subcategory_name, category_id FROM subcategories;";
     $statement = $db->prepare($query);
     $statement->execute();
     $result = $statement->fetchAll();

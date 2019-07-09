@@ -50,7 +50,7 @@ $app->post('/listings/new', function (Request $request, Response $response) {
 
 $app->get('/[listings/]', function (Request $request, Response $response) {
     try {
-        $query = "SELECT listings.id, price, quantity, created_at, subcategory_name 
+        $query = "SELECT listings.id, price, quantity, created_at, subcategory_name
             FROM listings INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
             ORDER BY created_at DESC;";
         $statement = $this->db->prepare($query);
@@ -68,7 +68,7 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
 
 $app->get('/listings/{id}', function (Request $request, Response $response, $args = []) {
     try {
-        $query = "SELECT subcategory_name, category_name, email, price, quantity, created_at FROM listings 
+        $query = "SELECT subcategory_name, category_name, email, price, quantity, created_at FROM listings
             INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
             INNER JOIN categories ON subcategories.category_id = categories.id
             WHERE listings.id = ?;";
