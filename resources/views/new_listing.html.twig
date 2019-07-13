@@ -12,9 +12,9 @@
     var subCatOption = $('#new_listing_sub_category option')
     $('#new_listing_category').change(function () {
         $('#new_listing_sub_category option').remove()
-        var categoryId = $('#new_listing_category option:selected').prop('class');
-        if (categoryId != "") {
-          var filteredSubCat = subCatOption.filter('.' + categoryId);
+        var categoryName = $('#new_listing_category option:selected').prop('class');
+        if (categoryName != "") {
+          var filteredSubCat = subCatOption.filter('.' + categoryName);
           $.each(filteredSubCat, function (i, j) {
               $(j).appendTo('#new_listing_sub_category');
           });
@@ -33,7 +33,7 @@
       <select class="form-control" id="new_listing_category" name="category_id" required>
         <option value="">Choose category</option>
         {% for category in categories %}
-          <option value="{{ category.id }}" class="{{ category.id }}">{{ category.category_name }}</option>
+          <option value="{{ category.id }}" class="{{ category.category_name }}">{{ category.category_name }}</option>
         {% endfor %}
       </select>
     </div>
@@ -42,7 +42,7 @@
       <select class="form-control" id="new_listing_sub_category" required>
         <option value="">Choose subcategory</option>
         {% for subcategory in subcategories %}
-          <option value="{{ subcategory.id }}" class="{{ subcategory.category_id }}">{{ subcategory.subcategory_name }}</option>
+          <option value="{{ subcategory.id }}" class="{{ subcategory.category_name }}">{{ subcategory.subcategory_name }}</option>
         {% endfor %}
       </select>
     </div>
