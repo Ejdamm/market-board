@@ -50,15 +50,27 @@ $app->post('/listings/new', function (Request $request, Response $response) {
 
 $app->get('/[listings/]', function (Request $request, Response $response) {
     try {
+        $page = ($request->getParam('page', 0) > 0) ? $request->getParam('page') : 1;
+        $limit = 10;
+        $count = 100; //TODO fetch real total count from database
+        $offset = ($page - 1) * $limit;
+
         $query = "SELECT listings.id, price, quantity, created_at, subcategory_name 
             FROM listings INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
-            ORDER BY created_at DESC;";
+            ORDER BY created_at DESC LIMIT 10 OFFSET ?;";
         $statement = $this->db->prepare($query);
+        $statement->bindValue(1, $offset, PDO::PARAM_INT);
         $statement->execute();
         $result = $statement->fetchAll();
-        $this->logger->addDebug(print_r($result, true));
         return $this->view->render($response, 'all_listings.html.twig', [
-            'listings' => $result
+            'listings' => $result,
+            'pagination' => [
+                'needed' => $count > $limit,
+                'count' => $count,
+                'page' => $page,
+                'lastpage' => (ceil($count / $limit) == 0 ? 1 : ceil($count / $limit)),
+                'limit' => $limit,
+            ],
         ]);
     } catch (Exception $e) {
         $this->logger->addError("/listings/ GET throw exception: " . $e);

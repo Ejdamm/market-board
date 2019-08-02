@@ -20,4 +20,16 @@
     {% endfor %}
   </div>
 
+  {% if pagination.needed %}
+    <nav aria-label="Page navigation">
+      <ul class="pagination justify-content-center py-4">
+        {% for i in 1..pagination.lastpage %}
+        <li class="page-item"><a class="{% if i == pagination.page %}active{% endif %} page-link" href="?page={{ i }}">{{ i }}</a></li>
+        {% endfor %}
+      </ul>
+    </nav>
+  {% endif %}
+
+
+
 {% endblock %}

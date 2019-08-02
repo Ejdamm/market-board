@@ -1,6 +1,7 @@
 <?php
 
 
+use Faker\Factory;
 use Phinx\Seed\AbstractSeed;
 
 class ListingsSeed extends AbstractSeed
@@ -15,14 +16,33 @@ class ListingsSeed extends AbstractSeed
      */
     public function run()
     {
-        $users = $this->table('listings');
-        $users->truncate(); //Empty table to avoid duplicates
+        $listings = $this->table('listings');
+        $listings->truncate(); //Empty table to avoid duplicates
 
 
-        $data = $this->generateConstantData();
+        $data = $this->generateFakeData();
         $this->execute('SET foreign_key_checks=0');
-        $users->insert($data)->save();
+        $listings->insert($data)->save();
         $this->execute('SET foreign_key_checks=1');
+    }
+
+    private function generateFakeData()
+    {
+        $faker = Factory::create();
+        $data = [];
+
+        for ($i = 0; $i < 100; $i++) {
+            $data[] = [
+                'email' => $faker->email,
+                'subcategory_id' => $faker->numberBetween(1, 5),
+                'price' => $faker->numberBetween(100, 1000),
+                'quantity' =>  $faker->numberBetween(1, 2),
+                'removal_code' => 'AAAAA',
+                'created_at' => $faker->date($format = 'Y-m-d H:i:s', $max = 'now'),
+            ];
+        }
+
+        return $data;
     }
 
     private function generateConstantData()
