@@ -5,24 +5,6 @@
     New listing inserted. It can be found <a href='/listings/{{ insertedId }}'>here</a>
   {% endif %}
 
-  <!-- query to filter second dropdown -->
-  <!-- https://stackoverflow.com/a/20478291/5318606-->
-  <script >
-  $(document).ready(function () {
-    var subCatOption = $('#new_listing_sub_category option')
-    $('#new_listing_category').change(function () {
-        $('#new_listing_sub_category option').remove()
-        var categoryName = $('#new_listing_category option:selected').prop('class');
-        if (categoryName != "") {
-          var filteredSubCat = subCatOption.filter('.' + categoryName);
-          $.each(filteredSubCat, function (i, j) {
-              $(j).appendTo('#new_listing_sub_category');
-          });
-        }
-    });
-  });
-  </script>
-
   <form method="post">
     <div class="form-group">
       <label for="new_listing_email">Email address</label>
@@ -39,7 +21,7 @@
     </div>
     <div class="form-group">
       <label for="new_listing_subcategory">Subcategory</label>
-      <select class="form-control" id="new_listing_sub_category" required>
+      <select class="form-control" id="new_listing_sub_category" name="subcategory_id" required>
         <option value="">Choose subcategory</option>
         {% for subcategory in subcategories %}
           <option value="{{ subcategory.id }}" class="{{ subcategory.category_name }}">{{ subcategory.subcategory_name }}</option>
@@ -56,6 +38,33 @@
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
+
+  <!-- query to filter second dropdown -->
+  <!-- https://stackoverflow.com/a/20478291/5318606-->
+  <script >
+  $(document).ready(function () {
+    var subCatOption = $('#new_listing_sub_category option')
+    $('#new_listing_category').change(function () {
+        var categoryName = $('#new_listing_category option:selected').prop('class');
+
+        if (categoryName != "") {
+            $('#new_listing_sub_category option').remove()
+
+          var filteredSubCat = subCatOption.filter('.' + categoryName);
+          $.each(filteredSubCat, function (i, j) {
+            $(j).appendTo('#new_listing_sub_category');
+          });
+        }
+        else {
+          // Reset options
+          $.each(subCatOption, function (i, j) {
+            $(j).appendTo('#new_listing_sub_category');
+          });
+          $('#new_listing_sub_category option:contains("Choose subcategory")').prop('selected', true);
+        }
+    });
+  });
+  </script>
 
 {% endblock %}
 
