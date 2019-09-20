@@ -50,15 +50,39 @@ $app->post('/listings/new', function (Request $request, Response $response) {
 
 $app->get('/[listings/]', function (Request $request, Response $response) {
     try {
-        $query = "SELECT listings.id, price, quantity, created_at, subcategory_name 
-            FROM listings INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
-            ORDER BY created_at DESC;";
+        $query = "SELECT COUNT(*) AS count FROM listings;";
         $statement = $this->db->prepare($query);
         $statement->execute();
+        $count = $statement->fetch();
+
+        $page = ($request->getParam('page', 0) > 0) ? $request->getParam('page') : 1;
+        $limit = 20;
+        $count = isset($count['count']) != null ? $count['count'] : 0;
+        $offset = ($page - 1) * $limit;
+        $last_page = (ceil($count / $limit) == 0 ? 1 : ceil($count / $limit));
+        $window_start = ($page - 2) > 2 ? $page - 2 : 1;
+        $window_stop = ($window_start + 4) < $last_page ? ($window_start + 4) : $last_page;
+
+        $query = "SELECT listings.id, price, quantity, created_at, subcategory_name 
+            FROM listings INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
+            ORDER BY created_at DESC LIMIT ? OFFSET ?;";
+        $statement = $this->db->prepare($query);
+        $statement->bindValue(1, $limit, PDO::PARAM_INT);
+        $statement->bindValue(2, $offset, PDO::PARAM_INT);
+        $statement->execute();
         $result = $statement->fetchAll();
-        $this->logger->addDebug(print_r($result, true));
+
         return $this->view->render($response, 'all_listings.html.twig', [
-            'listings' => $result
+            'listings' => $result,
+            'pagination' => [
+                'needed' => $count > $limit,
+                'count' => $count,
+                'page' => $page,
+                'last_page' => $last_page,
+                'limit' => $limit,
+                'window_start' => $window_start,
+                'window_stop' => $window_stop
+            ],
         ]);
     } catch (Exception $e) {
         $this->logger->addError("/listings/ GET throw exception: " . $e);
