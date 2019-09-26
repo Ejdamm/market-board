@@ -2,6 +2,7 @@
 
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Startplats\Listings;
 
 include_once __DIR__ . '/utils.php';
 
@@ -23,18 +24,10 @@ $app->post('/listings/new', function (Request $request, Response $response) {
     try {
         $this->logger->addInfo("Received post params:" . print_r($request->getParams(), true));
 
-        $query = "INSERT INTO listings(email, subcategory_id, price, quantity) VALUES(?,?,?,?);";
-        $statement = $this->db->prepare($query);
-        $params = $request->getParams();
-        $statement->execute(array_values([
-            $params['email'],
-            $params['subcategory_id'],
-            $params['price'],
-            $params['quantity']
-        ]));
+        $listings = new Listings($this->db);
+        $insertedId = $listings->insertListing($request->getParams());
         $this->logger->addInfo("Parameters inserted");
 
-        $insertedId = $this->db->lastInsertId();
         $categories = get_categories($this->db);
         $subcategories = get_subcategories($this->db);
         return $this->view->render($response, 'new_listing.html.twig', [
@@ -50,30 +43,21 @@ $app->post('/listings/new', function (Request $request, Response $response) {
 
 $app->get('/[listings/]', function (Request $request, Response $response) {
     try {
-        $query = "SELECT COUNT(*) AS count FROM listings;";
-        $statement = $this->db->prepare($query);
-        $statement->execute();
-        $count = $statement->fetch();
+        $listings = new Listings($this->db);
+        $count = $listings->getNrOfListings();
 
         $page = ($request->getParam('page', 0) > 0) ? $request->getParam('page') : 1;
-        $limit = 20;
+        $limit = 20; //TODO should be configurable
         $count = isset($count['count']) != null ? $count['count'] : 0;
         $offset = ($page - 1) * $limit;
         $last_page = (ceil($count / $limit) == 0 ? 1 : ceil($count / $limit));
         $window_start = ($page - 2) > 2 ? $page - 2 : 1;
         $window_stop = ($window_start + 4) < $last_page ? ($window_start + 4) : $last_page;
 
-        $query = "SELECT listings.id, price, quantity, created_at, subcategory_name 
-            FROM listings INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
-            ORDER BY created_at DESC LIMIT ? OFFSET ?;";
-        $statement = $this->db->prepare($query);
-        $statement->bindValue(1, $limit, PDO::PARAM_INT);
-        $statement->bindValue(2, $offset, PDO::PARAM_INT);
-        $statement->execute();
-        $result = $statement->fetchAll();
+        $all_listings = $listings->getAllListings($limit, $offset);
 
         return $this->view->render($response, 'all_listings.html.twig', [
-            'listings' => $result,
+            'listings' => $all_listings,
             'pagination' => [
                 'needed' => $count > $limit,
                 'count' => $count,
@@ -92,15 +76,10 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
 
 $app->get('/listings/{id}', function (Request $request, Response $response, $args = []) {
     try {
-        $query = "SELECT subcategory_name, category_name, email, price, quantity, created_at FROM listings 
-            INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
-            INNER JOIN categories ON subcategories.category_id = categories.id
-            WHERE listings.id = ?;";
-        $statement = $this->db->prepare($query);
-        $statement->execute([$args['id']]);
-        $result = $statement->fetch();
+        $listings = new Listings($this->db);
+        $single_listing = $listings->getSingleListing($args['id']);
         return $this->view->render($response, 'single_listing.html.twig', [
-            'listing' => $result
+            'listing' => $single_listing
         ]);
     } catch (Exception $e) {
         //TODO: addWarning if id does not exist
