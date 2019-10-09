@@ -162,7 +162,7 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
         //stuff..
     }
 
-    public function clearDatabaseOf($table, $data)
+    public static function clearDatabaseOf($table, $data)
     {
         $prepare = self::createPDOPreparedConditions($data);
         $statement = self::$container['db']->prepare("DELETE FROM $table WHERE " . $prepare['conditions'] . ";");
