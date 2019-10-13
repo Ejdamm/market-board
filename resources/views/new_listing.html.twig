@@ -43,27 +43,48 @@
   <!-- https://stackoverflow.com/a/20478291/5318606-->
   <script >
   $(document).ready(function () {
-    var subCatOption = $('#new_listing_sub_category option')
+    var subCatOption = $('#new_listing_sub_category option');
+    var defaultOptionText = "Choose subcategory";
+
     $('#new_listing_category').change(function () {
         var categoryName = $('#new_listing_category option:selected').prop('class');
-
-        if (categoryName != "") {
-            $('#new_listing_sub_category option').remove()
-
-          var filteredSubCat = subCatOption.filter('.' + categoryName);
-          $.each(filteredSubCat, function (i, j) {
-            $(j).appendTo('#new_listing_sub_category');
-          });
-        }
-        else {
-          // Reset options
-          $.each(subCatOption, function (i, j) {
-            $(j).appendTo('#new_listing_sub_category');
-          });
-          $('#new_listing_sub_category option:contains("Choose subcategory")').prop('selected', true);
-        }
+        filterCategoryOptions(categoryName, subCatOption, "#new_listing_sub_category", defaultOptionText)
     });
+
+    var defaultOptionText = "Choose category";
+    var mainCatOption = $('#new_listing_category option')
+      $('#new_listing_sub_category').change(function () {
+        var categoryName = $('#new_listing_sub_category option:selected').prop('class');
+        filterCategoryOptions(categoryName, mainCatOption, "#new_listing_category", defaultOptionText)
+    });
+
   });
+
+  function filterCategoryOptions(categoryName, catOption, selectElement, deafultOption){
+    if (categoryName != "") {
+      $(selectElement + ' option').remove()
+
+      var filteredSubCat = catOption.filter('.' + categoryName);
+      var index = 0;
+      // Re-add "Choose" option
+      var e = new Option(deafultOption, "")
+      $(e).appendTo(selectElement);
+
+      $.each(filteredSubCat, function (i, j) {
+        $(j).appendTo(selectElement);
+      });
+    }
+    else {
+      // Reset both options
+      $(selectElement + ' option').remove(0)
+      $.each(catOption, function (i, j) {
+        $(j).appendTo(selectElement);
+      });
+
+      $('#new_listing_category option:contains("' + "Choose category" + '")').prop('selected', true);
+      $('#new_listing_sub_category option:contains("' + "Choose subcategory" + '")').prop('selected', true);
+    }
+  }
   </script>
 
 {% endblock %}
