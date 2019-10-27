@@ -44,30 +44,30 @@
   <script >
   $(document).ready(function () {
     var subCatOption = $('#new_listing_sub_category option');
-    var defaultOptionText = "Choose subcategory";
 
+    // Subcategory filtering
     $('#new_listing_category').change(function () {
         var categoryName = $('#new_listing_category option:selected').prop('class');
-        filterCategoryOptions(categoryName, subCatOption, "#new_listing_sub_category", defaultOptionText)
+        filterCategoryOptions(categoryName, subCatOption, "#new_listing_sub_category", "Choose subcategory")
+        $('#new_listing_sub_category option:contains("' + "Choose subcategory" + '")').prop('selected', true);
     });
 
-    var defaultOptionText = "Choose category";
+    // category filtering
     var mainCatOption = $('#new_listing_category option')
       $('#new_listing_sub_category').change(function () {
         var categoryName = $('#new_listing_sub_category option:selected').prop('class');
-        filterCategoryOptions(categoryName, mainCatOption, "#new_listing_category", defaultOptionText)
+        filterCategoryOptions(categoryName, mainCatOption, "#new_listing_category", "Choose category")
     });
-
   });
 
-  function filterCategoryOptions(categoryName, catOption, selectElement, deafultOption){
+  function filterCategoryOptions(categoryName, catOption, selectElement, defaultTextOption){
     if (categoryName != "") {
       $(selectElement + ' option').remove()
 
       var filteredSubCat = catOption.filter('.' + categoryName);
       var index = 0;
       // Re-add "Choose" option
-      var e = new Option(deafultOption, "")
+      var e = new Option(defaultTextOption, "")
       $(e).appendTo(selectElement);
 
       $.each(filteredSubCat, function (i, j) {
@@ -80,7 +80,6 @@
       $.each(catOption, function (i, j) {
         $(j).appendTo(selectElement);
       });
-
       $('#new_listing_category option:contains("' + "Choose category" + '")').prop('selected', true);
       $('#new_listing_sub_category option:contains("' + "Choose subcategory" + '")').prop('selected', true);
     }
