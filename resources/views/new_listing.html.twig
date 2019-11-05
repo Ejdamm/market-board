@@ -43,45 +43,38 @@
   <!-- https://stackoverflow.com/a/20478291/5318606-->
   <script >
   $(document).ready(function () {
-    var subCatOption = $('#new_listing_sub_category option');
+    var subCatOptions = $('#new_listing_sub_category option');
 
-    // Subcategory filtering
+    // Subcategory filtering depending on category
     $('#new_listing_category').change(function () {
-        var categoryName = $('#new_listing_category option:selected').prop('class');
-        filterCategoryOptions(categoryName, subCatOption, "#new_listing_sub_category", "Choose subcategory")
-        $('#new_listing_sub_category option:contains("' + "Choose subcategory" + '")').prop('selected', true);
+      filterSubCategoryOptions(subCatOptions);
+      $('#new_listing_sub_category option[value=""]').prop('selected', true);
     });
 
-    // category filtering
-    var mainCatOption = $('#new_listing_category option')
-      $('#new_listing_sub_category').change(function () {
-        var categoryName = $('#new_listing_sub_category option:selected').prop('class');
-        filterCategoryOptions(categoryName, mainCatOption, "#new_listing_category", "Choose category")
+    // Subcategory filtering depending on subcategory
+    $('#new_listing_sub_category').change(function () {
+      var selectedSubCategory = $('#new_listing_sub_category option:selected');
+      var subCatClass = selectedSubCategory.prop('class');
+
+      // Make sure the category corresponds to chosen subcategory
+      if ($('#new_listing_category option:selected').prop('class') != subCatClass) {
+        $('#new_listing_category .' + subCatClass).prop('selected', true);
+      }
+      filterSubCategoryOptions(subCatOptions);
+      // Reselect the selected option because it was lost in the filtering
+      selectedSubCategory.prop('selected', true);
     });
   });
 
-  function filterCategoryOptions(categoryName, catOption, selectElement, defaultTextOption){
-    if (categoryName != "") {
-      $(selectElement + ' option').remove()
+  function filterSubCategoryOptions(options){
+    var categoryClass = $('#new_listing_category option:selected').prop('class');
 
-      var filteredSubCat = catOption.filter('.' + categoryName);
-      var index = 0;
-      // Re-add "Choose" option
-      var e = new Option(defaultTextOption, "")
-      $(e).appendTo(selectElement);
+    // Always reset subcategory options
+    $('#new_listing_sub_category option').remove();
+    $('#new_listing_sub_category').append(options);
 
-      $.each(filteredSubCat, function (i, j) {
-        $(j).appendTo(selectElement);
-      });
-    }
-    else {
-      // Reset both options
-      $(selectElement + ' option').remove(0)
-      $.each(catOption, function (i, j) {
-        $(j).appendTo(selectElement);
-      });
-      $('#new_listing_category option:contains("' + "Choose category" + '")').prop('selected', true);
-      $('#new_listing_sub_category option:contains("' + "Choose subcategory" + '")').prop('selected', true);
+    if (categoryClass != "") {
+      $('#new_listing_sub_category :not(.' + categoryClass + ',option[value=""])').remove();
     }
   }
   </script>
