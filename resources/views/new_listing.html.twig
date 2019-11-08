@@ -15,16 +15,16 @@
       <select class="form-control" id="new_listing_category" name="category_id" required>
         <option value="">Choose category</option>
         {% for category in categories %}
-          <option value="{{ category.id }}">{{ category.category_name }}</option>
+          <option value="{{ category.id }}" class="{{ category.category_name }}">{{ category.category_name }}</option>
         {% endfor %}
       </select>
     </div>
-    <div class="form-group"> {# TODO only show associated subcategories when category is selected #}
+    <div class="form-group">
       <label for="new_listing_subcategory">Subcategory</label>
-      <select class="form-control" id="new_listing_category" name="subcategory_id" required>
+      <select class="form-control" id="new_listing_sub_category" name="subcategory_id" required>
         <option value="">Choose subcategory</option>
         {% for subcategory in subcategories %}
-          <option value="{{ subcategory.id }}">{{ subcategory.subcategory_name }}</option>
+          <option value="{{ subcategory.id }}" class="{{ subcategory.category_name }}">{{ subcategory.subcategory_name }}</option>
         {% endfor %}
       </select>
     </div>
@@ -38,4 +38,46 @@
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
+
+  <!-- query to filter second dropdown -->
+  <!-- https://stackoverflow.com/a/20478291/5318606-->
+  <script >
+  $(document).ready(function () {
+    var subCatOptions = $('#new_listing_sub_category option');
+
+    // Subcategory filtering depending on category
+    $('#new_listing_category').change(function () {
+      filterSubCategoryOptions(subCatOptions);
+      $('#new_listing_sub_category option[value=""]').prop('selected', true);
+    });
+
+    // Subcategory filtering depending on subcategory
+    $('#new_listing_sub_category').change(function () {
+      var selectedSubCategory = $('#new_listing_sub_category option:selected');
+      var subCatClass = selectedSubCategory.prop('class');
+
+      // Make sure the category corresponds to chosen subcategory
+      if ($('#new_listing_category option:selected').prop('class') != subCatClass) {
+        $('#new_listing_category .' + subCatClass).prop('selected', true);
+      }
+      filterSubCategoryOptions(subCatOptions);
+      // Reselect the selected option because it was lost in the filtering
+      selectedSubCategory.prop('selected', true);
+    });
+  });
+
+  function filterSubCategoryOptions(options){
+    var categoryClass = $('#new_listing_category option:selected').prop('class');
+
+    // Always reset subcategory options
+    $('#new_listing_sub_category option').remove();
+    $('#new_listing_sub_category').append(options);
+
+    if (categoryClass != "") {
+      $('#new_listing_sub_category :not(.' + categoryClass + ',option[value=""])').remove();
+    }
+  }
+  </script>
+
 {% endblock %}
+
