@@ -212,7 +212,9 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
      */
     public function clearLog()
     {
-        file_put_contents($this->logFile, "");
+        if ($this->logFile != null) {
+            file_put_contents($this->logFile, "");
+        }
     }
 
     public function clearDatabase()
