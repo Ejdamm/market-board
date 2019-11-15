@@ -54,7 +54,7 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
         $window_start = ($page - 2) > 2 ? $page - 2 : 1;
         $window_stop = ($window_start + 4) < $last_page ? ($window_start + 4) : $last_page;
 
-        $all_listings = $listings->getAllListings($limit, $offset);
+        $all_listings = $listings->getMultipleListings($limit, $offset);
 
         return $this->view->render($response, 'all_listings.html.twig', [
             'listings' => $all_listings,

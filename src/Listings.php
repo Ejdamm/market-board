@@ -25,10 +25,12 @@ class Listings
         return $result;
     }
 
-    public function getAllListings(int $limit, int $offset)
+    public function getMultipleListings(int $limit, int $offset)
     {
-        $query = "SELECT listings.id, price, quantity, created_at, subcategory_name
-            FROM listings INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
+        $query = "SELECT listings.id, subcategory_name, category_name, email, price, quantity, created_at
+            FROM listings 
+            INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
+            INNER JOIN categories ON subcategories.category_id = categories.id
             ORDER BY created_at DESC LIMIT ? OFFSET ?;";
         $statement = $this->prepareAndExecute($query, [$limit, $offset]);
         $result = $statement->fetchAll();
@@ -46,7 +48,7 @@ class Listings
         ]);
         $this->prepareAndExecute($query, $params);
         $insertedId = $this->db->lastInsertId();
-        return $insertedId;
+        return intval($insertedId);
     }
 
     public function getNrOfListings()
@@ -54,7 +56,7 @@ class Listings
         $query = "SELECT COUNT(*) AS count FROM listings;";
         $statement = $this->prepareAndExecute($query);
         $count = $statement->fetch();
-        return $count;
+        return intval($count['count']);
     }
 
     private function prepareAndExecute($query, $params=[])

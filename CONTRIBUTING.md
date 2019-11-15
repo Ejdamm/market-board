@@ -31,8 +31,8 @@
 ## Standards
 ### Code style
 All pull requests must adhere to the [PSR-2 standard](https://www.php-fig.org/psr/psr-2/)
-* To search your files for styling errors, run `bin/psr-2.sh -v --dry-run --diff`
-* To automatically fix styling errors, run `bin/psr-2.sh`
+* To search your files for styling errors, run `composer style -v --dry-run --diff`
+* To automatically fix styling errors, run `composer style`
 
 
 ### File structure
