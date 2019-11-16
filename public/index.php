@@ -1,5 +1,6 @@
 <?php
 
+use Anddye\Mailer\Mailer;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Slim\App;
@@ -55,6 +56,19 @@ $container['logger'] = function (Container $container) {
     $fileHandler = new StreamHandler($conf['path'], $conf['level']);
     $logger->pushHandler($fileHandler);
     return $logger;
+};
+
+$container['mailer'] = function(Container $container) {
+    $conf = $container->get('email');
+    $mailer = new Mailer($container['view'], [
+        'host'      => $conf['smtp']['host'],
+        'port'      => $conf['smtp']['port'],
+        'username'  => $conf['smtp']['username'],
+        'password'  => $conf['smtp']['password'],
+        'protocol'  => $conf['smtp']['protocol']
+    ]);
+    $mailer->setDefaultFrom($conf['from'], $conf['name']);
+    return $mailer;
 };
 
 

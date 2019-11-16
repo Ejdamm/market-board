@@ -2,6 +2,7 @@
 
 namespace Startplats\Tests\Functional;
 
+use Anddye\Mailer\Mailer;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use PDO;
@@ -103,11 +104,24 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
             return $view;
         };
 
-        self::$container['logger'] = function ($c) {
+        self::$container['logger'] = function ($container) {
             $logger = new Logger('functional_test');
             $file_handler = new StreamHandler($this->logFile);
             $logger->pushHandler($file_handler);
             return $logger;
+        };
+
+        self::$container['mailer'] = function($container) {
+            $conf = $container->get('email');
+            $mailer = new Mailer($container['view'], [
+                'host'      => $conf['smtp']['host'],
+                'port'      => $conf['smtp']['port'],
+                'username'  => $conf['smtp']['username'],
+                'password'  => $conf['smtp']['password'],
+                'protocol'  => $conf['smtp']['protocol']
+            ]);
+            $mailer->setDefaultFrom($conf['from'], $conf['name']);
+            return $mailer;
         };
 
         // To make sure the log is empty at the start of the run

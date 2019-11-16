@@ -36,5 +36,17 @@ return [
             'pass' => 'password',
             'port' => '3306'
         ]
-    ]
+    ],
+
+    'email' => [
+        'from' => 'no-reply@mail.com',
+        'name' => 'Webmaster',
+        'smtp' => [
+            'host'      => '',
+            'port'      => 587,
+            'username'  => '',
+            'password'  => '',
+            'protocol'  => '' // SSL or TLS
+        ],
+    ],
 ];
