@@ -103,13 +103,6 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
 
 $app->get('/listings/{id}', function (Request $request, Response $response, $args = []) {
     try {
-        $test = 'true';
-        if ($test == false) {
-            echo "FALSE";
-        } else {
-            echo "TRUE";
-        }
-
         $query = "SELECT subcategory_name, category_name, email, price, quantity, created_at FROM listings
             INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
             INNER JOIN categories ON subcategories.category_id = categories.id
