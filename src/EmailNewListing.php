@@ -3,7 +3,6 @@
 
 namespace Startplats;
 
-
 use Anddye\Mailer\Mailable;
 
 class EmailNewListing extends Mailable
