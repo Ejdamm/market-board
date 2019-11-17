@@ -71,8 +71,7 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
 
         self::$container =  $app->getContainer();
         self::$container['db'] = function ($container) {
-            $default = $container->get('environments')['default_database'];
-            $conf = $container->get('environments')[$default];
+            $conf = $container->get('settings')['db'];
             $pdo = new PDO(
                 $conf['adapter'] . ':host=' . $conf['host'] . ';dbname=' . $conf['name'],
                 $conf['user'],
@@ -111,8 +110,8 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
             return $logger;
         };
 
-        self::$container['mailer'] = function($container) {
-            $conf = $container->get('email');
+        self::$container['mailer'] = function ($container) {
+            $conf = $container->get('settings')['email'];
             $mailer = new Mailer($container['view'], [
                 'host'      => $conf['smtp']['host'],
                 'port'      => $conf['smtp']['port'],

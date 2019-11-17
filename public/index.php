@@ -18,8 +18,7 @@ $app = new App($config);
 
 $container = $app->getContainer();
 $container['db'] = function (Container $container) {
-    $default = $container->get('environments')['default_database'];
-    $conf = $container->get('environments')[$default];
+    $conf = $container->get('settings')['db'];
     $pdo = new PDO(
         $conf['adapter'] . ':host=' . $conf['host'] . ';dbname=' . $conf['name'],
         $conf['user'],
@@ -58,8 +57,8 @@ $container['logger'] = function (Container $container) {
     return $logger;
 };
 
-$container['mailer'] = function(Container $container) {
-    $conf = $container->get('email');
+$container['mailer'] = function (Container $container) {
+    $conf = $container->get('settings')['email'];
     $mailer = new Mailer($container['view'], [
         'host'      => $conf['smtp']['host'],
         'port'      => $conf['smtp']['port'],

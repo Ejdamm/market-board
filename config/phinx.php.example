@@ -1,0 +1,21 @@
+<?php
+return [
+    'paths' => [
+        'migrations' => 'resources/db/migrations',
+        "seeds" => "resources/db/seeds"
+    ],
+
+    # Phinx and database
+    'environments' => [
+        'default_migration_table' => 'phinxlog',
+        'default_database' => 'dev',
+        'dev' => [
+            'adapter' => 'mysql',
+            'host' => 'localhost',
+            'name' => 'startplats',
+            'user' => 'root',
+            'pass' => 'password',
+            'port' => '3306'
+        ]
+    ],
+];

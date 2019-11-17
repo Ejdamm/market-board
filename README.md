@@ -24,7 +24,7 @@ Restart apache2 `systemctl restart apache2`
 [Ref.](http://docs.slimframework.com/routing/rewrite/)
 ### Install
 * Run `composer install` inside the git repository root folder.
-* copy /config/config.php.example to /config/config.php and change the credentials to your database setup
+* copy /config/config.php.example to /config/config.php and change the credentials to your database setup. The same goes for phinx.php.example.
 
 ## Database migration
 Database migration is done with phinx. Usage:
