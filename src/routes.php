@@ -44,6 +44,7 @@ $app->post('/listings/new', function (Request $request, Response $response) {
         $email_variables = new stdClass;
         $email_variables->insertedId = $insertedId;
         $email_variables->removal_code = $removal_code;
+        // E-mail function is excluded if run in Travis since it's a closed environment and tests will fail
         if (getenv('TRAVIS') != 'true') {
             $this->mailer->setTo($params['email'])->sendMessage(new EmailNewListing($email_variables));
         }
