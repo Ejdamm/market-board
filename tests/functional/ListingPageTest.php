@@ -18,42 +18,49 @@ class ListingPageTest extends BaseTestCase
         "quantity" => "3",
     ];
 
-    private $category = [
+    private static $category = [
         "category_name" => "category_test"
     ];
 
-    private $subcategory = [
+    private static $subcategory = [
         "subcategory_name" => "subcategory_test",
         "category_id" => null
     ];
 
-    public function setUp(): void
+    public static function setUpBeforeClass(): void
     {
-        $this->clearLog();
-
         $query = "INSERT INTO categories(category_name) VALUES(?);";
         $statement1 = self::$container['db']->prepare($query);
-        $statement1->execute(array_values($this->category));
-        $categoryId= self::$container['db']->lastInsertId();
-        $this->category["id"] = $categoryId; // Set id so clearDatabaseOf() only removes one entry
+        $statement1->execute(array_values(self::$category));
+        $categoryId = self::$container['db']->lastInsertId();
+        self::$category["id"] = $categoryId; // Set id so clearDatabaseOf() only removes one entry
 
-        $this->subcategory["category_id"] = $categoryId;
+        self::$subcategory["category_id"] = $categoryId;
         $query = "INSERT INTO subcategories(subcategory_name, category_id) VALUES(?, ?);";
         $statement2 = self::$container['db']->prepare($query);
-        $statement2->execute(array_values($this->subcategory));
+        $statement2->execute(array_values(self::$subcategory));
         $subcategoryId = self::$container['db']->lastInsertId();
 
         self::$listing_data1["subcategory_id"] = $subcategoryId;
         self::$listing_data2["subcategory_id"] = $subcategoryId;
     }
 
+    public function setUp(): void
+    {
+        $this->clearLog();
+    }
+
     public function tearDown(): void
     {
-        $this->clearDatabaseOf("listings", self::$listing_data1);
-        $this->clearDatabaseOf("listings", self::$listing_data2);
-        $this->clearDatabaseOf("subcategories", $this->subcategory);
-        $this->clearDatabaseOf("categories", $this->category);
         $this->clearLog();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        self::clearDatabaseOf("listings", self::$listing_data1);
+        self::clearDatabaseOf("listings", self::$listing_data2);
+        self::clearDatabaseOf("subcategories", self::$subcategory);
+        self::clearDatabaseOf("categories", self::$category);
     }
 
     /**
@@ -116,7 +123,7 @@ class ListingPageTest extends BaseTestCase
         $unit_price2 = self::$listing_data2['price'] / self::$listing_data2['quantity'];
         $this->assertStringContainsString($unit_price1, $htmlBody);
         $this->assertStringContainsString($unit_price2, $htmlBody);
-        $this->assertStringContainsString($this->subcategory['subcategory_name'], $htmlBody);
+        $this->assertStringContainsString(self::$subcategory['subcategory_name'], $htmlBody);
     }
 
     /**
@@ -143,8 +150,8 @@ class ListingPageTest extends BaseTestCase
         $this->assertStringContainsString(self::$listing_data1['email'], $htmlBody);
         $this->assertStringContainsString(self::$listing_data1['price'], $htmlBody);
         $this->assertStringContainsString(self::$listing_data1['quantity'], $htmlBody);
-        $this->assertStringContainsString($this->subcategory['subcategory_name'], $htmlBody);
-        $this->assertStringContainsString($this->category['category_name'], $htmlBody);
+        $this->assertStringContainsString(self::$subcategory['subcategory_name'], $htmlBody);
+        $this->assertStringContainsString(self::$category['category_name'], $htmlBody);
         $this->assertStringNotContainsString(self::$listing_data2['email'], $htmlBody);
     }
 }

@@ -3,7 +3,7 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class Listings extends AbstractMigration
+class ListingsMigration extends AbstractMigration
 {
     /**
      * Change Method.

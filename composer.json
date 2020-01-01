@@ -18,7 +18,8 @@
     "require-dev": {
         "pds/skeleton": "^1.0",
         "friendsofphp/php-cs-fixer": "^2.14",
-        "phpunit/phpunit": "^8"
+        "phpunit/phpunit": "^8",
+        "dms/phpunit-arraysubset-asserts": "^0.1.0"
     },
     "autoload": {
         "psr-4": {
@@ -32,6 +33,7 @@
         }
     },
     "scripts":{
-        "test": "phpunit"
+        "test": "phpunit",
+        "style": "bin/psr-2.sh"
     }
 }
