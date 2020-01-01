@@ -3,6 +3,7 @@
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Startplats\Listings;
+use Startplats\EmailNewListing;
 
 include_once __DIR__ . '/utils.php';
 
@@ -27,9 +28,19 @@ $app->post('/listings/new', function (Request $request, Response $response) {
         $listings = new Listings($this->db);
         $insertedId = $listings->insertListing($request->getParams());
         $this->logger->addInfo("Parameters inserted");
+        $removal_code = 'AAAAAA'; //TODO generate random, insert in database
 
         $categories = get_categories($this->db);
         $subcategories = get_subcategories($this->db);
+
+        $email_variables = new stdClass;
+        $email_variables->insertedId = $insertedId;
+        $email_variables->removal_code = $removal_code;
+        // E-mail function is excluded if run in Travis since it's a closed environment and tests will fail
+        if (getenv('TRAVIS') != 'true') {
+            $this->mailer->setTo($request->getParams()['email'])->sendMessage(new EmailNewListing($email_variables));
+        }
+
         return $this->view->render($response, 'new_listing.html.twig', [
             'insertedId' => $insertedId,
             'categories' => $categories,

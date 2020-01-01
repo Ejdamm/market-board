@@ -17,24 +17,26 @@ return [
             'path' => __DIR__ . '/../logs/app.log',
             'test_path' => __DIR__ . '/../logs/apptest.log',
         ],
-    ],
 
-    'paths' => [
-        'migrations' => 'resources/db/migrations',
-        "seeds" => "resources/db/seeds"
-    ],
-
-    # Phinx and database
-    'environments' => [
-        'default_migration_table' => 'phinxlog',
-        'default_database' => 'dev',
-        'dev' => [
+        'db' => [
             'adapter' => 'mysql',
             'host' => 'localhost',
             'name' => 'startplats',
             'user' => 'root',
             'pass' => 'password',
             'port' => '3306'
-        ]
-    ]
+        ],
+
+        'email' => [
+            'from' => 'no-reply@mail.com',
+            'name' => 'Webmaster',
+            'smtp' => [
+                'host'      => '',
+                'port'      => 587,
+                'username'  => '',
+                'password'  => '',
+                'protocol'  => '' // SSL or TLS
+            ],
+        ],
+    ],
 ];

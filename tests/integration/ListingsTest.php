@@ -40,7 +40,7 @@ class ListingsTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         $configFile = include __DIR__ . '/../../config/config.php';
-        $dbConf = $configFile['environments']['dev'];
+        $dbConf = $configFile['settings']['db'];
         self::$db = new PDO(
             $dbConf['adapter'] . ':host=' . $dbConf['host'] . ';dbname=' . $dbConf['name'],
             $dbConf['user'],

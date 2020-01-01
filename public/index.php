@@ -1,5 +1,6 @@
 <?php
 
+use Anddye\Mailer\Mailer;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Slim\App;
@@ -17,8 +18,7 @@ $app = new App($config);
 
 $container = $app->getContainer();
 $container['db'] = function (Container $container) {
-    $default = $container->get('environments')['default_database'];
-    $conf = $container->get('environments')[$default];
+    $conf = $container->get('settings')['db'];
     $pdo = new PDO(
         $conf['adapter'] . ':host=' . $conf['host'] . ';dbname=' . $conf['name'],
         $conf['user'],
@@ -55,6 +55,19 @@ $container['logger'] = function (Container $container) {
     $fileHandler = new StreamHandler($conf['path'], $conf['level']);
     $logger->pushHandler($fileHandler);
     return $logger;
+};
+
+$container['mailer'] = function (Container $container) {
+    $conf = $container->get('settings')['email'];
+    $mailer = new Mailer($container['view'], [
+        'host'      => $conf['smtp']['host'],
+        'port'      => $conf['smtp']['port'],
+        'username'  => $conf['smtp']['username'],
+        'password'  => $conf['smtp']['password'],
+        'protocol'  => $conf['smtp']['protocol']
+    ]);
+    $mailer->setDefaultFrom($conf['from'], $conf['name']);
+    return $mailer;
 };
 
 
