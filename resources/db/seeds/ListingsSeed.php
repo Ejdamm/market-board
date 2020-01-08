@@ -3,6 +3,7 @@
 
 use Faker\Factory;
 use Phinx\Seed\AbstractSeed;
+use Startplats\Utils;
 
 class ListingsSeed extends AbstractSeed
 {
@@ -37,7 +38,7 @@ class ListingsSeed extends AbstractSeed
                 'subcategory_id' => $faker->numberBetween(1, 5),
                 'price' => $faker->numberBetween(100, 1000),
                 'quantity' =>  $faker->numberBetween(1, 2),
-                'removal_code' => 'AAAAA',
+                'removal_code' => Utils::generate_removal_code(),
                 'created_at' => $faker->date($format = 'Y-m-d H:i:s', $max = 'now'),
             ];
         }

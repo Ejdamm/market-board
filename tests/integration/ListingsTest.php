@@ -16,6 +16,7 @@ class ListingsTest extends TestCase
         "subcategory_id" => null,
         "price" => "123",
         "quantity" => "2",
+        "removal_code" => "AAAAAA"
     ];
 
     private static $listing_data2 = [
@@ -23,6 +24,7 @@ class ListingsTest extends TestCase
         "subcategory_id" => null,
         "price" => "456",
         "quantity" => "3",
+        "removal_code" => "AAAAAA"
     ];
 
     private static $category = [

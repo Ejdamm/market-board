@@ -39,12 +39,13 @@ class Listings
 
     public function insertListing($params)
     {
-        $query = "INSERT INTO listings(email, subcategory_id, price, quantity) VALUES(?,?,?,?);";
+        $query = "INSERT INTO listings(email, subcategory_id, price, quantity, removal_code) VALUES(?,?,?,?,?);";
         $params = array_values([
             $params['email'],
             $params['subcategory_id'],
             $params['price'],
-            $params['quantity']
+            $params['quantity'],
+            $params['removal_code']
         ]);
         $this->prepareAndExecute($query, $params);
         $insertedId = $this->db->lastInsertId();
