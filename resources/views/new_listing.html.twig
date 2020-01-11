@@ -1,8 +1,8 @@
 {% extends 'templates/base.html.twig' %}
 
 {% block content %}
-  {% if insertedId is defined %}
-    New listing inserted. It can be found <a href='/listings/{{ insertedId }}'>here</a>
+  {% if inserted_id is defined %}
+    New listing inserted. It can be found <a href='/listings/{{ inserted_id }}'>here</a>. Removal code: {{ removal_code }}
   {% endif %}
 
   <form method="post">

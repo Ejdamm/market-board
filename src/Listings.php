@@ -48,8 +48,20 @@ class Listings
             $params['removal_code']
         ]);
         $this->prepareAndExecute($query, $params);
-        $insertedId = $this->db->lastInsertId();
-        return intval($insertedId);
+        $inserted_id = $this->db->lastInsertId();
+        return intval($inserted_id);
+    }
+
+    public function removeListing($listing_id, $removal_code)
+    {
+        $query = "DELETE FROM listings WHERE id = ? AND removal_code = ?;";
+        $params = array_values([
+            $listing_id,
+            $removal_code
+        ]);
+        $statement = $this->prepareAndExecute($query, $params);
+        $affected_rows = $statement->rowCount();
+        return intval($affected_rows);
     }
 
     public function getNrOfListings()
