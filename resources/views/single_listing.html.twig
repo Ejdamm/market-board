@@ -10,10 +10,9 @@
         <div>Antal: {{ listing.quantity }}</div>
         <div>Skapad: {{ listing.created_at }}</div>
       </div>
-      <form method="post">
-        <div class="form-group">
-          <label for="removal_code">Removal code</label>
-          <input type="input" class="form-control" id="removal_code" name="removal_code" required>
+      <form class="form-inline mb-2" method="post">
+        <div class="form-group mx-sm-3">
+          <input type="input" class="form-control" id="removal_code" name="removal_code" placeholder="Removal code" required>
         </div>
         <button type="submit" class="btn btn-danger">Remove</button>
       </form>

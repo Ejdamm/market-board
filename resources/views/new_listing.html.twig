@@ -2,7 +2,9 @@
 
 {% block content %}
   {% if inserted_id is defined %}
-    New listing inserted. It can be found <a href='/listings/{{ inserted_id }}'>here</a>. Removal code: {{ removal_code }}
+    <div class="alert alert-success">
+      <strong>Success!</strong> New listing inserted. It can be found <a href='/listings/{{ inserted_id }}'>here</a>. Removal code: {{ removal_code }}.
+    </div>
   {% endif %}
 
   <form method="post">

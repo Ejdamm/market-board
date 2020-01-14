@@ -108,7 +108,8 @@ $app->post('/listings/{id}', function (Request $request, Response $response, $ar
         $this->logger->addInfo("Listing removed: " . $args['id']);
 
         return $this->view->render($response, 'remove_listing.html.twig', [
-            'affected_rows' => $affected_rows
+            'affected_rows' => $affected_rows,
+            'listing_id' => $args['id']
         ]);
     } catch (Exception $e) {
         //TODO: addWarning if id does not exist
