@@ -25,13 +25,37 @@ class Listings
         return $result;
     }
 
-    public function getMultipleListings(int $limit, int $offset)
+    public function getMultipleListings(int $limit, int $offset, string $sortingColumn = "created_at", string $sortingOrder = DESCENDING)
     {
+
+        #sortingColumn and sortingOrder need manual sanitizing because you can't prepare column names and ASC/DESC
+        switch($sortingColumn)
+        {
+            case 'unit_price':
+                $sort = 'unit_price';
+                break;
+            case 'created_at':
+            default:
+                $sort = 'created_at';
+                break;
+        }
+
+        switch($sortingOrder)
+        {
+            case ASCENDING:
+                $order = ASCENDING;
+                break;
+            case DESCENDING:
+            default:
+                $order = DESCENDING;
+                break;
+        }
+
         $query = "SELECT listings.id, subcategory_name, category_name, email, unit_price, quantity, created_at
             FROM listings 
             INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
             INNER JOIN categories ON subcategories.category_id = categories.id
-            ORDER BY created_at DESC LIMIT ? OFFSET ?;";
+            ORDER BY $sort $order LIMIT ? OFFSET ?;";
         $statement = $this->prepareAndExecute($query, [$limit, $offset]);
         $result = $statement->fetchAll();
         return $result;

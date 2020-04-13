@@ -1,5 +1,8 @@
 <?php
 
+define("ASCENDING", "ASC");
+define("DESCENDING", "DESC");
+
 function get_categories($db)
 {
     $query = "SELECT id, category_name FROM categories;";
