@@ -35,7 +35,7 @@ class ListingsMigration extends AbstractMigration
         $listings = $this->table('listings');
         $listings->addColumn('email', 'string', ['limit' => 75])
             ->addColumn('subcategory_id', 'integer')
-            ->addColumn('price', 'decimal', ['signed' => true])
+            ->addColumn('unit_price', 'decimal', ['signed' => true])
             ->addColumn('quantity', 'integer')
             ->addColumn('removal_code', 'string', ['limit' => 6, 'null' => true])
             ->addColumn('created_at', 'timestamp', ['default' => 'CURRENT_TIMESTAMP'])

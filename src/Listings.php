@@ -16,7 +16,7 @@ class Listings
 
     public function getSingleListing(int $id)
     {
-        $query = "SELECT subcategory_name, category_name, email, price, quantity, created_at FROM listings
+        $query = "SELECT subcategory_name, category_name, email, unit_price, quantity, created_at FROM listings
             INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
             INNER JOIN categories ON subcategories.category_id = categories.id
             WHERE listings.id = ?;";
@@ -27,7 +27,7 @@ class Listings
 
     public function getMultipleListings(int $limit, int $offset)
     {
-        $query = "SELECT listings.id, subcategory_name, category_name, email, price, quantity, created_at
+        $query = "SELECT listings.id, subcategory_name, category_name, email, unit_price, quantity, created_at
             FROM listings 
             INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
             INNER JOIN categories ON subcategories.category_id = categories.id
@@ -39,11 +39,11 @@ class Listings
 
     public function insertListing($params)
     {
-        $query = "INSERT INTO listings(email, subcategory_id, price, quantity) VALUES(?,?,?,?);";
+        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity) VALUES(?,?,?,?);";
         $params = array_values([
             $params['email'],
             $params['subcategory_id'],
-            $params['price'],
+            $params['unit_price'],
             $params['quantity']
         ]);
         $this->prepareAndExecute($query, $params);

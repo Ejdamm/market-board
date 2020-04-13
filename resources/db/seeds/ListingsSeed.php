@@ -35,7 +35,7 @@ class ListingsSeed extends AbstractSeed
             $data[] = [
                 'email' => $faker->email,
                 'subcategory_id' => $faker->numberBetween(1, 5),
-                'price' => $faker->numberBetween(100, 1000),
+                'unit_price' => $faker->numberBetween(100, 1000),
                 'quantity' =>  $faker->numberBetween(1, 2),
                 'removal_code' => 'AAAAA',
                 'created_at' => $faker->date($format = 'Y-m-d H:i:s', $max = 'now'),
@@ -51,7 +51,7 @@ class ListingsSeed extends AbstractSeed
             [
                 'email' => 'nisse.hult@test.com',
                 'subcategory_id' => 1,
-                'price' => 21,
+                'unit_price' => 21,
                 'quantity' => 1,
                 'removal_code' => 'AAAAA'
             ]

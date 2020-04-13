@@ -14,14 +14,14 @@ class ListingsTest extends TestCase
     private static $listing_data1 = [
         "email" => "test@test.com",
         "subcategory_id" => null,
-        "price" => "123",
+        "unit_price" => "123",
         "quantity" => "2",
     ];
 
     private static $listing_data2 = [
         "email" => "test2@test.com",
         "subcategory_id" => null,
-        "price" => "456",
+        "unit_price" => "456",
         "quantity" => "3",
     ];
 
@@ -120,7 +120,7 @@ class ListingsTest extends TestCase
             "subcategory_name" => self::$subcategory["subcategory_name"],
             "category_name" => self::$category["category_name"],
             "email" => self::$listing_data1["email"],
-            "price" => self::$listing_data1["price"],
+            "unit_price" => self::$listing_data1["unit_price"],
             "quantity" => self::$listing_data1["quantity"]
         ];
         $actual = self::$listings->getSingleListing($lastInsertedId);
@@ -150,7 +150,7 @@ class ListingsTest extends TestCase
             "subcategory_name" => self::$subcategory["subcategory_name"],
             "category_name" => self::$category["category_name"],
             "email" => self::$listing_data1["email"],
-            "price" => self::$listing_data1["price"],
+            "unit_price" => self::$listing_data1["unit_price"],
             "quantity" => self::$listing_data1["quantity"]
         ];
 
@@ -158,7 +158,7 @@ class ListingsTest extends TestCase
             "subcategory_name" => self::$subcategory["subcategory_name"],
             "category_name" => self::$category["category_name"],
             "email" => self::$listing_data2["email"],
-            "price" => self::$listing_data2["price"],
+            "unit_price" => self::$listing_data2["unit_price"],
             "quantity" => self::$listing_data2["quantity"]
         ];
 
@@ -186,7 +186,7 @@ class ListingsTest extends TestCase
             "subcategory_name" => self::$subcategory["subcategory_name"],
             "category_name" => self::$category["category_name"],
             "email" => self::$listing_data2["email"],
-            "price" => self::$listing_data2["price"],
+            "unit_price" => self::$listing_data2["unit_price"],
             "quantity" => self::$listing_data2["quantity"]
         ];
 
