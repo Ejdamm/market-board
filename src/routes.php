@@ -59,14 +59,19 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
 
         $page = ($request->getParam('page', 0) > 0) ? $request->getParam('page') : 1;
         $limit = 20; //TODO should be configurable
-        $count = isset($count['count']) != null ? $count['count'] : 0;
         $offset = ($page - 1) * $limit;
         $last_page = (ceil($count / $limit) == 0 ? 1 : ceil($count / $limit));
         $window_start = ($page - 2) > 2 ? $page - 2 : 1;
         $window_stop = ($window_start + 4) < $last_page ? ($window_start + 4) : $last_page;
 
-        $all_listings = $listings->getMultipleListings($limit, $offset);
-        $sort_order = '';
+
+        $sorting_column = $request->getParam('sorting_column', null);
+        $order = $request->getParam('order', 'NONE');
+        $sorting = get_sorting($sorting_column, $order);
+
+
+        $all_listings = $listings->getMultipleListings($limit, $offset, $sorting['column'], $sorting['current_order']);
+
 
         return $this->view->render($response, 'all_listings.html.twig', [
             'listings' => $all_listings,
@@ -79,7 +84,7 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
                 'window_start' => $window_start,
                 'window_stop' => $window_stop
             ],
-            'sort_order' => $sort_order,
+            'sorting' => $sorting,
         ]);
     } catch (Exception $e) {
         $this->logger->addError("/listings/ GET throw exception: " . $e);

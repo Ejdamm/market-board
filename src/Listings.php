@@ -29,8 +29,7 @@ class Listings
     {
 
         #sortingColumn and sortingOrder need manual sanitizing because you can't prepare column names and ASC/DESC
-        switch($sortingColumn)
-        {
+        switch ($sortingColumn) {
             case 'unit_price':
                 $sort = 'unit_price';
                 break;
@@ -40,8 +39,7 @@ class Listings
                 break;
         }
 
-        switch($sortingOrder)
-        {
+        switch ($sortingOrder) {
             case ASCENDING:
                 $order = ASCENDING;
                 break;

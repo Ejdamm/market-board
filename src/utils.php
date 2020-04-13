@@ -29,3 +29,38 @@ function get_subcategories($db)
 
     return $result;
 }
+
+/**
+ * Returns an array with sorting parameters for listing page
+ * sorting_column == null means sorting isn't requested and it falls back to default sorting
+ */
+function get_sorting($sorting_column, $order)
+{
+    $orders = [
+        'DESC' => '-down',
+        'ASC' => '-up'
+    ];
+    $current_column = $sorting_column;
+    $current_order = $order == 'NONE' ? 'DESC' : $order;
+    $toggle_order = $current_order == 'ASC' ? 'DESC' : 'ASC';
+    $price_class = '';
+    $date_class = '';
+
+    if ($sorting_column == 'created_at') {
+        $date_class = $orders[$toggle_order];
+    } elseif ($sorting_column == 'unit_price') {
+        $price_class = $orders[$toggle_order];
+    } else {
+        $current_column = 'created_at';
+        $current_order = 'DESC';
+        $toggle_order = 'ASC';
+    }
+
+    return [
+        'price_class' => $price_class,
+        'date_class' => $date_class,
+        'current_order' => $current_order,
+        'toggle_order' => $toggle_order,
+        'column' => $current_column
+    ];
+}

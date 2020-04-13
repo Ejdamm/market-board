@@ -272,5 +272,4 @@ class ListingsTest extends TestCase
         $this->assertGreaterThanOrEqual($actual[1]['created_at'], $actual[0]['created_at']);
         $this->assertGreaterThanOrEqual($actual[2]['created_at'], $actual[1]['created_at']);
     }
-
 }
