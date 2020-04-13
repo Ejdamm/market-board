@@ -66,6 +66,7 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
         $window_stop = ($window_start + 4) < $last_page ? ($window_start + 4) : $last_page;
 
         $all_listings = $listings->getMultipleListings($limit, $offset);
+        $sort_order = '';
 
         return $this->view->render($response, 'all_listings.html.twig', [
             'listings' => $all_listings,
@@ -78,6 +79,7 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
                 'window_start' => $window_start,
                 'window_stop' => $window_stop
             ],
+            'sort_order' => $sort_order,
         ]);
     } catch (Exception $e) {
         $this->logger->addError("/listings/ GET throw exception: " . $e);

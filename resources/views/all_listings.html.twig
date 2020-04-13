@@ -5,8 +5,8 @@
     <div class="list-group-item font-weight-bold">
       <div class="row">
         <span class="px-1 col-8">Tävling</span>
-        <span class="px-1 col-2 text-center">Styckpris</span>
-        <span class="px-1 col-2 text-right">Tillagd</span>
+        <a class="deco-none px-1 col-2 text-center" href="?page={{ pagination.page }}&sorting_column=unit_price&order={{ sorting.toggle_order }}">Styckpris <i class="fas fa-sort{{ sorting.price_class }}"></i></a>
+        <a class="deco-none px-1 col-2 text-right" href="?page={{ pagination.page }}&sorting_column=created_at&order={{ sorting.toggle_order }}">Tillagd <i class="fas fa-sort{{ sorting.date_class }}"></i></a>
       </div>
     </div>
     {% for listing in listings %}
@@ -24,31 +24,31 @@
     <nav aria-label="Page navigation">
       <ul class="pagination justify-content-center py-4">
         <li class="page-item {% if pagination.page == 1 %}disabled{% endif %}">
-          <a class="page-link" href="?page=1">First</a>
+          <a class="page-link" href="?page=1&sorting_column={{ sorting.column }}&order={{ sorting.current_order }}">First</a>
         </li>
         <li class="page-item {% if pagination.page == 1 %}disabled{% endif %}">
-          <a class="page-link" href="?page={{ pagination.page - 1 }}">Previous</a>
+          <a class="page-link" href="?page={{ pagination.page - 1 }}&sorting_column={{ sorting.column }}&order={{ sorting.current_order }}">Previous</a>
         </li>
         {% if pagination.window_start > 1 %}
           <li class="page-item disabled">
-            <a class="page-link" href="?page={{ pagination.window_start - 1 }}">...</a>
+            <a class="page-link" href="?page={{ pagination.window_start - 1 }}&sorting_column={{ sorting.column }}&order={{ sorting.current_order }}">...</a>
           </li>
         {% endif %}
         {% for i in pagination.window_start..pagination.window_stop %}
         <li class="page-item {% if i == pagination.page %}active{% endif %}">
-          <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+          <a class="page-link" href="?page={{ i }}&sorting_column={{ sorting.column }}&order={{ sorting.current_order }}">{{ i }}</a>
         </li>
         {% endfor %}
         {% if pagination.window_stop < pagination.last_page %}
           <li class="page-item disabled">
-            <a class="page-link" href="?page={{ pagination.window_stop + 1 }}">...</a>
+            <a class="page-link" href="?page={{ pagination.window_stop + 1 }}&sorting_column={{ sorting.column }}&order={{ sorting.current_order }}">...</a>
           </li>
         {% endif %}
         <li class="page-item {% if pagination.page == pagination.last_page %}disabled{% endif %}">
-          <a class="page-link" href="?page={{ pagination.page + 1 }}">Next</a>
+          <a class="page-link" href="?page={{ pagination.page + 1 }}&sorting_column={{ sorting.column }}&order={{ sorting.current_order }}">Next</a>
         </li>
         <li class="page-item {% if pagination.page == pagination.last_page %}disabled{% endif %}">
-          <a class="page-link" href="?page={{ pagination.last_page }}">Last</a>
+          <a class="page-link" href="?page={{ pagination.last_page }}&sorting_column={{ sorting.column }}&order={{ sorting.current_order }}">Last</a>
         </li>
       </ul>
     </nav>
