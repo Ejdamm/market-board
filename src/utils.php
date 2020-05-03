@@ -37,12 +37,12 @@ function get_subcategories($db)
 function get_sorting($sorting_column, $order)
 {
     $orders = [
-        'DESC' => '-down',
-        'ASC' => '-up'
+        DESCENDING => '-up',
+        ASCENDING => '-down'
     ];
     $current_column = $sorting_column;
-    $current_order = $order == 'NONE' ? 'DESC' : $order;
-    $toggle_order = $current_order == 'ASC' ? 'DESC' : 'ASC';
+    $current_order = $order == null ? DESCENDING : $order;
+    $toggle_order = $current_order == ASCENDING ? DESCENDING : ASCENDING;
     $price_class = '';
     $date_class = '';
 
@@ -52,8 +52,8 @@ function get_sorting($sorting_column, $order)
         $price_class = $orders[$toggle_order];
     } else {
         $current_column = 'created_at';
-        $current_order = 'DESC';
-        $toggle_order = 'ASC';
+        $current_order = DESCENDING;
+        $toggle_order = ASCENDING;
     }
 
     return [

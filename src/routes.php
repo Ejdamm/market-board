@@ -64,11 +64,16 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
         $window_start = ($page - 2) > 2 ? $page - 2 : 1;
         $window_stop = ($window_start + 4) < $last_page ? ($window_start + 4) : $last_page;
 
+        $GET_sorting_column = $request->getParam('sorting_column', null);
+        $GET_order = $request->getParam('order', null);
+        if ($GET_sorting_column != null || $GET_order != null) {
+            $this->session->set('sorting_column', $GET_sorting_column);
+            $this->session->set('order', $GET_order);
+        }
 
-        $sorting_column = $request->getParam('sorting_column', null);
-        $order = $request->getParam('order', 'NONE');
-        $sorting = get_sorting($sorting_column, $order);
-
+        $SESSION_sorting_column = $this->session->get('sorting_column', null);
+        $SESSION_order = $this->session->get('order', null);
+        $sorting = get_sorting($SESSION_sorting_column, $SESSION_order);
 
         $all_listings = $listings->getMultipleListings($limit, $offset, $sorting['column'], $sorting['current_order']);
 

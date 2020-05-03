@@ -2,6 +2,7 @@
     <testsuites>
         <testsuite name="StartplatserTest">
             <directory>tests</directory>
+            <exclude>tests/functional/</exclude>
         </testsuite>
     </testsuites>
     <filter>

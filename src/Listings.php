@@ -5,6 +5,8 @@ namespace Startplats;
 
 use PDO;
 
+include_once __DIR__ . '/utils.php';
+
 class Listings
 {
     private $db;
@@ -27,7 +29,6 @@ class Listings
 
     public function getMultipleListings(int $limit, int $offset, string $sortingColumn = "created_at", string $sortingOrder = DESCENDING)
     {
-
         #sortingColumn and sortingOrder need manual sanitizing because you can't prepare column names and ASC/DESC
         switch ($sortingColumn) {
             case 'unit_price':

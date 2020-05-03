@@ -32,8 +32,6 @@ class ListingsTest extends TestCase
         "quantity" => "3",
     ];
 
-
-
     private static $category = [
         "category_name" => "category_test",
     ];
