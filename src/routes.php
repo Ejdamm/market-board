@@ -58,8 +58,11 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
 
         $count = $listings->getNrOfListings();
         $limit = 20; //TODO should be configurable
-        $page = ($request->getParam('page', 0) > 0) ? $request->getParam('page') : 1;
-        $paging = get_paging($page, $count, $limit);
+        $GET_page = $request->getParam('page', null);
+        if ($GET_page && is_numeric($GET_page) && intval($GET_page) > 0) {
+            $this->session->set('paging', $GET_page);
+        }
+        $paging = get_paging($this->session->get('paging', 1), $count, $limit);
 
         $GET_sorting_column = $request->getParam('sorting_column', null);
         $GET_order = $request->getParam('order', null);
@@ -80,7 +83,7 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
             'pagination' => [
                 'needed' => $count > $limit,
                 'count' => $count,
-                'page' => $page,
+                'page' => $paging['page'],
                 'last_page' => $paging['last_page'],
                 'limit' => $limit,
                 'window_start' => $paging['window_start'],

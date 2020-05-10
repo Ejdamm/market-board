@@ -68,9 +68,10 @@ function get_sorting($sorting_column, $order)
 function get_paging($page, $count, $limit)
 {
     $paging = [];
-    $paging['offset'] = ($page - 1) * $limit;
     $paging['last_page'] = (ceil($count / $limit) == 0 ? 1 : ceil($count / $limit));
-    $paging['window_start'] = ($page - 2) > 2 ? $page - 2 : 1;
+    $paging['page'] = $page <= $paging['last_page'] ? $page : $paging['last_page'];
+    $paging['offset'] = ($paging['page'] - 1) * $limit;
+    $paging['window_start'] = ($paging['page'] - 2) > 2 ? $paging['page'] - 2 : 1;
     $paging['window_stop'] = ($paging['window_start'] + 4) < $paging['last_page'] ? ($paging['window_start'] + 4) : $paging['last_page'];
     return $paging;
 }
