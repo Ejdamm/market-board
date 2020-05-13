@@ -16,6 +16,7 @@ class ListingsTest extends TestCase
         "subcategory_id" => null,
         "price" => "123",
         "quantity" => "2",
+        "removal_code" => "AAAAAA"
     ];
 
     private static $listing_data2 = [
@@ -23,6 +24,7 @@ class ListingsTest extends TestCase
         "subcategory_id" => null,
         "price" => "456",
         "quantity" => "3",
+        "removal_code" => "AAAAAA"
     ];
 
     private static $category = [
@@ -105,16 +107,15 @@ class ListingsTest extends TestCase
 
     public function testInsertListing()
     {
-        $insertId = self::$listings->insertListing(self::$listing_data1);
-        $this->assertNotNull($insertId);
-        $lastInsertedId = $insertId;
-        return $lastInsertedId;
+        $insert_id = self::$listings->insertListing(self::$listing_data1);
+        $this->assertNotNull($insert_id);
+        return $insert_id;
     }
 
     /**
      * @depends testInsertListing
      */
-    public function testGetSingleListingThatExist($lastInsertedId)
+    public function testGetSingleListingThatExist($last_inserted_id)
     {
         $expected = [
             "subcategory_name" => self::$subcategory["subcategory_name"],
@@ -123,17 +124,43 @@ class ListingsTest extends TestCase
             "price" => self::$listing_data1["price"],
             "quantity" => self::$listing_data1["quantity"]
         ];
-        $actual = self::$listings->getSingleListing($lastInsertedId);
+        $actual = self::$listings->getSingleListing($last_inserted_id);
         $this->assertArraySubset($expected, $actual);
     }
 
     /**
      * @depends testInsertListing
      */
-    public function testGetSingleListingThatDontExist($lastInsertedId)
+    public function testGetSingleListingThatDontExist($last_inserted_id)
     {
-        $actual = self::$listings->getSingleListing($lastInsertedId + 1);
+        $actual = self::$listings->getSingleListing($last_inserted_id + 1);
         $this->assertFalse($actual);
+    }
+
+    /**
+     * @depends testInsertListing
+     */
+    public function testRemoveListingThatExists($last_inserted_id)
+    {
+        $before = self::$listings->getNrOfListings();
+        $actual = self::$listings->removeListing($last_inserted_id, self::$listing_data1['removal_code']);
+        $after = self::$listings->getNrOfListings();
+
+        $this->assertEquals(1, $actual, "Last inserted id: $last_inserted_id");
+        $this->assertGreaterThan($after, $before);
+    }
+
+    /**
+     * @depends testInsertListing
+     */
+    public function testRemoveListingThatDoesntExists($last_inserted_id)
+    {
+        $before = self::$listings->getNrOfListings();
+        $actual = self::$listings->removeListing($last_inserted_id+10, self::$listing_data1['removal_code']);
+        $after = self::$listings->getNrOfListings();
+
+        $this->assertEquals(0, $actual, "Last inserted id: $last_inserted_id");
+        $this->assertEquals($before, $after);
     }
 
     /**

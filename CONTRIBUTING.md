@@ -12,6 +12,7 @@
 * To run all tests locally: run `composer test` from root.
 * Run single test: `composer test tests/Functional/HomepageTest.php`
 * Git hooks should be used to prevent untested code to be pushed.
+* Email tests can be done with [mailtrap.io](https://mailtrap.io)
 
 ### Troubleshooting for test
 * `Error: Class 'path/to/class' not found`
