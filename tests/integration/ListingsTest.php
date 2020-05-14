@@ -16,6 +16,7 @@ class ListingsTest extends TestCase
         "subcategory_id" => null,
         "unit_price" => "123",
         "quantity" => "2",
+        "removal_code" => "AAAAAA"
     ];
 
     private static $listing_data2 = [
@@ -23,6 +24,7 @@ class ListingsTest extends TestCase
         "subcategory_id" => null,
         "unit_price" => "789",
         "quantity" => "1",
+        "removal_code" => "AAAAAA"
     ];
 
     private static $listing_data3 = [
@@ -30,6 +32,7 @@ class ListingsTest extends TestCase
         "subcategory_id" => null,
         "unit_price" => "456",
         "quantity" => "3",
+        "removal_code" => "AAAAAA"
     ];
 
     private static $category = [
@@ -113,16 +116,15 @@ class ListingsTest extends TestCase
 
     public function testInsertListing()
     {
-        $insertId = self::$listings->insertListing(self::$listing_data1);
-        $this->assertNotNull($insertId);
-        $lastInsertedId = $insertId;
-        return $lastInsertedId;
+        $insert_id = self::$listings->insertListing(self::$listing_data1);
+        $this->assertNotNull($insert_id);
+        return $insert_id;
     }
 
     /**
      * @depends testInsertListing
      */
-    public function testGetSingleListingThatExist($lastInsertedId)
+    public function testGetSingleListingThatExist($last_inserted_id)
     {
         $expected = [
             "subcategory_name" => self::$subcategory["subcategory_name"],
@@ -131,17 +133,43 @@ class ListingsTest extends TestCase
             "unit_price" => self::$listing_data1["unit_price"],
             "quantity" => self::$listing_data1["quantity"]
         ];
-        $actual = self::$listings->getSingleListing($lastInsertedId);
+        $actual = self::$listings->getSingleListing($last_inserted_id);
         $this->assertArraySubset($expected, $actual);
     }
 
     /**
      * @depends testInsertListing
      */
-    public function testGetSingleListingThatDontExist($lastInsertedId)
+    public function testGetSingleListingThatDontExist($last_inserted_id)
     {
-        $actual = self::$listings->getSingleListing($lastInsertedId + 1);
+        $actual = self::$listings->getSingleListing($last_inserted_id + 1);
         $this->assertFalse($actual);
+    }
+
+    /**
+     * @depends testInsertListing
+     */
+    public function testRemoveListingThatExists($last_inserted_id)
+    {
+        $before = self::$listings->getNrOfListings();
+        $actual = self::$listings->removeListing($last_inserted_id, self::$listing_data1['removal_code']);
+        $after = self::$listings->getNrOfListings();
+
+        $this->assertEquals(1, $actual, "Last inserted id: $last_inserted_id");
+        $this->assertGreaterThan($after, $before);
+    }
+
+    /**
+     * @depends testInsertListing
+     */
+    public function testRemoveListingThatDoesntExists($last_inserted_id)
+    {
+        $before = self::$listings->getNrOfListings();
+        $actual = self::$listings->removeListing($last_inserted_id+10, self::$listing_data1['removal_code']);
+        $after = self::$listings->getNrOfListings();
+
+        $this->assertEquals(0, $actual, "Last inserted id: $last_inserted_id");
+        $this->assertEquals($before, $after);
     }
 
     /**
@@ -236,7 +264,7 @@ class ListingsTest extends TestCase
      */
     public function testSortedListingsAscendingPrice()
     {
-        $actual = self::$listings->getMultipleListings(3, 0, "unit_price", ASCENDING);
+        $actual = self::$listings->getMultipleListings(3, 0, "unit_price", "ASC");
         $this->assertLessThanOrEqual($actual[1]['unit_price'], $actual[0]['unit_price']);
         $this->assertLessThanOrEqual($actual[2]['unit_price'], $actual[1]['unit_price']);
     }
@@ -246,7 +274,7 @@ class ListingsTest extends TestCase
      */
     public function testSortedListingsDescendingPrice()
     {
-        $actual = self::$listings->getMultipleListings(3, 0, "unit_price", DESCENDING);
+        $actual = self::$listings->getMultipleListings(3, 0, "unit_price", "DESC");
         $this->assertGreaterThanOrEqual($actual[1]['unit_price'], $actual[0]['unit_price']);
         $this->assertGreaterThanOrEqual($actual[2]['unit_price'], $actual[1]['unit_price']);
     }
@@ -256,7 +284,7 @@ class ListingsTest extends TestCase
      */
     public function testSortedListingsAscendingDate()
     {
-        $actual = self::$listings->getMultipleListings(3, 0, "created_at", ASCENDING);
+        $actual = self::$listings->getMultipleListings(3, 0, "created_at", "ASC");
         $this->assertLessThanOrEqual($actual[1]['created_at'], $actual[0]['created_at']);
         $this->assertLessThanOrEqual($actual[2]['created_at'], $actual[1]['created_at']);
     }
@@ -266,7 +294,7 @@ class ListingsTest extends TestCase
      */
     public function testSortedListingsDescendingDate()
     {
-        $actual = self::$listings->getMultipleListings(3, 0, "created_at", DESCENDING);
+        $actual = self::$listings->getMultipleListings(3, 0, "created_at", "DESC");
         $this->assertGreaterThanOrEqual($actual[1]['created_at'], $actual[0]['created_at']);
         $this->assertGreaterThanOrEqual($actual[2]['created_at'], $actual[1]['created_at']);
     }

@@ -5,8 +5,6 @@ namespace Startplats;
 
 use PDO;
 
-include_once __DIR__ . '/utils.php';
-
 class Listings
 {
     private $db;
@@ -27,7 +25,7 @@ class Listings
         return $result;
     }
 
-    public function getMultipleListings(int $limit, int $offset, string $sortingColumn = "created_at", string $sortingOrder = DESCENDING)
+    public function getMultipleListings(int $limit, int $offset, string $sortingColumn = "created_at", string $sortingOrder = "DESC")
     {
         #sortingColumn and sortingOrder need manual sanitizing because you can't prepare column names and ASC/DESC
         switch ($sortingColumn) {
@@ -40,15 +38,7 @@ class Listings
                 break;
         }
 
-        switch ($sortingOrder) {
-            case ASCENDING:
-                $order = ASCENDING;
-                break;
-            case DESCENDING:
-            default:
-                $order = DESCENDING;
-                break;
-        }
+        $order = $sortingOrder == "ASC" ? $sortingOrder : "DESC";
 
         $query = "SELECT listings.id, subcategory_name, category_name, email, unit_price, quantity, created_at
             FROM listings 
@@ -62,16 +52,29 @@ class Listings
 
     public function insertListing($params)
     {
-        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity) VALUES(?,?,?,?);";
+        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code) VALUES(?,?,?,?,?);";
         $params = array_values([
             $params['email'],
             $params['subcategory_id'],
             $params['unit_price'],
-            $params['quantity']
+            $params['quantity'],
+            $params['removal_code']
         ]);
         $this->prepareAndExecute($query, $params);
-        $insertedId = $this->db->lastInsertId();
-        return intval($insertedId);
+        $inserted_id = $this->db->lastInsertId();
+        return intval($inserted_id);
+    }
+
+    public function removeListing($listing_id, $removal_code)
+    {
+        $query = "DELETE FROM listings WHERE id = ? AND removal_code = ?;";
+        $params = array_values([
+            $listing_id,
+            $removal_code
+        ]);
+        $statement = $this->prepareAndExecute($query, $params);
+        $affected_rows = $statement->rowCount();
+        return intval($affected_rows);
     }
 
     public function getNrOfListings()
