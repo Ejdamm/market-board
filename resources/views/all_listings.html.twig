@@ -5,15 +5,15 @@
     <div class="list-group-item font-weight-bold">
       <div class="row">
         <span class="px-1 col-8">Tävling</span>
-        <span class="px-1 col-2 text-center">Styckpris</span>
-        <span class="px-1 col-2 text-right">Tillagd</span>
+        <a class="deco-none px-1 col-2 text-center" href="?page={{ pagination.page }}&sorting_column=unit_price&order={{ sorting.toggle_order }}">Styckpris <i class="fas fa-sort{{ sorting.price_class }}"></i></a>
+        <a class="deco-none px-1 col-2 text-right" href="?page={{ pagination.page }}&sorting_column=created_at&order={{ sorting.toggle_order }}">Tillagd <i class="fas fa-sort{{ sorting.date_class }}"></i></a>
       </div>
     </div>
     {% for listing in listings %}
       <a class="list-group-item" href="/listings/{{ listing.id }}">
         <div class="row">
           <span class="px-1 col-8">{{ listing.subcategory_name }}</span>
-          <span class="px-1 col-2 text-center">{{ listing.price / listing.quantity }}</span>
+          <span class="px-1 col-2 text-center">{{ listing.unit_price }}</span>
           <span class="px-1 col-2 text-right">{{ listing.created_at }}</span>
         </div>
       </a>

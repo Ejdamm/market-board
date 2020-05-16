@@ -15,8 +15,10 @@ use Slim\Http\Environment;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Http\Uri;
+use Slim\Middleware\Session;
 use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
+use SlimSession\Helper;
 use Twig\TwigFilter;
 
 /**
@@ -68,6 +70,11 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
     {
         // Instantiate the application
         $app = new App($this->config);
+
+        $app->add(new Session([
+            'name' => 'my_session',
+            'autorefresh' => true
+        ]));
 
         self::$container =  $app->getContainer();
         self::$container['db'] = function ($container) {
@@ -121,6 +128,10 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
             ]);
             $mailer->setDefaultFrom($conf['from'], $conf['name']);
             return $mailer;
+        };
+
+        self::$container['session'] = function ($container) {
+            return new Helper;
         };
 
         // To make sure the log is empty at the start of the run

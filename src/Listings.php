@@ -16,7 +16,7 @@ class Listings
 
     public function getSingleListing(int $id)
     {
-        $query = "SELECT subcategory_name, category_name, email, price, quantity, created_at FROM listings
+        $query = "SELECT subcategory_name, category_name, email, unit_price, quantity, created_at FROM listings
             INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
             INNER JOIN categories ON subcategories.category_id = categories.id
             WHERE listings.id = ?;";
@@ -25,13 +25,26 @@ class Listings
         return $result;
     }
 
-    public function getMultipleListings(int $limit, int $offset)
+    public function getMultipleListings(int $limit, int $offset, string $sortingColumn = "created_at", string $sortingOrder = "DESC")
     {
-        $query = "SELECT listings.id, subcategory_name, category_name, email, price, quantity, created_at
+        #sortingColumn and sortingOrder need manual sanitizing because you can't prepare column names and ASC/DESC
+        switch ($sortingColumn) {
+            case 'unit_price':
+                $sort = 'unit_price';
+                break;
+            case 'created_at':
+            default:
+                $sort = 'created_at';
+                break;
+        }
+
+        $order = $sortingOrder == "ASC" ? $sortingOrder : "DESC";
+
+        $query = "SELECT listings.id, subcategory_name, category_name, email, unit_price, quantity, created_at
             FROM listings 
             INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
             INNER JOIN categories ON subcategories.category_id = categories.id
-            ORDER BY created_at DESC LIMIT ? OFFSET ?;";
+            ORDER BY $sort $order LIMIT ? OFFSET ?;";
         $statement = $this->prepareAndExecute($query, [$limit, $offset]);
         $result = $statement->fetchAll();
         return $result;
@@ -39,11 +52,11 @@ class Listings
 
     public function insertListing($params)
     {
-        $query = "INSERT INTO listings(email, subcategory_id, price, quantity, removal_code) VALUES(?,?,?,?,?);";
+        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code) VALUES(?,?,?,?,?);";
         $params = array_values([
             $params['email'],
             $params['subcategory_id'],
-            $params['price'],
+            $params['unit_price'],
             $params['quantity'],
             $params['removal_code']
         ]);

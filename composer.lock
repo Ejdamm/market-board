@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "8bb32ca0c697f3b4c009c3a61e2a39fb",
+    "content-hash": "7e6f86e3b5c1e59f49a4e297cd68a51d",
     "packages": [
         {
             "name": "andrewdyer/slim3-mailer",
@@ -58,6 +58,54 @@
                 "swiftmailer"
             ],
             "time": "2019-05-22T18:12:06+00:00"
+        },
+        {
+            "name": "bryanjhv/slim-session",
+            "version": "3.6.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bryanjhv/slim-session.git",
+                "reference": "0f73fbee8e49fc5c0021f06c99f8b8418de888fc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bryanjhv/slim-session/zipball/0f73fbee8e49fc5c0021f06c99f8b8418de888fc",
+                "reference": "0f73fbee8e49fc5c0021f06c99f8b8418de888fc",
+                "shasum": ""
+            },
+            "require": {
+                "slim/slim": "^3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bryan Horna",
+                    "email": "bryanjhv@gmail.com",
+                    "homepage": "https://bryanjhv.github.io",
+                    "role": "developer"
+                }
+            ],
+            "description": "Session middleware and helper for Slim framework 3.",
+            "homepage": "https://github.com/bryanjhv/slim-session",
+            "keywords": [
+                "helper",
+                "middleware",
+                "session",
+                "slim"
+            ],
+            "time": "2020-04-28T19:20:28+00:00"
         },
         {
             "name": "cakephp/cache",

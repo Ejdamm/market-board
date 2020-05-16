@@ -7,7 +7,7 @@ class ListingPageTest extends BaseTestCase
     private static $listing_data1 = [
         "email" => "test@test.com",
         "subcategory_id" => null,
-        "price" => "123",
+        "unit_price" => "123",
         "quantity" => "2",
         "removal_code" => "AAAAAA"
     ];
@@ -15,7 +15,7 @@ class ListingPageTest extends BaseTestCase
     private static $listing_data2 = [
         "email" => "test2@test.com",
         "subcategory_id" => null,
-        "price" => "456",
+        "unit_price" => "456",
         "quantity" => "3",
         "removal_code" => "AAAAAA"
     ];
@@ -111,7 +111,7 @@ class ListingPageTest extends BaseTestCase
      */
     public function testGETAllListings()
     {
-        $query = "INSERT INTO listings(email, subcategory_id, price, quantity, removal_code) VALUES(?,?,?,?,?);";
+        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code) VALUES(?,?,?,?,?);";
         $statement1 = self::$container['db']->prepare($query);
         $statement1->execute(array_values(self::$listing_data1));
         $statement2 = self::$container['db']->prepare($query);
@@ -125,10 +125,8 @@ class ListingPageTest extends BaseTestCase
         $htmlBody = (string)$response->getBody();
 
         // Verify input fields
-        $unit_price1 = self::$listing_data1['price'] / self::$listing_data1['quantity'];
-        $unit_price2 = self::$listing_data2['price'] / self::$listing_data2['quantity'];
-        $this->assertStringContainsString($unit_price1, $htmlBody);
-        $this->assertStringContainsString($unit_price2, $htmlBody);
+        $this->assertStringContainsString(self::$listing_data1['unit_price'], $htmlBody);
+        $this->assertStringContainsString(self::$listing_data2['unit_price'], $htmlBody);
         $this->assertStringContainsString(self::$subcategory['subcategory_name'], $htmlBody);
     }
 
@@ -138,7 +136,7 @@ class ListingPageTest extends BaseTestCase
      */
     public function testGETSingleListing()
     {
-        $query = "INSERT INTO listings(email, subcategory_id, price, quantity, removal_code) VALUES(?,?,?,?,?);";
+        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code) VALUES(?,?,?,?,?);";
         $statement1 = self::$container['db']->prepare($query);
         $statement1->execute(array_values(self::$listing_data1));
         $inserted_id = self::$container['db']->lastInsertId();
@@ -154,7 +152,7 @@ class ListingPageTest extends BaseTestCase
 
         // Verify input fields
         $this->assertStringContainsString(self::$listing_data1['email'], $htmlBody);
-        $this->assertStringContainsString(self::$listing_data1['price'], $htmlBody);
+        $this->assertStringContainsString(self::$listing_data1['unit_price'], $htmlBody);
         $this->assertStringContainsString(self::$listing_data1['quantity'], $htmlBody);
         $this->assertStringContainsString(self::$subcategory['subcategory_name'], $htmlBody);
         $this->assertStringContainsString(self::$category['category_name'], $htmlBody);

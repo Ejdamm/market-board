@@ -61,13 +61,24 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
 
         $page = ($request->getParam('page', 0) > 0) ? $request->getParam('page') : 1;
         $limit = 20; //TODO should be configurable
-        $count = isset($count['count']) != null ? $count['count'] : 0;
         $offset = ($page - 1) * $limit;
         $last_page = (ceil($count / $limit) == 0 ? 1 : ceil($count / $limit));
         $window_start = ($page - 2) > 2 ? $page - 2 : 1;
         $window_stop = ($window_start + 4) < $last_page ? ($window_start + 4) : $last_page;
 
-        $all_listings = $listings->getMultipleListings($limit, $offset);
+        $GET_sorting_column = $request->getParam('sorting_column', null);
+        $GET_order = $request->getParam('order', null);
+        if ($GET_sorting_column != null || $GET_order != null) {
+            $this->session->set('sorting_column', $GET_sorting_column);
+            $this->session->set('order', $GET_order);
+        }
+
+        $SESSION_sorting_column = $this->session->get('sorting_column', null);
+        $SESSION_order = $this->session->get('order', null);
+        $sorting = Utils::get_sorting($SESSION_sorting_column, $SESSION_order);
+
+        $all_listings = $listings->getMultipleListings($limit, $offset, $sorting['column'], $sorting['current_order']);
+
 
         return $this->view->render($response, 'all_listings.html.twig', [
             'listings' => $all_listings,
@@ -80,6 +91,7 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
                 'window_start' => $window_start,
                 'window_stop' => $window_stop
             ],
+            'sorting' => $sorting,
         ]);
     } catch (Exception $e) {
         $this->logger->addError("/listings/ GET throw exception: " . $e);

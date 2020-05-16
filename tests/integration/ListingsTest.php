@@ -14,15 +14,23 @@ class ListingsTest extends TestCase
     private static $listing_data1 = [
         "email" => "test@test.com",
         "subcategory_id" => null,
-        "price" => "123",
+        "unit_price" => "123",
         "quantity" => "2",
         "removal_code" => "AAAAAA"
     ];
 
     private static $listing_data2 = [
+        "email" => "test3@test.com",
+        "subcategory_id" => null,
+        "unit_price" => "789",
+        "quantity" => "1",
+        "removal_code" => "AAAAAA"
+    ];
+
+    private static $listing_data3 = [
         "email" => "test2@test.com",
         "subcategory_id" => null,
-        "price" => "456",
+        "unit_price" => "456",
         "quantity" => "3",
         "removal_code" => "AAAAAA"
     ];
@@ -65,7 +73,7 @@ class ListingsTest extends TestCase
 
         self::$listing_data1["subcategory_id"] = $subcategoryId;
         self::$listing_data2["subcategory_id"] = $subcategoryId;
-
+        self::$listing_data3["subcategory_id"] = $subcategoryId;
 
         self::$listings = new Listings(self::$db);
     }
@@ -74,6 +82,7 @@ class ListingsTest extends TestCase
     {
         self::clearDatabaseOf("listings", self::$listing_data1);
         self::clearDatabaseOf("listings", self::$listing_data2);
+        self::clearDatabaseOf("listings", self::$listing_data3);
         self::clearDatabaseOf("subcategories", self::$subcategory);
         self::clearDatabaseOf("categories", self::$category);
     }
@@ -121,7 +130,7 @@ class ListingsTest extends TestCase
             "subcategory_name" => self::$subcategory["subcategory_name"],
             "category_name" => self::$category["category_name"],
             "email" => self::$listing_data1["email"],
-            "price" => self::$listing_data1["price"],
+            "unit_price" => self::$listing_data1["unit_price"],
             "quantity" => self::$listing_data1["quantity"]
         ];
         $actual = self::$listings->getSingleListing($last_inserted_id);
@@ -170,14 +179,16 @@ class ListingsTest extends TestCase
     {
         self::clearDatabaseOf("listings", self::$listing_data1);
         self::clearDatabaseOf("listings", self::$listing_data2);
+        self::clearDatabaseOf("listings", self::$listing_data3);
         self::$listings->insertListing(self::$listing_data1);
         self::$listings->insertListing(self::$listing_data2);
+        self::$listings->insertListing(self::$listing_data3);
 
         $expected1 = [
             "subcategory_name" => self::$subcategory["subcategory_name"],
             "category_name" => self::$category["category_name"],
             "email" => self::$listing_data1["email"],
-            "price" => self::$listing_data1["price"],
+            "unit_price" => self::$listing_data1["unit_price"],
             "quantity" => self::$listing_data1["quantity"]
         ];
 
@@ -185,14 +196,24 @@ class ListingsTest extends TestCase
             "subcategory_name" => self::$subcategory["subcategory_name"],
             "category_name" => self::$category["category_name"],
             "email" => self::$listing_data2["email"],
-            "price" => self::$listing_data2["price"],
+            "unit_price" => self::$listing_data2["unit_price"],
             "quantity" => self::$listing_data2["quantity"]
         ];
 
-        $actual = self::$listings->getMultipleListings(2, 0);
+        $expected3 = [
+            "subcategory_name" => self::$subcategory["subcategory_name"],
+            "category_name" => self::$category["category_name"],
+            "email" => self::$listing_data3["email"],
+            "unit_price" => self::$listing_data3["unit_price"],
+            "quantity" => self::$listing_data3["quantity"]
+        ];
+
+
+        $actual = self::$listings->getMultipleListings(3, 0);
 
         $this->assertArraySubset($expected1, $actual[0]);
         $this->assertArraySubset($expected2, $actual[1]);
+        $this->assertArraySubset($expected3, $actual[2]);
     }
 
     /**
@@ -213,7 +234,7 @@ class ListingsTest extends TestCase
             "subcategory_name" => self::$subcategory["subcategory_name"],
             "category_name" => self::$category["category_name"],
             "email" => self::$listing_data2["email"],
-            "price" => self::$listing_data2["price"],
+            "unit_price" => self::$listing_data2["unit_price"],
             "quantity" => self::$listing_data2["quantity"]
         ];
 
@@ -236,5 +257,45 @@ class ListingsTest extends TestCase
         self::$listings->insertListing(self::$listing_data1);
         $after = self::$listings->getNrOfListings();
         $this->assertGreaterThan($before, $after);
+    }
+
+    /**
+     * @depends testGetMultipleListings
+     */
+    public function testSortedListingsAscendingPrice()
+    {
+        $actual = self::$listings->getMultipleListings(3, 0, "unit_price", "ASC");
+        $this->assertLessThanOrEqual($actual[1]['unit_price'], $actual[0]['unit_price']);
+        $this->assertLessThanOrEqual($actual[2]['unit_price'], $actual[1]['unit_price']);
+    }
+
+    /**
+     * @depends testGetMultipleListings
+     */
+    public function testSortedListingsDescendingPrice()
+    {
+        $actual = self::$listings->getMultipleListings(3, 0, "unit_price", "DESC");
+        $this->assertGreaterThanOrEqual($actual[1]['unit_price'], $actual[0]['unit_price']);
+        $this->assertGreaterThanOrEqual($actual[2]['unit_price'], $actual[1]['unit_price']);
+    }
+
+    /**
+     * @depends testGetMultipleListings
+     */
+    public function testSortedListingsAscendingDate()
+    {
+        $actual = self::$listings->getMultipleListings(3, 0, "created_at", "ASC");
+        $this->assertLessThanOrEqual($actual[1]['created_at'], $actual[0]['created_at']);
+        $this->assertLessThanOrEqual($actual[2]['created_at'], $actual[1]['created_at']);
+    }
+
+    /**
+     * @depends testGetMultipleListings
+     */
+    public function testSortedListingsDescendingDate()
+    {
+        $actual = self::$listings->getMultipleListings(3, 0, "created_at", "DESC");
+        $this->assertGreaterThanOrEqual($actual[1]['created_at'], $actual[0]['created_at']);
+        $this->assertGreaterThanOrEqual($actual[2]['created_at'], $actual[1]['created_at']);
     }
 }

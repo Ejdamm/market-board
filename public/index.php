@@ -7,14 +7,21 @@ use Slim\App;
 use Slim\Container;
 use Slim\Http\Environment;
 use Slim\Http\Uri;
+use Slim\Middleware\Session;
 use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
+use SlimSession\Helper;
 use Twig\TwigFilter;
 
 require __DIR__ . '/../vendor/autoload.php';
 
 $config = include __DIR__ . '/../config/config.php';
 $app = new App($config);
+
+$app->add(new Session([
+    'name' => 'my_session',
+    'autorefresh' => true
+]));
 
 $container = $app->getContainer();
 $container['db'] = function (Container $container) {
@@ -68,6 +75,10 @@ $container['mailer'] = function (Container $container) {
     ]);
     $mailer->setDefaultFrom($conf['from'], $conf['name']);
     return $mailer;
+};
+
+$container['session'] = function (Container $container) {
+    return new Helper;
 };
 
 
