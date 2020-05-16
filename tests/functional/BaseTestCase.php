@@ -200,8 +200,20 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
         $statement->execute($prepare['params']);
         $queryResult = $statement->fetch();
 
-        // False if no data was found. An object full of data if found.
-        $this->assertNotFalse($queryResult, "Sql query did not find a result from given data!");
+        // Empty if no data was found. An object full of data if found.
+        $this->assertNotEmpty($queryResult, "Sql query did not find a result from given data!");
+    }
+
+    public function verifyEntryRemoved($table, $id)
+    {
+        $prepare = self::createPDOPreparedConditions(['id' => $id]);
+        $query = "SELECT * FROM $table WHERE " . $prepare['conditions'] . ";";
+        $statement = self::$container['db']->prepare($query);
+        $statement->execute($prepare['params']);
+        $queryResult = $statement->fetch();
+
+        // Empty result if listing with id was removed.
+        $this->assertEmpty($queryResult, "Sql query did find a result even if it should be removed!");
     }
 
     /**

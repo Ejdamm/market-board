@@ -9,6 +9,7 @@ class ListingPageTest extends BaseTestCase
         "subcategory_id" => null,
         "unit_price" => "123",
         "quantity" => "2",
+        "removal_code" => "AAAAAA"
     ];
 
     private static $listing_data2 = [
@@ -16,6 +17,7 @@ class ListingPageTest extends BaseTestCase
         "subcategory_id" => null,
         "unit_price" => "456",
         "quantity" => "3",
+        "removal_code" => "AAAAAA"
     ];
 
     private static $category = [
@@ -57,6 +59,8 @@ class ListingPageTest extends BaseTestCase
 
     public static function tearDownAfterClass(): void
     {
+        unset(self::$listing_data1['removal_code']);
+        unset(self::$listing_data2['removal_code']);
         self::clearDatabaseOf("listings", self::$listing_data1);
         self::clearDatabaseOf("listings", self::$listing_data2);
         self::clearDatabaseOf("subcategories", self::$subcategory);
@@ -90,13 +94,15 @@ class ListingPageTest extends BaseTestCase
      */
     public function testPOSTNewListing()
     {
-        $response = $this->processRequest('POST', '/listings/new', self::$listing_data1);
+        $listing_data = self::$listing_data1;
+        unset($listing_data['removal_code']);
+        $response = $this->processRequest('POST', '/listings/new', $listing_data);
         $this->assertEquals(200, $response->getStatusCode());
 
         $this->assertLogDoesNotContain(['ERROR']);
         $this->assertLogContains(["INFO: Parameters inserted"]);
 
-        $this->verifyEntryInserted("listings", self::$listing_data1);
+        $this->verifyEntryInserted("listings", $listing_data);
     }
 
     /**
@@ -105,7 +111,7 @@ class ListingPageTest extends BaseTestCase
      */
     public function testGETAllListings()
     {
-        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity) VALUES(?,?,?,?);";
+        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code) VALUES(?,?,?,?,?);";
         $statement1 = self::$container['db']->prepare($query);
         $statement1->execute(array_values(self::$listing_data1));
         $statement2 = self::$container['db']->prepare($query);
@@ -130,14 +136,14 @@ class ListingPageTest extends BaseTestCase
      */
     public function testGETSingleListing()
     {
-        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity) VALUES(?,?,?,?);";
+        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code) VALUES(?,?,?,?,?);";
         $statement1 = self::$container['db']->prepare($query);
         $statement1->execute(array_values(self::$listing_data1));
-        $insertedId = self::$container['db']->lastInsertId();
+        $inserted_id = self::$container['db']->lastInsertId();
         $statement2 = self::$container['db']->prepare($query);
         $statement2->execute(array_values(self::$listing_data2));
 
-        $response = $this->processRequest('GET', "/listings/$insertedId");
+        $response = $this->processRequest('GET', "/listings/$inserted_id");
         $this->assertEquals(200, $response->getStatusCode());
 
         $this->assertLogDoesNotContain(['ERROR']);
@@ -151,5 +157,23 @@ class ListingPageTest extends BaseTestCase
         $this->assertStringContainsString(self::$subcategory['subcategory_name'], $htmlBody);
         $this->assertStringContainsString(self::$category['category_name'], $htmlBody);
         $this->assertStringNotContainsString(self::$listing_data2['email'], $htmlBody);
+    }
+
+    /**
+     * Verify that the listing is removed from database
+     * when received as POST on '/listings/{id}'
+     */
+    public function testPOSTSingleListing()
+    {
+        $query = "INSERT INTO listings(email, subcategory_id, price, quantity, removal_code) VALUES(?,?,?,?,?);";
+        $statement = self::$container['db']->prepare($query);
+        $statement->execute(array_values(self::$listing_data1));
+        $inserted_id = self::$container['db']->lastInsertId();
+
+        $response = $this->processRequest('POST', "/listings/$inserted_id", self::$listing_data1);
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertLogDoesNotContain(['ERROR']);
+        $this->assertLogContains(["INFO: Listing removed"]);
+        $this->verifyEntryRemoved("listings", $inserted_id);
     }
 }

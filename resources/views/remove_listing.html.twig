@@ -1,0 +1,13 @@
+{% extends 'templates/base.html.twig' %}
+
+{% block content %}
+  {% if affected_rows >= 1 %}
+  <div class="alert alert-success">
+    <strong>Success!</strong> The listing was successfully removed. <a href="/">Go back to start page</a>.
+  </div>
+  {% else %}
+  <div class="alert alert-warning">
+    <strong>Warning!</strong> Something went wrong and the listing was not removed. Please try again later or contact admin. <a href="/listings/{{ listing_id }}">Go back to the listing.</a>
+  </div>
+  {% endif %}
+{% endblock %}
