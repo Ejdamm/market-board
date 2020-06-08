@@ -57,14 +57,14 @@ $app->post('/listings/new', function (Request $request, Response $response) {
 $app->get('/[listings/]', function (Request $request, Response $response) {
     try {
         $listings = new Listings($this->db);
-        $count = $listings->getNrOfListings();
 
-        $page = ($request->getParam('page', 0) > 0) ? $request->getParam('page') : 1;
+        $count = $listings->getNrOfListings();
         $limit = 20; //TODO should be configurable
-        $offset = ($page - 1) * $limit;
-        $last_page = (ceil($count / $limit) == 0 ? 1 : ceil($count / $limit));
-        $window_start = ($page - 2) > 2 ? $page - 2 : 1;
-        $window_stop = ($window_start + 4) < $last_page ? ($window_start + 4) : $last_page;
+        $GET_page = $request->getParam('page', null);
+        if ($GET_page && is_numeric($GET_page) && intval($GET_page) > 0) {
+            $this->session->set('paging', $GET_page);
+        }
+        $paging = Utils::get_paging($this->session->get('paging', 1), $count, $limit);
 
         $GET_sorting_column = $request->getParam('sorting_column', null);
         $GET_order = $request->getParam('order', null);
@@ -77,7 +77,7 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
         $SESSION_order = $this->session->get('order', null);
         $sorting = Utils::get_sorting($SESSION_sorting_column, $SESSION_order);
 
-        $all_listings = $listings->getMultipleListings($limit, $offset, $sorting['column'], $sorting['current_order']);
+        $all_listings = $listings->getMultipleListings($limit, $paging['offset'], $sorting['column'], $sorting['current_order']);
 
 
         return $this->view->render($response, 'all_listings.html.twig', [
@@ -85,11 +85,11 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
             'pagination' => [
                 'needed' => $count > $limit,
                 'count' => $count,
-                'page' => $page,
-                'last_page' => $last_page,
+                'page' => $paging['page'],
+                'last_page' => $paging['last_page'],
                 'limit' => $limit,
-                'window_start' => $window_start,
-                'window_stop' => $window_stop
+                'window_start' => $paging['window_start'],
+                'window_stop' => $paging['window_stop']
             ],
             'sorting' => $sorting,
         ]);
