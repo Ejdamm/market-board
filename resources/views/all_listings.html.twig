@@ -2,31 +2,39 @@
 
 {% block content %}
 
-  <form>
-    <select id="category_dropdown" name="category_dropdown">
-      <option value="0">All idrotter</option>
-      {% for category in categories %}
-      <option value="{{ category.id }}">{{ category.category_name }}</option>
-      {% endfor %}
-    </select>
+  <form method="post">
+    <div class="form-row">
+      <div class="form-group col-5">
+        <select class="form-control" id="category_dropdown" name="category_dropdown">
+          <option value="0">All Categories</option>
+          {% for category in categories %}
+          <option value="{{ category.id }}">{{ category.category_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
 
-    <select id="subcategory_dropdown" name="subcategory_dropdown">
-      <option value="0">All tävlingar</option>
-      {% for subcategory in subcategories %}
-        <option value="{{ subcategory.id }}">{{ subcategory.subcategory_name }}</option>
-      {% endfor %}
-    </select>
+      <div class="form-group col-5">
+        <select class="form-control" id="subcategory_dropdown" name="subcategory_dropdown">
+          <option value="0">All Subcategories</option>
+          {% for subcategory in subcategories %}
+            <option value="{{ subcategory.id }}">{{ subcategory.subcategory_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
 
-    <input type="submit" value="Filtrera">
+      <div class="form-group col-2">
+        <button type="submit" class="btn btn-primary">Filter</button>
+      </div>
+    </div>
   </form>
 
 
   <div class="list-group">
     <div class="list-group-item font-weight-bold">
       <div class="row">
-        <span class="px-1 col-8">Tävling</span>
-        <a class="deco-none px-1 col-2 text-center" href="?sorting_column=unit_price&order={{ sorting.toggle_order }}">Styckpris <i class="fas fa-sort{{ sorting.price_class }}"></i></a>
-        <a class="deco-none px-1 col-2 text-right" href="?sorting_column=created_at&order={{ sorting.toggle_order }}">Tillagd <i class="fas fa-sort{{ sorting.date_class }}"></i></a>
+        <span class="px-1 col-8">Subcategory</span>
+        <a class="deco-none px-1 col-2 text-center" href="?sorting_column=unit_price&order={{ sorting.toggle_order }}">Unit Price <i class="fas fa-sort{{ sorting.price_class }}"></i></a>
+        <a class="deco-none px-1 col-2 text-right" href="?sorting_column=created_at&order={{ sorting.toggle_order }}">Created <i class="fas fa-sort{{ sorting.date_class }}"></i></a>
       </div>
     </div>
       {% for listing in listings %}

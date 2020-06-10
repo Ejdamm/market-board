@@ -47,8 +47,6 @@ class Listings
         if ($filter['subcategory'] > 0) {
             $whereclause .= " AND subcategories.id = " . intval($filter['subcategory']);
         }
-        echo $whereclause;
-        Utils::dump($filter);
 
         $query = "SELECT listings.id, subcategory_name, category_name, email, unit_price, quantity, created_at
             FROM listings 
