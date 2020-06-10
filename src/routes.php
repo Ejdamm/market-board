@@ -58,7 +58,21 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
     try {
         $listings = new Listings($this->db);
 
-        $count = $listings->getNrOfListings();
+        // Filtering TODO remember filtering
+        $filter = [];
+        $GET_category_filter = $request->getParam('category_dropdown', 0);
+        if (is_numeric($GET_category_filter) && intval($GET_category_filter) >= 0) {
+            $this->session->set('category_filter', $GET_category_filter);
+        }
+        $filter['category'] = $this->session->get('category_filter', 0);
+        $GET_subcategory_filter = $request->getParam('subcategory_dropdown', 0);
+        if (is_numeric($GET_subcategory_filter) && intval($GET_subcategory_filter) >= 0) {
+            $this->session->set('subcategory_filter', $GET_subcategory_filter);
+        }
+        $filter['subcategory'] = $this->session->get('subcategory_filter', 0);
+
+        // Paging
+        $count = $listings->getNrOfListings(); //TODO doesn't care about filtering
         $limit = 20; //TODO should be configurable
         $GET_page = $request->getParam('page', null);
         if ($GET_page && is_numeric($GET_page) && intval($GET_page) > 0) {
@@ -66,19 +80,21 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
         }
         $paging = Utils::get_paging($this->session->get('paging', 1), $count, $limit);
 
+        //Sorting
         $GET_sorting_column = $request->getParam('sorting_column', null);
         $GET_order = $request->getParam('order', null);
         if ($GET_sorting_column != null || $GET_order != null) {
             $this->session->set('sorting_column', $GET_sorting_column);
             $this->session->set('order', $GET_order);
         }
-
         $SESSION_sorting_column = $this->session->get('sorting_column', null);
         $SESSION_order = $this->session->get('order', null);
         $sorting = Utils::get_sorting($SESSION_sorting_column, $SESSION_order);
 
-        $all_listings = $listings->getMultipleListings($limit, $paging['offset'], $sorting['column'], $sorting['current_order']);
-
+        //TODO send just $sorting and not separate column/current_order
+        $all_listings = $listings->getMultipleListings($limit, $paging['offset'], $filter, $sorting['column'], $sorting['current_order']);
+        $categories = Utils::get_categories($this->db);
+        $subcategories = Utils::get_subcategories($this->db);
 
         return $this->view->render($response, 'all_listings.html.twig', [
             'listings' => $all_listings,
@@ -92,6 +108,8 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
                 'window_stop' => $paging['window_stop']
             ],
             'sorting' => $sorting,
+            'categories' => $categories,
+            'subcategories' => $subcategories,
         ]);
     } catch (Exception $e) {
         $this->logger->addError("/listings/ GET throw exception: " . $e);

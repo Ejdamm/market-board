@@ -1,6 +1,26 @@
 {% extends 'templates/base.html.twig' %}
 
 {% block content %}
+
+  <form>
+    <select id="category_dropdown" name="category_dropdown">
+      <option value="0">All idrotter</option>
+      {% for category in categories %}
+      <option value="{{ category.id }}">{{ category.category_name }}</option>
+      {% endfor %}
+    </select>
+
+    <select id="subcategory_dropdown" name="subcategory_dropdown">
+      <option value="0">All tävlingar</option>
+      {% for subcategory in subcategories %}
+        <option value="{{ subcategory.id }}">{{ subcategory.subcategory_name }}</option>
+      {% endfor %}
+    </select>
+
+    <input type="submit" value="Filtrera">
+  </form>
+
+
   <div class="list-group">
     <div class="list-group-item font-weight-bold">
       <div class="row">
@@ -9,7 +29,7 @@
         <a class="deco-none px-1 col-2 text-right" href="?sorting_column=created_at&order={{ sorting.toggle_order }}">Tillagd <i class="fas fa-sort{{ sorting.date_class }}"></i></a>
       </div>
     </div>
-    {% for listing in listings %}
+      {% for listing in listings %}
       <a class="list-group-item" href="/listings/{{ listing.id }}">
         <div class="row">
           <span class="px-1 col-8">{{ listing.subcategory_name }}</span>
@@ -17,7 +37,7 @@
           <span class="px-1 col-2 text-right">{{ listing.created_at }}</span>
         </div>
       </a>
-    {% endfor %}
+      {% endfor %}
   </div>
 
   {% if pagination.needed %}

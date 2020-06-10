@@ -25,7 +25,7 @@ class Listings
         return $result;
     }
 
-    public function getMultipleListings(int $limit, int $offset, string $sortingColumn = "created_at", string $sortingOrder = "DESC")
+    public function getMultipleListings(int $limit, int $offset, $filter, string $sortingColumn = "created_at", string $sortingOrder = "DESC")
     {
         #sortingColumn and sortingOrder need manual sanitizing because you can't prepare column names and ASC/DESC
         switch ($sortingColumn) {
@@ -40,10 +40,21 @@ class Listings
 
         $order = $sortingOrder == "ASC" ? $sortingOrder : "DESC";
 
+        $whereclause = "WHERE 1=1";
+        if ($filter['category'] > 0) {
+            $whereclause .= " AND categories.id = " . intval($filter['category']);
+        }
+        if ($filter['subcategory'] > 0) {
+            $whereclause .= " AND subcategories.id = " . intval($filter['subcategory']);
+        }
+        echo $whereclause;
+        Utils::dump($filter);
+
         $query = "SELECT listings.id, subcategory_name, category_name, email, unit_price, quantity, created_at
             FROM listings 
             INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
             INNER JOIN categories ON subcategories.category_id = categories.id
+            $whereclause
             ORDER BY $sort $order LIMIT ? OFFSET ?;";
         $statement = $this->prepareAndExecute($query, [$limit, $offset]);
         $result = $statement->fetchAll();
