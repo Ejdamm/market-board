@@ -58,15 +58,14 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
     try {
         $listings = new Listings($this->db);
 
-        // Filtering TODO remember filtering
         $filter = [];
-        $GET_category_filter = $request->getParam('category_dropdown', 0);
-        if (is_numeric($GET_category_filter) && intval($GET_category_filter) >= 0) {
+        $GET_category_filter = $request->getParam('category_dropdown', null);
+        if ($GET_category_filter != null && is_numeric($GET_category_filter) && intval($GET_category_filter) >= 0) {
             $this->session->set('category_filter', $GET_category_filter);
         }
         $filter['category'] = $this->session->get('category_filter', 0);
-        $GET_subcategory_filter = $request->getParam('subcategory_dropdown', 0);
-        if (is_numeric($GET_subcategory_filter) && intval($GET_subcategory_filter) >= 0) {
+        $GET_subcategory_filter = $request->getParam('subcategory_dropdown', null);
+        if ($GET_subcategory_filter != null && is_numeric($GET_subcategory_filter) && intval($GET_subcategory_filter) >= 0) {
             $this->session->set('subcategory_filter', $GET_subcategory_filter);
         }
         $filter['subcategory'] = $this->session->get('subcategory_filter', 0);
@@ -110,6 +109,7 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
             'sorting' => $sorting,
             'categories' => $categories,
             'subcategories' => $subcategories,
+            'filter' => $filter,
         ]);
     } catch (Exception $e) {
         $this->logger->addError("/listings/ GET throw exception: " . $e);
