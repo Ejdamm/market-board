@@ -86,9 +86,21 @@ class Listings
         return intval($affected_rows);
     }
 
-    public function getNrOfListings()
+    public function getNrOfListings($filter)
     {
-        $query = "SELECT COUNT(*) AS count FROM listings;";
+        $whereclause = "WHERE 1=1";
+        if ($filter['category'] > 0) {
+            $whereclause .= " AND categories.id = " . intval($filter['category']);
+        }
+        if ($filter['subcategory'] > 0) {
+            $whereclause .= " AND subcategories.id = " . intval($filter['subcategory']);
+        }
+
+        $query = "SELECT COUNT(*) AS count
+            FROM listings
+            INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
+            INNER JOIN categories ON subcategories.category_id = categories.id
+            $whereclause;";
         $statement = $this->prepareAndExecute($query);
         $count = $statement->fetch();
         return intval($count['count']);

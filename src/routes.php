@@ -71,7 +71,7 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
         $filter['subcategory'] = $this->session->get('subcategory_filter', 0);
 
         // Paging
-        $count = $listings->getNrOfListings(); //TODO doesn't care about filtering
+        $count = $listings->getNrOfListings($filter);
         $limit = 20; //TODO should be configurable
         $GET_page = $request->getParam('page', null);
         if ($GET_page && is_numeric($GET_page) && intval($GET_page) > 0) {
