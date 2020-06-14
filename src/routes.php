@@ -59,12 +59,12 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
         $listings = new Listings($this->db);
 
         $filter = [];
-        $GET_category_filter = $request->getParam('category_dropdown', null);
+        $GET_category_filter = $request->getParam('category_filter', null);
         if ($GET_category_filter != null && is_numeric($GET_category_filter) && intval($GET_category_filter) >= 0) {
             $this->session->set('category_filter', $GET_category_filter);
         }
         $filter['category'] = $this->session->get('category_filter', 0);
-        $GET_subcategory_filter = $request->getParam('subcategory_dropdown', null);
+        $GET_subcategory_filter = $request->getParam('subcategory_filter', null);
         if ($GET_subcategory_filter != null && is_numeric($GET_subcategory_filter) && intval($GET_subcategory_filter) >= 0) {
             $this->session->set('subcategory_filter', $GET_subcategory_filter);
         }
