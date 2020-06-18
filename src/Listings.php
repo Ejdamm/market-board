@@ -39,14 +39,19 @@ class Listings
         }
 
         $order = $sortingOrder == "ASC" ? $sortingOrder : "DESC";
+        $params = [];
 
         $whereclause = "WHERE 1=1";
         if (isset($filter['category']) && $filter['category'] > 0) {
-            $whereclause .= " AND categories.id = " . intval($filter['category']);
+            $whereclause .= " AND categories.id = ?";
+            $params[] = intval($filter['category']);
         }
         if (isset($filter['subcategory']) && $filter['subcategory'] > 0) {
-            $whereclause .= " AND subcategories.id = " . intval($filter['subcategory']);
+            $whereclause .= " AND subcategories.id = ?";
+            $params[] = intval($filter['subcategory']);
         }
+
+        $params = array_merge($params, [$limit, $offset]);
 
         $query = "SELECT listings.id, subcategory_name, category_name, email, unit_price, quantity, created_at
             FROM listings 
@@ -54,7 +59,7 @@ class Listings
             INNER JOIN categories ON subcategories.category_id = categories.id
             $whereclause
             ORDER BY $sort $order LIMIT ? OFFSET ?;";
-        $statement = $this->prepareAndExecute($query, [$limit, $offset]);
+        $statement = $this->prepareAndExecute($query, $params);
         $result = $statement->fetchAll();
         return $result;
     }
@@ -88,12 +93,15 @@ class Listings
 
     public function getNrOfListings($filter = null)
     {
+        $params = [];
         $whereclause = "WHERE 1=1";
         if (isset($filter['category']) && $filter['category'] > 0) {
-            $whereclause .= " AND categories.id = " . intval($filter['category']);
+            $whereclause .= " AND categories.id = ?";
+            $params[] = intval($filter['category']);
         }
-        if (isset($filter['category']) && $filter['subcategory'] > 0) {
-            $whereclause .= " AND subcategories.id = " . intval($filter['subcategory']);
+        if (isset($filter['subcategory']) && $filter['subcategory'] > 0) {
+            $whereclause .= " AND subcategories.id = ?";
+            $params[] = intval($filter['subcategory']);
         }
 
         $query = "SELECT COUNT(*) AS count
@@ -101,7 +109,7 @@ class Listings
             INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
             INNER JOIN categories ON subcategories.category_id = categories.id
             $whereclause;";
-        $statement = $this->prepareAndExecute($query);
+        $statement = $this->prepareAndExecute($query, $params);
         $count = $statement->fetch();
         return intval($count['count']);
     }
