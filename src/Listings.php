@@ -41,10 +41,10 @@ class Listings
         $order = $sortingOrder == "ASC" ? $sortingOrder : "DESC";
 
         $whereclause = "WHERE 1=1";
-        if ($filter['category'] > 0) {
+        if (isset($filter['category']) && $filter['category'] > 0) {
             $whereclause .= " AND categories.id = " . intval($filter['category']);
         }
-        if ($filter['subcategory'] > 0) {
+        if (isset($filter['subcategory']) && $filter['subcategory'] > 0) {
             $whereclause .= " AND subcategories.id = " . intval($filter['subcategory']);
         }
 
@@ -86,13 +86,13 @@ class Listings
         return intval($affected_rows);
     }
 
-    public function getNrOfListings($filter)
+    public function getNrOfListings($filter = null)
     {
         $whereclause = "WHERE 1=1";
-        if ($filter['category'] > 0) {
+        if (isset($filter['category']) && $filter['category'] > 0) {
             $whereclause .= " AND categories.id = " . intval($filter['category']);
         }
-        if ($filter['subcategory'] > 0) {
+        if (isset($filter['category']) && $filter['subcategory'] > 0) {
             $whereclause .= " AND subcategories.id = " . intval($filter['subcategory']);
         }
 
