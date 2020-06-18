@@ -16,6 +16,14 @@ return [
             'user' => 'root',
             'pass' => 'password',
             'port' => '3306'
+        ],
+        'test' => [
+            'adapter' => 'mysql',
+            'host' => 'localhost',
+            'name' => 'startplats_test',
+            'user' => 'root',
+            'pass' => 'password',
+            'port' => '3306'
         ]
     ],
 ];

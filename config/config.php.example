@@ -27,6 +27,15 @@ return [
             'port' => '3306'
         ],
 
+        'db_test' => [
+            'adapter' => 'mysql',
+            'host' => 'localhost',
+            'name' => 'startplats_test',
+            'user' => 'root',
+            'pass' => 'password',
+            'port' => '3306'
+        ],
+
         'email' => [
             'from' => 'no-reply@mail.com',
             'name' => 'Webmaster',
