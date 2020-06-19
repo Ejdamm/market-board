@@ -80,12 +80,12 @@ class ListingsTest extends TestCase
         self::$listing_data[2]["subcategory_id"] = $subcategoryId;
 
         self::clearListingsTable();
-
-        self::$listings = new Listings(self::$db);
     }
 
     public function setUp(): void
     {
+        self::$listings = new Listings(self::$db);
+
         foreach (self::$listing_data as $listing) {
             $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, created_at) VALUES(?,?,?,?,?,?);";
             $statement = self::$db->prepare($query);
@@ -205,8 +205,7 @@ class ListingsTest extends TestCase
             "quantity" => self::$listing_data[2]["quantity"]
         ];
 
-
-        $actual = self::$listings->getMultipleListings(3, 0);
+        $actual = self::$listings->getMultipleListings();
 
         $this->assertArraySubset($expected1, $actual[0]);
         $this->assertArraySubset($expected2, $actual[1]);
@@ -215,7 +214,9 @@ class ListingsTest extends TestCase
 
     public function testGetMultipleListingsLimit()
     {
-        $actual = self::$listings->getMultipleListings(1, 0);
+        self::$listings->setLimit(1);
+        self::$listings->setOffset(0);
+        $actual = self::$listings->getMultipleListings();
         $this->assertEquals(1, count($actual));
     }
 
@@ -229,7 +230,9 @@ class ListingsTest extends TestCase
             "quantity" => self::$listing_data[1]["quantity"]
         ];
 
-        $actual = self::$listings->getMultipleListings(1, 1);
+        self::$listings->setLimit(1);
+        self::$listings->setOffset(1);
+        $actual = self::$listings->getMultipleListings();
 
         $this->assertArraySubset($expected, $actual[0]);
     }
@@ -252,28 +255,36 @@ class ListingsTest extends TestCase
 
     public function testSortedListingsAscendingPrice()
     {
-        $actual = self::$listings->getMultipleListings(3, 0, "unit_price", "ASC");
+        self::$listings->setSortingColumn("unit_price");
+        self::$listings->setSortingOrder("ASC");
+        $actual = self::$listings->getMultipleListings();
         $this->assertLessThanOrEqual($actual[1]['unit_price'], $actual[0]['unit_price']);
         $this->assertLessThanOrEqual($actual[2]['unit_price'], $actual[1]['unit_price']);
     }
 
     public function testSortedListingsDescendingPrice()
     {
-        $actual = self::$listings->getMultipleListings(3, 0, "unit_price", "DESC");
+        self::$listings->setSortingColumn("unit_price");
+        self::$listings->setSortingOrder("DESC");
+        $actual = self::$listings->getMultipleListings();
         $this->assertGreaterThanOrEqual($actual[1]['unit_price'], $actual[0]['unit_price']);
         $this->assertGreaterThanOrEqual($actual[2]['unit_price'], $actual[1]['unit_price']);
     }
 
     public function testSortedListingsAscendingDate()
     {
-        $actual = self::$listings->getMultipleListings(3, 0, "created_at", "ASC");
+        self::$listings->setSortingColumn("created_at");
+        self::$listings->setSortingOrder("ASC");
+        $actual = self::$listings->getMultipleListings();
         $this->assertLessThanOrEqual($actual[1]['created_at'], $actual[0]['created_at']);
         $this->assertLessThanOrEqual($actual[2]['created_at'], $actual[1]['created_at']);
     }
 
     public function testSortedListingsDescendingDate()
     {
-        $actual = self::$listings->getMultipleListings(3, 0, "created_at", "DESC");
+        self::$listings->setSortingColumn("created_at");
+        self::$listings->setSortingOrder("DESC");
+        $actual = self::$listings->getMultipleListings();
         $this->assertGreaterThanOrEqual($actual[1]['created_at'], $actual[0]['created_at']);
         $this->assertGreaterThanOrEqual($actual[2]['created_at'], $actual[1]['created_at']);
     }
@@ -282,7 +293,7 @@ class ListingsTest extends TestCase
     {
         self::$listings->setWHEREFilter(0, 0);
 
-        $actual = self::$listings->getMultipleListings(20, 0);
+        $actual = self::$listings->getMultipleListings();
 
         $this->assertEquals(3, sizeof($actual));
     }
@@ -291,7 +302,7 @@ class ListingsTest extends TestCase
     {
         self::$listings->setWHEREFilter(0, self::$listing_data[0]["subcategory_id"] + 1);
 
-        $actual = self::$listings->getMultipleListings(20, 0);
+        $actual = self::$listings->getMultipleListings();
 
         $this->assertEquals(0, sizeof($actual));
     }

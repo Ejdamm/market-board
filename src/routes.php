@@ -58,6 +58,7 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
     try {
         $listings = new Listings($this->db);
 
+        // Filter
         $filter = [];
         $GET_category_filter = $request->getParam('category_filter', null);
         if ($GET_category_filter != null && is_numeric($GET_category_filter) && intval($GET_category_filter) >= 0) {
@@ -79,6 +80,8 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
             $this->session->set('paging', $GET_page);
         }
         $paging = Utils::get_paging($this->session->get('paging', 1), $count, $limit);
+        $listings->setLimit($limit);
+        $listings->setOffset($paging['offset']);
 
         //Sorting
         $GET_sorting_column = $request->getParam('sorting_column', null);
@@ -87,12 +90,11 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
             $this->session->set('sorting_column', $GET_sorting_column);
             $this->session->set('order', $GET_order);
         }
-        $SESSION_sorting_column = $this->session->get('sorting_column', null);
-        $SESSION_order = $this->session->get('order', null);
-        $sorting = Utils::get_sorting($SESSION_sorting_column, $SESSION_order);
+        $sorting = Utils::get_sorting($this->session->get('sorting_column', null), $this->session->get('order', null));
+        $listings->setSortingColumn($sorting['column']);
+        $listings->setSortingOrder($sorting['current_order']);
 
-        //TODO send just $sorting and not separate column/current_order
-        $all_listings = $listings->getMultipleListings($limit, $paging['offset'], $sorting['column'], $sorting['current_order']);
+        $all_listings = $listings->getMultipleListings();
         $categories = Utils::get_categories($this->db);
         $subcategories = Utils::get_subcategories($this->db);
 
