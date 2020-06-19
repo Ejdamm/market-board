@@ -14,7 +14,7 @@ class Listings
     public function __construct($db)
     {
         $this->db = $db;
-        $this->WHERE_filter = $this->setWHEREFilter();
+        $this->setWHEREFilter();
         $this->params = [];
     }
 
