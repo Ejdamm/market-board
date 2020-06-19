@@ -91,7 +91,8 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
         $sorting = Utils::get_sorting($SESSION_sorting_column, $SESSION_order);
 
         //TODO send just $sorting and not separate column/current_order
-        $all_listings = $listings->getMultipleListings($limit, $paging['offset'], $filter, $sorting['column'], $sorting['current_order']);
+        $listings->setWHEREFilter($filter['category'], $filter['subcategory']);
+        $all_listings = $listings->getMultipleListings($limit, $paging['offset'], $sorting['column'], $sorting['current_order']);
         $categories = Utils::get_categories($this->db);
         $subcategories = Utils::get_subcategories($this->db);
 
