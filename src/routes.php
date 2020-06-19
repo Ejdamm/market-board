@@ -69,9 +69,10 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
             $this->session->set('subcategory_filter', $GET_subcategory_filter);
         }
         $filter['subcategory'] = $this->session->get('subcategory_filter', 0);
+        $listings->setWHEREFilter($filter['category'], $filter['subcategory']);
 
         // Paging
-        $count = $listings->getNrOfListings($filter);
+        $count = $listings->getNrOfListings();
         $limit = 20; //TODO should be configurable
         $GET_page = $request->getParam('page', null);
         if ($GET_page && is_numeric($GET_page) && intval($GET_page) > 0) {
@@ -91,7 +92,6 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
         $sorting = Utils::get_sorting($SESSION_sorting_column, $SESSION_order);
 
         //TODO send just $sorting and not separate column/current_order
-        $listings->setWHEREFilter($filter['category'], $filter['subcategory']);
         $all_listings = $listings->getMultipleListings($limit, $paging['offset'], $sorting['column'], $sorting['current_order']);
         $categories = Utils::get_categories($this->db);
         $subcategories = Utils::get_subcategories($this->db);

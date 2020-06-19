@@ -9,7 +9,6 @@ class Listings
 {
     private $db;
     private $WHERE_filter;
-    private $placeholders;
     private $params;
 
     public function __construct($db)
@@ -98,18 +97,15 @@ class Listings
         return intval($affected_rows);
     }
 
-    public function getNrOfListings($filter = null)
+    public function getNrOfListings()
     {
-        $category_id = isset($filter['category']) ? $filter['category'] : 0;
-        $subcategory_id = isset($filter['category']) ? $filter['category'] : 0;
-        $this->setWHEREFilter($category_id, $subcategory_id);
-
         $query = "SELECT COUNT(*) AS count
             FROM listings
             INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
             INNER JOIN categories ON subcategories.category_id = categories.id
             $this->WHERE_filter;";
         $statement = $this->prepareAndExecute($query, $this->params);
+
         $count = $statement->fetch();
         return intval($count['count']);
     }
