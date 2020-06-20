@@ -1,0 +1,5 @@
+{% if alert %}
+<div class="alert alert-{{ alert.level }}" role="alert">
+  {{ alert.text | raw }}
+</div>
+{%  endif %}
