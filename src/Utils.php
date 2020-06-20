@@ -81,4 +81,9 @@ class Utils
         $paging['window_stop'] = ($paging['window_start'] + 4) < $paging['last_page'] ? ($paging['window_start'] + 4) : $paging['last_page'];
         return $paging;
     }
+
+    public static function dump($array)
+    {
+        echo "<pre>" . print_r($array, true) . "</pre>";
+    }
 }

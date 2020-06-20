@@ -8,10 +8,27 @@ use PDO;
 class Listings
 {
     private $db;
+    private $WHERE_filter;
+    private $params;
 
     public function __construct($db)
     {
         $this->db = $db;
+        $this->setWHEREFilter();
+        $this->params = [];
+    }
+
+    public function setWHEREFilter(int $category_id = 0, int $subcategory_id = 0)
+    {
+        $this->WHERE_filter = "WHERE 1=1";
+        if ($category_id > 0) {
+            $this->WHERE_filter .= " AND categories.id = ?";
+            $this->params[] = $category_id;
+        }
+        if ($subcategory_id > 0) {
+            $this->WHERE_filter .= " AND subcategories.id = ?";
+            $this->params[] = $subcategory_id;
+        }
     }
 
     public function getSingleListing(int $id)
@@ -40,12 +57,15 @@ class Listings
 
         $order = $sortingOrder == "ASC" ? $sortingOrder : "DESC";
 
+        $params = array_merge($this->params, [$limit, $offset]);
+
         $query = "SELECT listings.id, subcategory_name, category_name, email, unit_price, quantity, created_at
             FROM listings 
             INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
             INNER JOIN categories ON subcategories.category_id = categories.id
+            $this->WHERE_filter
             ORDER BY $sort $order LIMIT ? OFFSET ?;";
-        $statement = $this->prepareAndExecute($query, [$limit, $offset]);
+        $statement = $this->prepareAndExecute($query, $params);
         $result = $statement->fetchAll();
         return $result;
     }
@@ -79,8 +99,13 @@ class Listings
 
     public function getNrOfListings()
     {
-        $query = "SELECT COUNT(*) AS count FROM listings;";
-        $statement = $this->prepareAndExecute($query);
+        $query = "SELECT COUNT(*) AS count
+            FROM listings
+            INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
+            INNER JOIN categories ON subcategories.category_id = categories.id
+            $this->WHERE_filter;";
+        $statement = $this->prepareAndExecute($query, $this->params);
+
         $count = $statement->fetch();
         return intval($count['count']);
     }
