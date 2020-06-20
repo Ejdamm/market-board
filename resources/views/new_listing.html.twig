@@ -1,12 +1,6 @@
 {% extends 'templates/base.html.twig' %}
 
 {% block content %}
-  {% if inserted_id is defined %}
-    <div class="alert alert-success">
-      <strong>Success!</strong> New listing inserted. It can be found <a href='/listings/{{ inserted_id }}'>here</a>. Removal code: {{ removal_code }}.
-    </div>
-  {% endif %}
-
   <form method="post">
     <div class="form-group">
       <label for="new_listing_email">Email address</label>

@@ -12,11 +12,13 @@ $app->get('/listings/new', function (Request $request, Response $response) {
         $subcategories = Utils::get_subcategories($this->db);
         return $this->view->render($response, 'new_listing.html.twig', [
             'categories' => $categories,
-            'subcategories' => $subcategories
+            'subcategories' => $subcategories,
         ]);
     } catch (Exception $e) {
-        //TODO: redirect?
         $this->logger->addError("/listings/new GET throw exception: " . $e);
+        return $this->view->render($response, 'error.html.twig', [
+            'alert' => ['level' => 'danger', 'text' => "An internal server error occurred. Please try again later."],
+        ]);
     }
 });
 
@@ -42,15 +44,18 @@ $app->post('/listings/new', function (Request $request, Response $response) {
             $this->mailer->setTo($params['email'])->sendMessage(new EmailNewListing($email_variables));
         }
 
+        $alert_text = "<strong>Success!</strong> New listing inserted. It can be found <a href=\"/listings/$inserted_id\">here</a>. Removal code: $removal_code";
+
         return $this->view->render($response, 'new_listing.html.twig', [
-            'inserted_id' => $inserted_id,
             'categories' => $categories,
             'subcategories' => $subcategories,
-            'removal_code' => $removal_code
+            'alert' => ['level' => 'success', 'text' => $alert_text],
         ]);
     } catch (Exception $e) {
         $this->logger->addError("/listings/new POST throw exception: " . $e);
-        //TODO: return something
+        return $this->view->render($response, 'error.html.twig', [
+            'alert' => ['level' => 'danger', 'text' => "An internal server error occurred. Please try again later."],
+        ]);
     }
 });
 
@@ -116,7 +121,9 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
         ]);
     } catch (Exception $e) {
         $this->logger->addError("/listings/ GET throw exception: " . $e);
-        //TODO: return something
+        return $this->view->render($response, 'error.html.twig', [
+            'alert' => ['level' => 'danger', 'text' => "An internal server error occurred. Please try again later."],
+        ]);
     }
 });
 
@@ -125,12 +132,13 @@ $app->get('/listings/{id}', function (Request $request, Response $response, $arg
         $listings = new Listings($this->db);
         $single_listing = $listings->getSingleListing($args['id']);
         return $this->view->render($response, 'single_listing.html.twig', [
-            'listing' => $single_listing
+            'listing' => $single_listing,
         ]);
     } catch (Exception $e) {
-        //TODO: addWarning if id does not exist
         $this->logger->addError("/listings/" . $args['id'] . " GET throw exception: " . $e);
-        //TODO: return something
+        return $this->view->render($response, 'error.html.twig', [
+            'alert' => ['level' => 'danger', 'text' => "An internal server error occurred. Please try again later."],
+        ]);
     }
 });
 
@@ -140,13 +148,23 @@ $app->post('/listings/{id}', function (Request $request, Response $response, $ar
         $affected_rows = $listings->removeListing($args['id'], $request->getParams()['removal_code']);
         $this->logger->addInfo("Listing removed: " . $args['id']);
 
+        $alert = [];
+        if ($affected_rows >= 1) {
+            $alert['text'] = "<strong>Success!</strong> The listing was successfully removed. <a href=\"/\">Go back to start page</a>.";
+            $alert['level'] = "success";
+        } else {
+            $alert['text'] = "<strong>Warning!</strong> Something went wrong and the listing was not removed. Please try again later or contact admin. <a href=\"/listings/"
+                . $args['id'] . "\">Go back to the listing.</a>";
+            $alert['level'] = "warning";
+        }
+
         return $this->view->render($response, 'remove_listing.html.twig', [
-            'affected_rows' => $affected_rows,
-            'listing_id' => $args['id']
+            'alert' => $alert,
         ]);
     } catch (Exception $e) {
-        //TODO: addWarning if id does not exist
         $this->logger->addError("/listings/" . $args['id'] . " POST throw exception: " . $e);
-        //TODO: return something
+        return $this->view->render($response, 'error.html.twig', [
+            'alert' => ['level' => 'danger', 'text' => "An internal server error occurred. Please try again later."],
+        ]);
     }
 });
