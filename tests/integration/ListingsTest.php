@@ -18,6 +18,7 @@ class ListingsTest extends TestCase
             "unit_price" => "123",
             "quantity" => "2",
             "removal_code" => "AAAAAA",
+            "description" => "Lorem Ipsum1",
             "created_at" => "2020-06-18 23:14:18",
         ],
         [
@@ -26,6 +27,7 @@ class ListingsTest extends TestCase
             "unit_price" => "789",
             "quantity" => "1",
             "removal_code" => "AAAAAA",
+            "description" => "Lorem Ipsum2",
             "created_at" => "2020-06-18 23:14:17",
         ],
         [
@@ -34,6 +36,7 @@ class ListingsTest extends TestCase
             "unit_price" => "456",
             "quantity" => "3",
             "removal_code" => "AAAAAA",
+            "description" => "Lorem Ipsum3",
             "created_at" => "2020-06-18 23:14:16",
         ]
     ];
@@ -87,7 +90,7 @@ class ListingsTest extends TestCase
         self::$listings = new Listings(self::$db);
 
         foreach (self::$listing_data as $listing) {
-            $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, created_at) VALUES(?,?,?,?,?,?);";
+            $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, description, created_at) VALUES(?,?,?,?,?,?,?);";
             $statement = self::$db->prepare($query);
             $statement->execute(array_values($listing));
             $this->last_inserted_id = self::$db->lastInsertId();

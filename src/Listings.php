@@ -65,7 +65,7 @@ class Listings
 
     public function getSingleListing(int $id)
     {
-        $query = "SELECT subcategory_name, category_name, email, unit_price, quantity, created_at FROM listings
+        $query = "SELECT subcategory_name, category_name, email, unit_price, quantity, created_at, description FROM listings
             INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
             INNER JOIN categories ON subcategories.category_id = categories.id
             WHERE listings.id = ?;";
@@ -92,13 +92,14 @@ class Listings
 
     public function insertListing($params)
     {
-        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code) VALUES(?,?,?,?,?);";
+        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, description) VALUES(?,?,?,?,?,?);";
         $params = array_values([
             $params['email'],
             $params['subcategory_id'],
             $params['unit_price'],
             $params['quantity'],
-            $params['removal_code']
+            $params['removal_code'],
+            $params['description']
         ]);
         $this->prepareAndExecute($query, $params);
         $inserted_id = $this->db->lastInsertId();
