@@ -39,6 +39,7 @@ class ListingsMigration extends AbstractMigration
             ->addColumn('quantity', 'integer')
             ->addColumn('removal_code', 'string', ['limit' => 6, 'null' => true])
             ->addColumn('created_at', 'timestamp', ['default' => 'CURRENT_TIMESTAMP'])
+            ->addColumn('description', 'text')
             ->addForeignKey('subcategory_id', 'subcategories', 'id')
             ->create();
     }

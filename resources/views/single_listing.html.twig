@@ -5,10 +5,11 @@
       <div class="card-body">
         <h5 class="card-title">{{ listing.subcategory_name }}</h5>
         <h6 class="card-subtitle mb-2 text-muted">{{ listing.category_name }}</h6>
+        <div><strong>Unit price:</strong> {{ listing.unit_price }}</div>
+        <div><strong>Quantity:</strong> {{ listing.quantity }}</div>
+        <div><strong>Created:</strong> {{ listing.created_at }}</div>
+        <div><dt>Description:</dt><dd>{{ listing.description }}</dd></div>
         <p class="card-text">Här ska vi ha ett e-post-formulär till {{ listing.email }}</p>
-        <div>Pris: {{ listing.unit_price }}</div>
-        <div>Antal: {{ listing.quantity }}</div>
-        <div>Skapad: {{ listing.created_at }}</div>
       </div>
       <form class="form-inline mb-2" method="post">
         <div class="form-group mx-sm-3">

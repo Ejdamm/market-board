@@ -39,6 +39,7 @@ class ListingsSeed extends AbstractSeed
                 'unit_price' => $faker->numberBetween(100, 1000),
                 'quantity' =>  $faker->numberBetween(1, 2),
                 'removal_code' => Utils::generate_removal_code(),
+                'description' => $faker->text(100),
                 'created_at' => $faker->date($format = 'Y-m-d H:i:s', $max = 'now'),
             ];
         }
