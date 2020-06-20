@@ -10,12 +10,20 @@ class Listings
     private $db;
     private $WHERE_filter;
     private $params;
+    private $sorting_column;
+    private $sorting_order;
+    private $limit;
+    private $offset;
 
     public function __construct($db)
     {
         $this->db = $db;
         $this->setWHEREFilter();
         $this->params = [];
+        $this->sorting_column = "created_at";
+        $this->sorting_order = "DESC";
+        $this->limit = 20;
+        $this->offset = 0;
     }
 
     public function setWHEREFilter(int $category_id = 0, int $subcategory_id = 0)
@@ -31,6 +39,30 @@ class Listings
         }
     }
 
+    public function setSortingOrder(string $sorting_order)
+    {
+        if ($sorting_order == "ASC" || $sorting_order == "DESC") {
+            $this->sorting_order = $sorting_order;
+        }
+    }
+
+    public function setSortingColumn(string $sorting_column)
+    {
+        if ($sorting_column == "created_at" || $sorting_column == "unit_price") {
+            $this->sorting_column = $sorting_column;
+        }
+    }
+
+    public function setLimit(int $limit)
+    {
+        $this->limit = $limit;
+    }
+
+    public function setOffset(int $offset)
+    {
+        $this->offset = $offset;
+    }
+
     public function getSingleListing(int $id)
     {
         $query = "SELECT subcategory_name, category_name, email, unit_price, quantity, created_at FROM listings
@@ -42,29 +74,17 @@ class Listings
         return $result;
     }
 
-    public function getMultipleListings(int $limit, int $offset, string $sortingColumn = "created_at", string $sortingOrder = "DESC")
+    public function getMultipleListings()
     {
-        #sortingColumn and sortingOrder need manual sanitizing because you can't prepare column names and ASC/DESC
-        switch ($sortingColumn) {
-            case 'unit_price':
-                $sort = 'unit_price';
-                break;
-            case 'created_at':
-            default:
-                $sort = 'created_at';
-                break;
-        }
-
-        $order = $sortingOrder == "ASC" ? $sortingOrder : "DESC";
-
-        $params = array_merge($this->params, [$limit, $offset]);
+        $params = array_merge($this->params, [$this->limit, $this->offset]);
 
         $query = "SELECT listings.id, subcategory_name, category_name, email, unit_price, quantity, created_at
             FROM listings 
             INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
             INNER JOIN categories ON subcategories.category_id = categories.id
             $this->WHERE_filter
-            ORDER BY $sort $order LIMIT ? OFFSET ?;";
+            ORDER BY $this->sorting_column $this->sorting_order
+            LIMIT ? OFFSET ?;";
         $statement = $this->prepareAndExecute($query, $params);
         $result = $statement->fetchAll();
         return $result;
