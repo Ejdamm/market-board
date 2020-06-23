@@ -9,13 +9,29 @@
         <div><strong>Quantity:</strong> {{ listing.quantity }}</div>
         <div><strong>Created:</strong> {{ listing.created_at }}</div>
         <div><dt>Description:</dt><dd>{{ listing.description }}</dd></div>
-        <p class="card-text">Här ska vi ha ett e-post-formulär till {{ listing.email }}</p>
+
+        <hr/>
+        <form method="post">
+          <h5>Contact the seller</h5>
+          <div class="form-group">
+            <input type="email" class="form-control" id="email_from" placeholder="Enter your E-mail" name="email_from" required>
+          </div>
+          <div class="form-group">
+            <textarea class="form-control" id="email_seller" name="email_text" placeholder="Write your message here" rows="4" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" name="email_form">Send</button>
+        </form>
+
+        <hr/>
+        <details>
+          <summary>Are you the seller?</summary>
+          <form class="form-inline my-2" method="post">
+            <div class="form-group mx-sm-3">
+              <input class="form-control" id="removal_code" name="removal_code" placeholder="Removal code" required>
+            </div>
+            <button type="submit" class="btn btn-danger" name="removal_form">Remove</button>
+          </form>
+        </details>
       </div>
-      <form class="form-inline mb-2" method="post">
-        <div class="form-group mx-sm-3">
-          <input class="form-control" id="removal_code" name="removal_code" placeholder="Removal code" required>
-        </div>
-        <button type="submit" class="btn btn-danger">Remove</button>
-      </form>
     </div>
 {% endblock %}

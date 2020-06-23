@@ -74,6 +74,7 @@ $container['mailer'] = function (Container $container) {
         'protocol'  => $conf['smtp']['protocol']
     ]);
     $mailer->setDefaultFrom($conf['from'], $conf['name']);
+
     return $mailer;
 };
 
