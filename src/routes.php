@@ -2,6 +2,7 @@
 
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Startplats\EmailSeller;
 use Startplats\Listings;
 use Startplats\EmailNewListing;
 use Startplats\Utils;
@@ -144,23 +145,48 @@ $app->get('/listings/{id}', function (Request $request, Response $response, $arg
 
 $app->post('/listings/{id}', function (Request $request, Response $response, $args = []) {
     try {
-        $listings = new Listings($this->db);
-        $affected_rows = $listings->removeListing($args['id'], $request->getParams()['removal_code']);
-        $this->logger->addInfo("Listing removed: " . $args['id']);
+        if (array_key_exists("removal_form", $request->getParams())) {
+            $listings = new Listings($this->db);
+            $affected_rows = $listings->removeListing($args['id'], $request->getParams()['removal_code']);
+            $this->logger->addInfo("Listing removed: " . $args['id']);
 
-        $alert = [];
-        if ($affected_rows >= 1) {
-            $alert['text'] = "<strong>Success!</strong> The listing was successfully removed. <a href=\"/\">Go back to start page</a>.";
-            $alert['level'] = "success";
-        } else {
-            $alert['text'] = "<strong>Warning!</strong> Something went wrong and the listing was not removed. Please try again later or contact admin. <a href=\"/listings/"
-                . $args['id'] . "\">Go back to the listing.</a>";
-            $alert['level'] = "warning";
+            $alert = [];
+            if ($affected_rows >= 1) {
+                $alert['text'] = "<strong>Success!</strong> The listing was successfully removed. <a href=\"/\">Go back to start page</a>.";
+                $alert['level'] = "success";
+            } else {
+                $alert['text'] = "<strong>Warning!</strong> Something went wrong and the listing was not removed. Please try again later or contact admin. <a href=\"/listings/"
+                    . $args['id'] . "\">Go back to the listing.</a>";
+                $alert['level'] = "warning";
+            }
+
+            return $this->view->render($response, 'remove_listing.html.twig', [
+                'alert' => $alert,
+            ]);
+        } elseif (array_key_exists("email_form", $request->getParams())) {
+            $listings = new Listings($this->db);
+            $single_listing = $listings->getSingleListing($args['id']);
+
+            $this->logger->addInfo("Sending email from: " . $request->getParam('email_from') . " to: " . $single_listing['email']);
+
+            $email_variables = new stdClass;
+            $email_variables->listing_id = $args['id'];
+            $email_variables->message = $request->getParam("email_text");
+
+            // E-mail function is excluded if run in Travis since it's a closed environment and tests will fail
+            if (getenv('TRAVIS') != 'true') {
+                $email_seller = new EmailSeller($email_variables);
+                $email_seller->setFrom($request->getParam('email_from'));
+                $this->mailer->setTo($single_listing['email'])->sendMessage($email_seller);
+            }
+
+            $alert_text = "<strong>Success!</strong> Your E-mail was sent";
+
+            return $this->view->render($response, 'single_listing.html.twig', [
+                'alert' => ['level' => 'info', 'text' => $alert_text],
+                'listing' => $single_listing,
+            ]);
         }
-
-        return $this->view->render($response, 'remove_listing.html.twig', [
-            'alert' => $alert,
-        ]);
     } catch (Exception $e) {
         $this->logger->addError("/listings/" . $args['id'] . " POST throw exception: " . $e);
         return $this->view->render($response, 'error.html.twig', [
