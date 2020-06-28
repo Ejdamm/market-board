@@ -82,6 +82,14 @@ $container['session'] = function (Container $container) {
     return new Helper;
 };
 
+$container['language'] = function (Container $container) {
+    $language_code = $container['session']->get('language', 'default');
+    $query = "SELECT * FROM language WHERE language_code = ?;";
+    $statement = $container['db']->prepare($query);
+    $statement->execute([$language_code]);
+    $language = $statement->fetch();
+    return $language;
+};
 
 // Register routes
 require __DIR__ . '/../src/routes.php';
