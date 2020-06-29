@@ -62,6 +62,9 @@ $app->post('/listings/new', function (Request $request, Response $response) {
 
 $app->get('/[listings/]', function (Request $request, Response $response) {
     try {
+        //$this->session->set('language', 'SE');
+        //Utils::dump($this->language);
+
         $listings = new Listings($this->db);
 
         // Filter
@@ -119,6 +122,7 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
             'categories' => $categories,
             'subcategories' => $subcategories,
             'filter' => $filter,
+            'language' => $this->language,
         ]);
     } catch (Exception $e) {
         $this->logger->addError("/listings/ GET throw exception: " . $e);

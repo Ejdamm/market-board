@@ -31,7 +31,6 @@ Database migration is done with phinx. Usage:
 * Migrate
     * `bin/phinx.sh create <MyTable>` (Note CamelCase)
         * Will create a file for migration under db/migration. This file will be used to create/migrate/rollback tables.
-        * One file for each table.
     * `bin/phinx.sh migrate` will migrate whatever config that is written under the function `create()` in `db/migrate`
     * `bin/phinx.sh rollback` will rollback whatever config that is written `create()` in `resources/db/migrate`
     * `bin/phinx.sh migrate -e dev -t 0` will reset all migrations
