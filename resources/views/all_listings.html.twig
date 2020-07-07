@@ -6,7 +6,7 @@
     <div class="form-row">
       <div class="form-group col-5">
         <select class="form-control" id="category_filter" name="category_filter">
-          <option value="0">All Categories</option>
+          <option value="0">{{ language.all_categories }}</option>
           {% for category in categories %}
           <option value="{{ category.id }}" class="{{ category.category_name }}" {% if category.id == filter.category %}selected{% endif %}>{{ category.category_name }}</option>
           {% endfor %}
@@ -15,7 +15,7 @@
 
       <div class="form-group col-5">
         <select class="form-control" id="subcategory_filter" name="subcategory_filter">
-          <option value="0">All Subcategories</option>
+          <option value="0">{{ language.all_subcategories }}</option>
           {% for subcategory in subcategories %}
             <option value="{{ subcategory.id }}" class="{{ subcategory.category_name }}" {% if subcategory.id == filter.subcategory %}selected{% endif %}>{{ subcategory.subcategory_name }}</option>
           {% endfor %}
@@ -23,7 +23,7 @@
       </div>
 
       <div class="form-group col-2">
-        <button type="submit" class="btn btn-primary">Filter</button>
+        <button type="submit" class="btn btn-primary">{{ language.filter }}</button>
       </div>
     </div>
   </form>
@@ -33,8 +33,8 @@
     <div class="list-group-item font-weight-bold">
       <div class="row">
         <span class="px-1 col-8">{{ language.subcategory }}</span>
-        <a class="deco-none px-1 col-2 text-center" href="?sorting_column=unit_price&order={{ sorting.toggle_order }}">Unit Price <i class="fas fa-sort{{ sorting.price_class }}"></i></a>
-        <a class="deco-none px-1 col-2 text-right" href="?sorting_column=created_at&order={{ sorting.toggle_order }}">Created <i class="fas fa-sort{{ sorting.date_class }}"></i></a>
+        <a class="deco-none px-1 col-2 text-center" href="?sorting_column=unit_price&order={{ sorting.toggle_order }}">{{ language.unit_price }} <i class="fas fa-sort{{ sorting.price_class }}"></i></a>
+        <a class="deco-none px-1 col-2 text-right" href="?sorting_column=created_at&order={{ sorting.toggle_order }}">{{ language.created }} <i class="fas fa-sort{{ sorting.date_class }}"></i></a>
       </div>
     </div>
       {% for listing in listings %}
@@ -52,10 +52,10 @@
     <nav aria-label="Page navigation">
       <ul class="pagination justify-content-center py-4">
         <li class="page-item {% if pagination.page == 1 %}disabled{% endif %}">
-          <a class="page-link" href="?page=1">First</a>
+          <a class="page-link" href="?page=1">{{ language.first }}</a>
         </li>
         <li class="page-item {% if pagination.page == 1 %}disabled{% endif %}">
-          <a class="page-link" href="?page={{ pagination.page - 1 }}">Previous</a>
+          <a class="page-link" href="?page={{ pagination.page - 1 }}">{{ language.previous }}</a>
         </li>
         {% if pagination.window_start > 1 %}
           <li class="page-item disabled">
@@ -73,10 +73,10 @@
           </li>
         {% endif %}
         <li class="page-item {% if pagination.page == pagination.last_page %}disabled{% endif %}">
-          <a class="page-link" href="?page={{ pagination.page + 1 }}">Next</a>
+          <a class="page-link" href="?page={{ pagination.page + 1 }}">{{ language.next }}</a>
         </li>
         <li class="page-item {% if pagination.page == pagination.last_page %}disabled{% endif %}">
-          <a class="page-link" href="?page={{ pagination.last_page }}">Last</a>
+          <a class="page-link" href="?page={{ pagination.last_page }}">{{ language.last }}</a>
         </li>
       </ul>
     </nav>

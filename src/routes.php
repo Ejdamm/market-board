@@ -14,11 +14,13 @@ $app->get('/listings/new', function (Request $request, Response $response) {
         return $this->view->render($response, 'new_listing.html.twig', [
             'categories' => $categories,
             'subcategories' => $subcategories,
+            'language' => $this->language,
         ]);
     } catch (Exception $e) {
         $this->logger->addError("/listings/new GET throw exception: " . $e);
         return $this->view->render($response, 'error.html.twig', [
-            'alert' => ['level' => 'danger', 'text' => "An internal server error occurred. Please try again later."],
+            'alert' => ['level' => 'danger', 'text' => $this->language['internal_server_error']],
+            'language' => $this->language,
         ]);
     }
 });
@@ -45,26 +47,28 @@ $app->post('/listings/new', function (Request $request, Response $response) {
             $this->mailer->setTo($params['email'])->sendMessage(new EmailNewListing($email_variables));
         }
 
-        $alert_text = "<strong>Success!</strong> New listing inserted. It can be found <a href=\"/listings/$inserted_id\">here</a>. Removal code: $removal_code";
+        $alert_text = "<strong>" . $this->language['success'] . "</strong> "
+            . $this->language['new_listing_inserted_message']
+            . " <a href=\"/listings/$inserted_id\">" . $this->language['here'] . "</a>. "
+            .$this->language['removal_code'] . ": $removal_code";
 
         return $this->view->render($response, 'new_listing.html.twig', [
             'categories' => $categories,
             'subcategories' => $subcategories,
             'alert' => ['level' => 'success', 'text' => $alert_text],
+            'language' => $this->language,
         ]);
     } catch (Exception $e) {
         $this->logger->addError("/listings/new POST throw exception: " . $e);
         return $this->view->render($response, 'error.html.twig', [
-            'alert' => ['level' => 'danger', 'text' => "An internal server error occurred. Please try again later."],
+            'alert' => ['level' => 'danger', 'text' => $this->language['internal_server_error']],
+            'language' => $this->language,
         ]);
     }
 });
 
 $app->get('/[listings/]', function (Request $request, Response $response) {
     try {
-        //$this->session->set('language', 'SE');
-        //Utils::dump($this->language);
-
         $listings = new Listings($this->db);
 
         // Filter
@@ -127,7 +131,8 @@ $app->get('/[listings/]', function (Request $request, Response $response) {
     } catch (Exception $e) {
         $this->logger->addError("/listings/ GET throw exception: " . $e);
         return $this->view->render($response, 'error.html.twig', [
-            'alert' => ['level' => 'danger', 'text' => "An internal server error occurred. Please try again later."],
+            'alert' => ['level' => 'danger', 'text' => $this->language['internal_server_error']],
+            'language' => $this->language,
         ]);
     }
 });
@@ -138,11 +143,13 @@ $app->get('/listings/{id}', function (Request $request, Response $response, $arg
         $single_listing = $listings->getSingleListing($args['id']);
         return $this->view->render($response, 'single_listing.html.twig', [
             'listing' => $single_listing,
+            'language' => $this->language,
         ]);
     } catch (Exception $e) {
         $this->logger->addError("/listings/" . $args['id'] . " GET throw exception: " . $e);
         return $this->view->render($response, 'error.html.twig', [
-            'alert' => ['level' => 'danger', 'text' => "An internal server error occurred. Please try again later."],
+            'alert' => ['level' => 'danger', 'text' => $this->language['internal_server_error']],
+            'language' => $this->language,
         ]);
     }
 });
@@ -156,16 +163,19 @@ $app->post('/listings/{id}', function (Request $request, Response $response, $ar
 
             $alert = [];
             if ($affected_rows >= 1) {
-                $alert['text'] = "<strong>Success!</strong> The listing was successfully removed. <a href=\"/\">Go back to start page</a>.";
+                $alert['text'] = "<strong>" . $this->language['success'] . "</strong> "
+                    . $this->language['listing_removed_success'] . " <a href=\"/\">" . $this->language['go_back_to_start'] . "</a>";
                 $alert['level'] = "success";
             } else {
-                $alert['text'] = "<strong>Warning!</strong> Something went wrong and the listing was not removed. Please try again later or contact admin. <a href=\"/listings/"
-                    . $args['id'] . "\">Go back to the listing.</a>";
+                $alert['text'] = "<strong>" . $this->language['warning'] . "</strong> "
+                    . $this->language['listing_removed_failed']
+                    . " <a href=\"/listings/" . $args['id'] . "\">" . $this->language['go_back_to_listing'] . "</a>";
                 $alert['level'] = "warning";
             }
 
             return $this->view->render($response, 'remove_listing.html.twig', [
                 'alert' => $alert,
+                'language' => $this->language,
             ]);
         } elseif (array_key_exists("email_form", $request->getParams())) {
             $listings = new Listings($this->db);
@@ -184,17 +194,19 @@ $app->post('/listings/{id}', function (Request $request, Response $response, $ar
                 $this->mailer->setTo($single_listing['email'])->sendMessage($email_seller);
             }
 
-            $alert_text = "<strong>Success!</strong> Your E-mail was sent";
+            $alert_text = "<strong>" . $this->language['success'] . "</strong> " . $this->language['your_email_was_sent'];
 
             return $this->view->render($response, 'single_listing.html.twig', [
                 'alert' => ['level' => 'info', 'text' => $alert_text],
                 'listing' => $single_listing,
+                'language' => $this->language,
             ]);
         }
     } catch (Exception $e) {
         $this->logger->addError("/listings/" . $args['id'] . " POST throw exception: " . $e);
         return $this->view->render($response, 'error.html.twig', [
-            'alert' => ['level' => 'danger', 'text' => "An internal server error occurred. Please try again later."],
+            'alert' => ['level' => 'danger', 'text' => $this->language['internal_server_error']],
+            'language' => $this->language,
         ]);
     }
 });
