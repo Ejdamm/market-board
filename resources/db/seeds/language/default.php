@@ -3,7 +3,7 @@
 
 use Phinx\Seed\AbstractSeed;
 
-class English extends AbstractSeed
+class DefaultLanguage extends AbstractSeed
 {
     /**
      * Run Method.
@@ -16,7 +16,7 @@ class English extends AbstractSeed
     public function run()
     {
         $table = $this->table('language');
-        $this->execute('DELETE FROM language WHERE language = \'english\'');
+        $this->execute('DELETE FROM language WHERE language = \'default\'');
         $data = $this->generateConstantData();
         $table->insert($data)->save();
     }
@@ -25,7 +25,7 @@ class English extends AbstractSeed
     {
         return [
             [
-                'language' => 'english',
+                'language' => 'default',
                 'title' => 'Market Board',
                 'subcategory' => 'Subcategory',
                 'category' => 'Category',

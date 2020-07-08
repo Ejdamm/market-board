@@ -84,7 +84,7 @@ $container['session'] = function (Container $container) {
 
 $container['language'] = function (Container $container) {
     // Set default language
-    $language_code = $container['session']->get('language', 'english');
+    $language_code = $container['session']->get('language', 'default');
     $query = "SELECT * FROM language WHERE language = ?;";
     $statement = $container['db']->prepare($query);
     $statement->execute([$language_code]);

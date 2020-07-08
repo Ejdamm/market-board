@@ -39,4 +39,10 @@ Database migration is done with phinx. Usage:
     * To create a new seed, execute `bin/phinx.sh seed:create YourSeedName` (Note camelCase).
     * All seeds are executed with `bin/phinx.sh seed:run`
     * Single seed is executed with `bin/phinx.sh seed:run -s <yourSeedClass>`
-* More info [link](http://docs.phinx.org/en/latest/intro.html)
+* More info: [link](http://docs.phinx.org/en/latest/intro.html)
+
+## Language
+All labels and messages are defined in the database to easy change wordings or language. To make a new set of strings 
+copy the default.php file in resources/db/seeds/language and replace the words. If you edit the default file directly 
+you risk to overwrite it upon an code update. As for now it is not possible to change language from the UI. Do it by 
+change from default to your own language in index.php or set it in the session `$this->session->set('language', 'english');`.
