@@ -5,31 +5,31 @@
       <div class="card-body">
         <h5 class="card-title">{{ listing.subcategory_name }}</h5>
         <h6 class="card-subtitle mb-2 text-muted">{{ listing.category_name }}</h6>
-        <div><strong>Unit price:</strong> {{ listing.unit_price }}</div>
-        <div><strong>Quantity:</strong> {{ listing.quantity }}</div>
-        <div><strong>Created:</strong> {{ listing.created_at }}</div>
-        <div><dt>Description:</dt><dd>{{ listing.description }}</dd></div>
+        <div><strong>{{ language.unit_price }}:</strong> {{ listing.unit_price }}</div>
+        <div><strong>{{ language.quantity }}:</strong> {{ listing.quantity }}</div>
+        <div><strong>{{ language.created }}:</strong> {{ listing.created_at }}</div>
+        <div><dt>{{ language.description }}:</dt><dd>{{ listing.description }}</dd></div>
 
         <hr/>
         <form method="post">
-          <h5>Contact the seller</h5>
+          <h5>{{ language.contact_the_seller }}</h5>
           <div class="form-group">
-            <input type="email" class="form-control" id="email_from" placeholder="Enter your E-mail" name="email_from" required>
+            <input type="email" class="form-control" id="email_from" placeholder="{{ language.enter_your_email }}" name="email_from" required>
           </div>
           <div class="form-group">
-            <textarea class="form-control" id="email_seller" name="email_text" placeholder="Write your message here" rows="4" required></textarea>
+            <textarea class="form-control" id="email_seller" name="email_text" placeholder="{{ language.write_your_message_here }}" rows="4" required></textarea>
           </div>
-          <button type="submit" class="btn btn-primary" name="email_form">Send</button>
+          <button type="submit" class="btn btn-primary" name="email_form">{{ language.send }}</button>
         </form>
 
         <hr/>
         <details>
-          <summary>Are you the seller?</summary>
+          <summary>{{ language.are_you_the_seller }}</summary>
           <form class="form-inline my-2" method="post">
             <div class="form-group mx-sm-3">
-              <input class="form-control" id="removal_code" name="removal_code" placeholder="Removal code" required>
+              <input class="form-control" id="removal_code" name="removal_code" placeholder="{{ language.removal_code }}" required>
             </div>
-            <button type="submit" class="btn btn-danger" name="removal_form">Remove</button>
+            <button type="submit" class="btn btn-danger" name="removal_form">{{ language.remove }}</button>
           </form>
         </details>
       </div>

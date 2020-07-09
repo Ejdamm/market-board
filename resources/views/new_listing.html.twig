@@ -3,40 +3,40 @@
 {% block content %}
   <form method="post">
     <div class="form-group">
-      <label for="new_listing_email">Email address</label>
-      <input type="email" class="form-control" id="new_listing_email" placeholder="Enter E-mail" name="email" required>
+      <label for="new_listing_email">{{ language.email_address }}</label>
+      <input type="email" class="form-control" id="new_listing_email" placeholder="{{ language.enter_email }}Enter E-mail" name="email" required>
     </div>
     <div class="form-group">
-      <label for="new_listing_category">Category</label>
+      <label for="new_listing_category">{{ language.category }}</label>
       <select class="form-control" id="new_listing_category" name="category_id" required>
-        <option value="">Choose category</option>
+        <option value="">{{ language.choose_category }}</option>
         {% for category in categories %}
           <option value="{{ category.id }}" class="{{ category.category_name }}">{{ category.category_name }}</option>
         {% endfor %}
       </select>
     </div>
     <div class="form-group">
-      <label for="new_listing_subcategory">Subcategory</label>
+      <label for="new_listing_subcategory">{{ language.subcategory }}</label>
       <select class="form-control" id="new_listing_sub_category" name="subcategory_id" required>
-        <option value="">Choose subcategory</option>
+        <option value="">{{ language.choose_subcategory }}</option>
         {% for subcategory in subcategories %}
           <option value="{{ subcategory.id }}" class="{{ subcategory.category_name }}">{{ subcategory.subcategory_name }}</option>
         {% endfor %}
       </select>
     </div>
     <div class="form-group">
-      <label for="new_listing_price">Unit price</label>
-      <input type="number" class="form-control" id="new_listing_price" placeholder="Enter unit price" name="unit_price" required>
+      <label for="new_listing_price">{{ language.unit_price }}</label>
+      <input type="number" class="form-control" id="new_listing_price" placeholder="{{ language.enter_unit_price }}" name="unit_price" required>
     </div>
     <div class="form-group">
-      <label for="new_listing_amount">Quantity</label>
-      <input type="number" class="form-control" id="new_listing_amount" placeholder="Enter number of items" name="quantity" value=1 min="1" required>
+      <label for="new_listing_amount">{{ language.quantity }}</label>
+      <input type="number" class="form-control" id="new_listing_amount" placeholder="{{ language.enter_quantity }}" name="quantity" value=1 min="1" required>
     </div>
     <div class="form-group">
-      <label for="new_listing_description">Description</label>
+      <label for="new_listing_description">{{ language.description }}</label>
       <textarea class="form-control" id="new_listing_description" name="description" rows="4"></textarea>
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary">{{ language.create_listing }}</button>
   </form>
 
   <!-- query to filter second dropdown -->

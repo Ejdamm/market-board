@@ -2,7 +2,7 @@
 return [
     'paths' => [
         'migrations' => 'resources/db/migrations',
-        "seeds" => "resources/db/seeds"
+        "seeds" => ["resources/db/seeds", "resources/db/seeds/language"]
     ],
 
     # Phinx and database
