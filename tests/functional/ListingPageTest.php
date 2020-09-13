@@ -217,22 +217,34 @@ class ListingPageTest extends BaseTestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertLogDoesNotContain(['ERROR']);
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-        $this->assertLogContains(["WARNING: Listing was not removed"]);
+        $this->assertLogContains(["WARNING: Listing was not removed: $wrong_id"]);
         $this->assertStringContainsString("Something went wrong and the listing was not removed.", $htmlBody);
         $this->verifyEntryInserted("listings", self::$listing_data[0]);
     }
 
     /**
-     *
+     * Verify that no listing is removed when received as POST on '/listings/{id} with wrong removal code'
      */
     public function testWrongRemovalCode()
     {
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, description, created_at) VALUES(?,?,?,?,?,?,?);";
+        $statement = self::$container['db']->prepare($query);
+        $statement->execute(array_values(self::$listing_data[0]));
+        $inserted_id = self::$container['db']->lastInsertId();
+
+        $post_params = [
+            'removal_code' => "BBBBBB",
+            'removal_form' => null
+        ];
+
+        $response = $this->processRequest('POST', "/listings/$inserted_id", $post_params);
+        $htmlBody = (string)$response->getBody();
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertLogDoesNotContain(['ERROR']);
+        $this->assertLogContains(["WARNING: Listing was not removed: $inserted_id"]);
+        $this->assertStringContainsString("Something went wrong and the listing was not removed.", $htmlBody);
+        $this->verifyEntryInserted("listings", self::$listing_data[0]);
     }
 
     /**
@@ -241,8 +253,24 @@ class ListingPageTest extends BaseTestCase
      */
     public function testSendMail()
     {
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, description, created_at) VALUES(?,?,?,?,?,?,?);";
+        $statement = self::$container['db']->prepare($query);
+        $statement->execute(array_values(self::$listing_data[0]));
+        $inserted_id = self::$container['db']->lastInsertId();
+
+        $email_from = "hillary.clinton@us.gov";
+        $post_params = [
+            'email_from' => $email_from,
+            'email_text' => "Greetings stranger",
+            'email_form' => null
+        ];
+
+        $response = $this->processRequest('POST', "/listings/$inserted_id", $post_params);
+        $htmlBody = (string)$response->getBody();
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertLogDoesNotContain(['ERROR']);
+        $this->assertLogContains(["INFO: Sending email from: " . $email_from . " to: " . self::$listing_data[0]['email']]);
+        $this->assertStringContainsString("Your E-mail was sent.", $htmlBody);
     }
 }

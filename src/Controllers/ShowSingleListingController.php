@@ -8,6 +8,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Startplats\EmailSeller;
 use Startplats\Listings;
+use Startplats\Utils;
 use stdClass;
 
 class ShowSingleListingController extends BaseController
@@ -41,18 +42,20 @@ class ShowSingleListingController extends BaseController
             if (array_key_exists("removal_form", $request->getParams())) {
                 $listings = new Listings($this->db);
                 $affected_rows = $listings->removeListing($args['id'], $request->getParams()['removal_code']);
-                $this->logger->addInfo("Listing removed: " . $args['id']);
+
 
                 $alert = [];
                 if ($affected_rows >= 1) {
                     $alert['text'] = "<strong>" . $this->language['success'] . "</strong> "
                         . $this->language['listing_removed_success'] . " <a href=\"/\">" . $this->language['go_back_to_start'] . "</a>";
                     $alert['level'] = "success";
+                    $this->logger->addInfo("Listing removed: " . $args['id']);
                 } else {
                     $alert['text'] = "<strong>" . $this->language['warning'] . "</strong> "
                         . $this->language['listing_removed_failed']
                         . " <a href=\"/listings/" . $args['id'] . "\">" . $this->language['go_back_to_listing'] . "</a>";
                     $alert['level'] = "warning";
+                    $this->logger->addWarning("Listing was not removed: " . $args['id']);
                 }
 
                 return $this->view->render($response, 'remove_listing.html.twig', [
