@@ -19,5 +19,6 @@ before_install:
 script:
     - composer install
     - ./bin/phinx.sh migrate -e test
+    - ./bin/phinx.sh seed:run -e test -s DefaultLanguage
     - composer test
     - ./bin/psr-2.sh -v --diff --dry-run --stop-on-violation

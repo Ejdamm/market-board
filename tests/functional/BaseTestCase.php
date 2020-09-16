@@ -9,6 +9,7 @@ use PDO;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Slim\App;
+use Slim\Container;
 use Slim\Exception\MethodNotAllowedException;
 use Slim\Exception\NotFoundException;
 use Slim\Http\Environment;
@@ -77,8 +78,8 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
         ]));
 
         self::$container =  $app->getContainer();
-        self::$container['db'] = function ($container) {
-            $conf = $container->get('settings')['db'];
+        self::$container['db'] = function (Container $container) {
+            $conf = $container->get('settings')['db_test'];
             $pdo = new PDO(
                 $conf['adapter'] . ':host=' . $conf['host'] . ';dbname=' . $conf['name'],
                 $conf['user'],
@@ -88,9 +89,8 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
             $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
             return $pdo;
         };
-        $this->prepareDatabase();
 
-        self::$container['view'] = function ($container) {
+        self::$container['view'] = function (Container $container) {
             $view = new Twig(__DIR__ . '/../../resources/views/', [
                 'cache' => false
             ]);
@@ -110,14 +110,14 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
             return $view;
         };
 
-        self::$container['logger'] = function ($container) {
+        self::$container['logger'] = function (Container $container) {
             $logger = new Logger('functional_test');
             $file_handler = new StreamHandler($this->logFile);
             $logger->pushHandler($file_handler);
             return $logger;
         };
 
-        self::$container['mailer'] = function ($container) {
+        self::$container['mailer'] = function (Container $container) {
             $conf = $container->get('settings')['email'];
             $mailer = new Mailer($container['view'], [
                 'host'      => $conf['smtp']['host'],
@@ -130,8 +130,18 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
             return $mailer;
         };
 
-        self::$container['session'] = function ($container) {
+        self::$container['session'] = function (Container $container) {
             return new Helper;
+        };
+
+        self::$container['language'] = function (Container $container) {
+            // Set default language
+            $language_code = $container->get('session')->get('language', 'default');
+            $query = "SELECT * FROM language WHERE language = ?;";
+            $statement = $container->get('db')->prepare($query);
+            $statement->execute([$language_code]);
+            $language = $statement->fetch();
+            return $language;
         };
 
         // To make sure the log is empty at the start of the run
@@ -175,15 +185,16 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
         $response = new Response();
 
         // Process the application
-        $response = $this->app->process($request, $response);
+        $response = @$this->app->process($request, $response);
 
         // Return the response
         return $response;
     }
 
-    public function prepareDatabase()
+    protected static function clearListingsTable()
     {
-        //stuff..
+        $statement = self::$container['db']->prepare("DELETE FROM listings WHERE 1=1;");
+        $statement->execute();
     }
 
     public static function clearDatabaseOf($table, $data)
@@ -226,7 +237,7 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
         $actualLogging = file_get_contents($this->logFile);
 
         foreach ($expectedContent as $singleContent) {
-            echo $singleContent;
+            $this->assertStringContainsString($singleContent, $actualLogging);
         }
     }
 
@@ -251,9 +262,5 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
         if ($this->logFile != null) {
             file_put_contents($this->logFile, "");
         }
-    }
-
-    public function clearDatabase()
-    {
     }
 }
