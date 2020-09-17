@@ -37,7 +37,7 @@ class ShowMultipleListingsController extends BaseController
 
             // Paging
             $count = $listings->getNrOfListings();
-            $limit = 20; //TODO should be configurable
+            $limit = $this->container->get('settings')['listings_limit'];
             $GET_page = $request->getParam('page', null);
             if ($GET_page && is_numeric($GET_page) && intval($GET_page) > 0) {
                 $this->session->set('paging', $GET_page);
