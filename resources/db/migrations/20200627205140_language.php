@@ -71,6 +71,7 @@ class Language extends AbstractMigration
             ->addColumn('success', 'string', ['default' => 'Success!'])
             ->addColumn('warning', 'string', ['default' => 'Warning!'])
             ->addColumn('your_email_was_sent', 'string', ['default' => 'Your E-mail was sent.'])
+            ->addColumn('no_listings', 'string', ['default' => 'There are currently no listings for this category.'])
             ->create();
     }
 }
