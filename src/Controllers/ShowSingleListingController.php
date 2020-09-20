@@ -4,6 +4,7 @@
 namespace Startplats\Controllers;
 
 use Exception;
+use Gregwar\Captcha\CaptchaBuilder;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Startplats\EmailSeller;
@@ -23,9 +24,15 @@ class ShowSingleListingController extends BaseController
         try {
             $listings = new Listings($this->db);
             $single_listing = $listings->getSingleListing($args['id']);
+
+            $captcha = new CaptchaBuilder;
+            $captcha->build();
+            $this->session->set('captcha', $captcha->getPhrase());
+
             return $this->view->render($response, 'single_listing.html.twig', [
                 'listing' => $single_listing,
                 'language' => $this->language,
+                'captcha' => $captcha->inline(),
             ]);
         } catch (Exception $e) {
             $this->logger->addError("/listings/" . $args['id'] . " GET threw exception: " . $e);
@@ -39,10 +46,11 @@ class ShowSingleListingController extends BaseController
     public function post($request, $response, $args): ResponseInterface
     {
         try {
-            if (array_key_exists("removal_form", $request->getParams())) {
-                $listings = new Listings($this->db);
-                $affected_rows = $listings->removeListing($args['id'], $request->getParams()['removal_code']);
+            $listings = new Listings($this->db);
+            $params = $request->getParams();
 
+            if (array_key_exists("removal_form", $params)) {
+                $affected_rows = $listings->removeListing($args['id'], $params['removal_code']);
 
                 $alert = [];
                 if ($affected_rows >= 1) {
@@ -58,34 +66,54 @@ class ShowSingleListingController extends BaseController
                     $this->logger->addWarning("Listing was not removed: " . $args['id']);
                 }
 
+                $captcha = new CaptchaBuilder;
+                $captcha->build();
+                $this->session->set('captcha', $captcha->getPhrase());
+
                 return $this->view->render($response, 'remove_listing.html.twig', [
                     'alert' => $alert,
                     'language' => $this->language,
+                    'captcha' => $captcha->inline(),
                 ]);
-            } elseif (array_key_exists("email_form", $request->getParams())) {
-                $listings = new Listings($this->db);
+            } elseif (array_key_exists("email_form", $params)) {
                 $single_listing = $listings->getSingleListing($args['id']);
 
-                $this->logger->addInfo("Sending email from: " . $request->getParam('email_from') . " to: " . $single_listing['email']);
+                if (!$params['captcha'] || $this->session->get('captcha') != $params['captcha']) {
+                    $alert_text = $this->language['wrong_captcha'];
+                    $alert = ['level' => 'warning', 'text' => $alert_text];
+                } else {
+                    $this->logger->addInfo("Sending email from: " . $request->getParam('email_from') . " to: " . $single_listing['email']);
+                    $email_variables = new stdClass;
+                    $email_variables->listing_id = $args['id'];
+                    $email_variables->message = $request->getParam("email_text");
 
-                $email_variables = new stdClass;
-                $email_variables->listing_id = $args['id'];
-                $email_variables->message = $request->getParam("email_text");
+                    // E-mail function is excluded if run in Travis since it's a closed environment and tests will fail
+                    if (getenv('TRAVIS') != 'true') {
+                        $email_seller = new EmailSeller($email_variables);
+                        $email_seller->setFrom($request->getParam('email_from'));
+                        $this->mailer->setTo($single_listing['email'])->sendMessage($email_seller);
+                    }
 
-                // E-mail function is excluded if run in Travis since it's a closed environment and tests will fail
-                if (getenv('TRAVIS') != 'true') {
-                    $email_seller = new EmailSeller($email_variables);
-                    $email_seller->setFrom($request->getParam('email_from'));
-                    $this->mailer->setTo($single_listing['email'])->sendMessage($email_seller);
+                    $alert_text = "<strong>" . $this->language['success'] . "</strong> " . $this->language['your_email_was_sent'];
+                    $alert = ['level' => 'info', 'text' => $alert_text];
+
+                    //We only refill form if it was unsuccessful
+                    $params = null;
                 }
 
-                $alert_text = "<strong>" . $this->language['success'] . "</strong> " . $this->language['your_email_was_sent'];
+                $captcha = new CaptchaBuilder;
+                $captcha->build();
+                $this->session->set('captcha', $captcha->getPhrase());
 
                 return $this->view->render($response, 'single_listing.html.twig', [
-                    'alert' => ['level' => 'info', 'text' => $alert_text],
+                    'alert' => $alert,
                     'listing' => $single_listing,
                     'language' => $this->language,
+                    'captcha' => $captcha->inline(),
+                    'params' => $params,
                 ]);
+            } else {
+                throw new Exception("Neither email_form nor removal_form was set.");
             }
         } catch (Exception $e) {
             $this->logger->addError("/listings/" . $args['id'] . " POST threw exception: " . $e);
