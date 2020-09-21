@@ -25,10 +25,8 @@
         <hr/>
         <details>
           <summary>{{ language.are_you_the_seller }}</summary>
-          <form class="form-inline my-2" method="post">
-            <div class="form-group mx-sm-3">
-              <input class="form-control" id="removal_code" name="removal_code" placeholder="{{ language.removal_code }}" required>
-            </div>
+          <form class="form-inline" method="post">
+            <input class="form-control my-2 mr-2" id="removal_code" name="removal_code" placeholder="{{ language.removal_code }}" required>
             <button type="submit" class="btn btn-danger" name="removal_form">{{ language.remove }}</button>
           </form>
         </details>
