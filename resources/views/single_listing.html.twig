@@ -14,11 +14,18 @@
         <form method="post">
           <h5>{{ language.contact_the_seller }}</h5>
           <div class="form-group">
-            <input type="email" class="form-control" id="email_from" placeholder="{{ language.enter_your_email }}" name="email_from" required>
+            <input type="email" class="form-control" id="email_from" value="{{ params.email_from }}" placeholder="{{ language.enter_your_email }}" name="email_from" required>
           </div>
           <div class="form-group">
-            <textarea class="form-control" id="email_seller" name="email_text" placeholder="{{ language.write_your_message_here }}" rows="4" required></textarea>
+            <textarea class="form-control" id="email_seller" name="email_text" placeholder="{{ language.write_your_message_here }}" rows="4" required>{{ params.email_text }}</textarea>
           </div>
+
+          <img class="my-2" alt="captcha_image" src="{{ captcha }}" />
+          <div class="form-group">
+            <label for="new_listing_captcha">{{ language.captcha }}</label>
+            <input type="text" class="form-control" id="new_listing_captcha" placeholder="{{ language.enter_captcha }}" name="captcha" required>
+          </div>
+
           <button type="submit" class="btn btn-primary" name="email_form">{{ language.send }}</button>
         </form>
 

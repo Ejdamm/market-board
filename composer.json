@@ -14,7 +14,8 @@
         "fzaninotto/faker": "^1.8",
         "ext-pdo": "*",
         "andrewdyer/slim3-mailer": "^1.1",
-        "bryanjhv/slim-session": "~3.0"
+        "bryanjhv/slim-session": "~3.0",
+        "gregwar/captcha": "^1.1"
     },
     "require-dev": {
         "pds/skeleton": "^1.0",

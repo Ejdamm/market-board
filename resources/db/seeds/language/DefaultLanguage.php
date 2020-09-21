@@ -64,6 +64,9 @@ class DefaultLanguage extends AbstractSeed
                 'success' => 'Success!',
                 'warning' => 'Warning!',
                 'your_email_was_sent' => 'Your E-mail was sent.',
+                'enter_captcha' => 'Enter the captcha code',
+                'captcha' => 'Captcha',
+                'wrong_captcha' => 'Input does not match with captcha code',
                 'no_listings' => 'There are currently no listings for this category.',
             ]
         ];

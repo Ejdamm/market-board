@@ -96,7 +96,7 @@ class ListingPageTest extends BaseTestCase
         $htmlBody = (string)$response->getBody();
 
         // Verify input fields
-        $this->assertStringContainsString('<input type="email" class="form-control" id="new_listing_email" placeholder="Enter E-mail" name="email" required>', $htmlBody);
+        $this->assertStringContainsString('<input type="email" class="form-control" id="new_listing_email" value="" placeholder="Enter your E-mail" name="email" required>', $htmlBody);
     }
 
     /**
@@ -108,7 +108,9 @@ class ListingPageTest extends BaseTestCase
         $listing_data = self::$listing_data[0];
         unset($listing_data['removal_code']);
         unset($listing_data['created_at']);
+        $listing_data['captcha'] = self::$container['session']->get('captcha');
         $response = $this->processRequest('POST', '/listings/new', $listing_data);
+        unset($listing_data['captcha']);
         $this->assertEquals(200, $response->getStatusCode());
 
         $this->assertLogDoesNotContain(['ERROR']);
@@ -262,7 +264,8 @@ class ListingPageTest extends BaseTestCase
         $post_params = [
             'email_from' => $email_from,
             'email_text' => "Greetings stranger",
-            'email_form' => null
+            'email_form' => null,
+            'captcha' => self::$container['session']->get('captcha'),
         ];
 
         $response = $this->processRequest('POST', "/listings/$inserted_id", $post_params);
