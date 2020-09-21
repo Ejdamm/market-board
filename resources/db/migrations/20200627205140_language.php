@@ -74,6 +74,7 @@ class Language extends AbstractMigration
             ->addColumn('enter_captcha', 'string', ['default' => 'Enter the captcha code'])
             ->addColumn('captcha', 'string', ['default' => 'Captcha'])
             ->addColumn('wrong_captcha', 'string', ['default' => 'Input does not match with captcha code.'])
+            ->addColumn('no_listings', 'string', ['default' => 'There are currently no listings for this category.'])
             ->create();
     }
 }
