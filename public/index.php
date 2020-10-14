@@ -23,7 +23,18 @@ $app->add(new Session([
     'autorefresh' => true
 ]));
 
+
 $container = $app->getContainer();
+
+unset($container['notFoundHandler']);
+$container['notFoundHandler'] = function (Container $container) {
+    return function ($request, $response) use ($container) {
+        return $container['view']->render($response->withStatus(404), 'errors/error404.html.twig', [
+            "language" => $container['language'],
+        ]);
+    };
+};
+
 $container['db'] = function (Container $container) {
     $conf = $container->get('settings')['db'];
     $pdo = new PDO(

@@ -173,6 +173,19 @@ class ListingPageTest extends BaseTestCase
     }
 
     /**
+     * Verify that a single listing are displayed when
+     * viewing webpage on  '/listings/{id}/'
+     */
+    public function testGETNonExistingSingleListing()
+    {
+        $response = $this->processRequest('GET', "/listings/-1");
+        $this->assertEquals(404, $response->getStatusCode());
+
+        $this->assertLogDoesNotContain(['ERROR']);
+        $this->assertLogContains(['404']);
+    }
+
+    /**
      * Verify that the listing is removed from database
      * when received as POST on '/listings/{id}'
      */
