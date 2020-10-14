@@ -1,14 +1,14 @@
 <?php
 
 
-namespace Startplats\Controllers;
+namespace MarketBoard\Controllers;
 
 use Exception;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
-use Startplats\Listings;
-use Startplats\EmailNewListing;
-use Startplats\Utils;
+use MarketBoard\Listings;
+use MarketBoard\EmailNewListing;
+use MarketBoard\Utils;
 use stdClass;
 use Gregwar\Captcha\CaptchaBuilder;
 

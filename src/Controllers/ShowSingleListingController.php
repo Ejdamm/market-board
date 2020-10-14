@@ -1,15 +1,15 @@
 <?php
 
 
-namespace Startplats\Controllers;
+namespace MarketBoard\Controllers;
 
 use Exception;
 use Gregwar\Captcha\CaptchaBuilder;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
-use Startplats\EmailSeller;
-use Startplats\Listings;
-use Startplats\Utils;
+use MarketBoard\EmailSeller;
+use MarketBoard\Listings;
+use MarketBoard\Utils;
 use stdClass;
 
 class ShowSingleListingController extends BaseController

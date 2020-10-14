@@ -12,7 +12,7 @@ return [
 
         # Monolog logger config. Log folder and file must be writable
         'logger' => [
-            'name' => 'startplats',
+            'name' => 'market-board',
             'level' => Logger::DEBUG,
             'path' => __DIR__ . '/../logs/app.log',
             'test_path' => __DIR__ . '/../logs/apptest.log',
@@ -21,7 +21,7 @@ return [
         'db' => [
             'adapter' => 'mysql',
             'host' => 'localhost',
-            'name' => 'startplats',
+            'name' => 'market-board',
             'user' => 'root',
             'pass' => 'password',
             'port' => '3306'
@@ -30,7 +30,7 @@ return [
         'db_test' => [
             'adapter' => 'mysql',
             'host' => 'localhost',
-            'name' => 'startplats_test',
+            'name' => 'market-board_test',
             'user' => 'root',
             'pass' => 'password',
             'port' => '3306'

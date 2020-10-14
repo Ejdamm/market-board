@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Startplats\Controllers;
+namespace MarketBoard\Controllers;
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;

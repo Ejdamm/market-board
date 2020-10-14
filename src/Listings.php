@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Startplats;
+namespace MarketBoard;
 
 use PDO;
 

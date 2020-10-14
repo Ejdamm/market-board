@@ -18,7 +18,7 @@
 * `Error: Class 'path/to/class' not found`
   * Try running: `composer update`
   * Are the tests located under `./tests/` folder?
-  * Is the wanted class to test using the correct namespace (`use Startplats\Tests\Unit;`)?
+  * Is the wanted class to test using the correct namespace (`use MarketBoard\Tests\Unit;`)?
 
 ### Git hooks
 * To enable that all tests are executed and green before every push is done (`git push`).

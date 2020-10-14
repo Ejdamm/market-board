@@ -1,9 +1,9 @@
 <?php
 
-namespace Startplats\Tests\Integration;
+namespace MarketBoard\Tests\Integration;
 
 use PHPUnit\Framework\TestCase;
-use Startplats\Listings;
+use MarketBoard\Listings;
 use PDO;
 use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 

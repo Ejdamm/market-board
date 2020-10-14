@@ -1,6 +1,6 @@
 <?php
 
-use Startplats\Controllers;
+use MarketBoard\Controllers;
 
 $app->get('/listings/new', Controllers\NewListingController::class . ':get');
 $app->post('/listings/new', Controllers\NewListingController::class . ':post');

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Startplats;
+namespace MarketBoard;
 
 use Anddye\Mailer\Mailable;
 
@@ -16,7 +16,7 @@ class EmailNewListing extends Mailable
 
     public function build()
     {
-        $this->setSubject('Startplats - Your removal code');
+        $this->setSubject('Market Board - Your removal code');
         $this->setView('emails/new_listing_confirmation.html.twig', [
             'params' => $this->email_variables
         ]);

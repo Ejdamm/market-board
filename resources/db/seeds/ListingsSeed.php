@@ -3,7 +3,7 @@
 
 use Faker\Factory;
 use Phinx\Seed\AbstractSeed;
-use Startplats\Utils;
+use MarketBoard\Utils;
 
 class ListingsSeed extends AbstractSeed
 {

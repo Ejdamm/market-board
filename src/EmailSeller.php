@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Startplats;
+namespace MarketBoard;
 
 use Anddye\Mailer\Mailable;
 
@@ -16,7 +16,7 @@ class EmailSeller extends Mailable
 
     public function build()
     {
-        $this->setSubject('You have got a message from Startplats');
+        $this->setSubject('You have got a message from Market Board');
         $this->setView('emails/email_seller.html.twig', [
             'params' => $this->email_variables,
         ]);

@@ -1,6 +1,6 @@
 {
-    "name": "startplats/startplats",
-    "homepage": "https://github.com/Ejdamm/startplats",
+    "name": "market-board/market-board",
+    "homepage": "https://github.com/Ejdamm/market-board",
     "config": {
         "platform": {
             "php": "7.2"
@@ -25,13 +25,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Startplats\\": "src/"
+            "MarketBoard\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Startplats\\Tests\\Functional\\": "tests/functional/",
-            "Startplats\\Tests\\Unit\\": "tests/unit/"
+            "MarketBoard\\Tests\\Functional\\": "tests/functional/",
+            "MarketBoard\\Tests\\Unit\\": "tests/unit/"
         }
     },
     "scripts":{

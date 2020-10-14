@@ -1,13 +1,13 @@
 <?php
 
 
-namespace Startplats\Controllers;
+namespace MarketBoard\Controllers;
 
 use Exception;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
-use Startplats\Listings;
-use Startplats\Utils;
+use MarketBoard\Listings;
+use MarketBoard\Utils;
 
 class ShowMultipleListingsController extends BaseController
 {
