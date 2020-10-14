@@ -67,7 +67,6 @@ class Language extends AbstractMigration
             ->addColumn('listing_removed_failed', 'string', ['default' => 'Something went wrong and the listing was not removed. Please try again later or contact admin.'])
             ->addColumn('go_back_to_start', 'string', ['default' => 'Go back to start page.'])
             ->addColumn('go_back_to_listing', 'string', ['default' => 'Go back to the listing.'])
-            ->addColumn('internal_server_error', 'string', ['default' => 'An internal server error occurred. Please try again later.'])
             ->addColumn('success', 'string', ['default' => 'Success!'])
             ->addColumn('warning', 'string', ['default' => 'Warning!'])
             ->addColumn('your_email_was_sent', 'string', ['default' => 'Your E-mail was sent.'])
@@ -75,6 +74,13 @@ class Language extends AbstractMigration
             ->addColumn('captcha', 'string', ['default' => 'Captcha'])
             ->addColumn('wrong_captcha', 'string', ['default' => 'Input does not match with captcha code.'])
             ->addColumn('no_listings', 'string', ['default' => 'There are currently no listings for this category.'])
+            ->addColumn('return_to_homepage', 'string', ['default' => 'Return to the homepage.'])
+            ->addColumn('error404_title', 'string', ['default' => '404 Not Found'])
+            ->addColumn('error404_text', 'string', ['default' => 'The page you are looking for could not be found. Check the address bar to ensure your URL is spelled correctly.'])
+            ->addColumn('error500_title', 'string', ['default' => '500 Internal Server Error'])
+            ->addColumn('error500_text', 'string', ['default' => 'An internal server error occurred. Please try again later.'])
+            ->addColumn('error501_title', 'string', ['default' => '501 Not Implemented'])
+            ->addColumn('error501_text', 'string', ['default' => 'The functionality you tried to use is not yet implemented.'])
             ->create();
     }
 }

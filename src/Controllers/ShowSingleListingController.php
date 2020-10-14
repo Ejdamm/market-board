@@ -24,6 +24,12 @@ class ShowSingleListingController extends BaseController
         try {
             $listings = new Listings($this->db);
             $single_listing = $listings->getSingleListing($args['id']);
+            if ($single_listing == null) {
+                $this->logger->addInfo("/listings/" . $args['id'] . " 404 Tried to access non-existing listing");
+                return $this->view->render($response->withStatus(404), 'errors/error404.html.twig', [
+                    'language' => $this->language,
+                ]);
+            }
 
             $captcha = new CaptchaBuilder;
             $captcha->build();
@@ -36,8 +42,7 @@ class ShowSingleListingController extends BaseController
             ]);
         } catch (Exception $e) {
             $this->logger->addError("/listings/" . $args['id'] . " GET threw exception: " . $e);
-            return $this->view->render($response, 'error.html.twig', [
-                'alert' => ['level' => 'danger', 'text' => $this->language['internal_server_error']],
+            return $this->view->render($response->withStatus(500), 'errors/error500.html.twig', [
                 'language' => $this->language,
             ]);
         }
@@ -117,8 +122,7 @@ class ShowSingleListingController extends BaseController
             }
         } catch (Exception $e) {
             $this->logger->addError("/listings/" . $args['id'] . " POST threw exception: " . $e);
-            return $this->view->render($response, 'error.html.twig', [
-                'alert' => ['level' => 'danger', 'text' => $this->language['internal_server_error']],
+            return $this->view->render($response->withStatus(500), 'errors/error500.html.twig', [
                 'language' => $this->language,
             ]);
         }

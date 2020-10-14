@@ -36,8 +36,7 @@ class NewListingController extends BaseController
             ]);
         } catch (Exception $e) {
             $this->logger->addError("/listings/new GET threw exception: " . $e);
-            return $this->view->render($response, 'error.html.twig', [
-                'alert' => ['level' => 'danger', 'text' => $this->language['internal_server_error']],
+            return $this->view->render($response->withStatus(500), 'errors/error500.html.twig', [
                 'language' => $this->language,
             ]);
         }
@@ -93,8 +92,7 @@ class NewListingController extends BaseController
             ]);
         } catch (Exception $e) {
             $this->logger->addError("/listings/new POST threw exception: " . $e);
-            return $this->view->render($response, 'error.html.twig', [
-                'alert' => ['level' => 'danger', 'text' => $this->language['internal_server_error']],
+            return $this->view->render($response->withStatus(500), 'errors/error500.html.twig', [
                 'language' => $this->language,
             ]);
         }

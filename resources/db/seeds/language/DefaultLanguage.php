@@ -60,7 +60,6 @@ class DefaultLanguage extends AbstractSeed
                 'listing_removed_failed' => 'Something went wrong and the listing was not removed. Please try again later or contact admin.',
                 'go_back_to_start' => 'Go back to start page.',
                 'go_back_to_listing' => 'Go back to the listing.',
-                'internal_server_error' => 'An internal server error occurred. Please try again later.',
                 'success' => 'Success!',
                 'warning' => 'Warning!',
                 'your_email_was_sent' => 'Your E-mail was sent.',
@@ -68,6 +67,13 @@ class DefaultLanguage extends AbstractSeed
                 'captcha' => 'Captcha',
                 'wrong_captcha' => 'Input does not match with captcha code',
                 'no_listings' => 'There are currently no listings for this category.',
+                'return_to_homepage' => 'Return to the homepage.',
+                'error404_title' => '404 Not Found',
+                'error404_text' => 'The page you are looking for could not be found. Check the address bar to ensure your URL is spelled correctly.',
+                'error500_title' => '500 Internal Server Error',
+                'error500_text' => 'An internal server error occurred. Please try again later.',
+                'error501_title' => '501 Not Implemented',
+                'error501_text' => 'The functionality you tried to use is not yet implemented.',
             ]
         ];
     }

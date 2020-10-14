@@ -1,0 +1,9 @@
+{% extends 'templates/base.html.twig' %}
+
+{% block content %}
+  <h1>{{ language.error404_title }}</h1>
+
+  <p>
+    {{ language.error404_text }} <a href="{{ path_for('homepage') }}">{{ language.return_to_homepage }}</a>
+  </p>
+{% endblock %}
