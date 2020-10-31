@@ -27,11 +27,9 @@ class CategoriesSeed extends AbstractSeed
     private function generateConstantData()
     {
         return [
-            ['category_name' => 'Löpning'],
-            ['category_name' => 'Simning'],
-            ['category_name' => 'Triathlon'],
-            ['category_name' => 'Cykling'],
-            ['category_name' => 'Skidor']
+            ['category_name' => 'Tools'],
+            ['category_name' => 'Electronics'],
+            ['category_name' => 'Vehicles']
         ];
     }
 }

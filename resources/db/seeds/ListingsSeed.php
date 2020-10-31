@@ -3,7 +3,7 @@
 
 use Faker\Factory;
 use Phinx\Seed\AbstractSeed;
-use Startplats\Utils;
+use MarketBoard\Utils;
 
 class ListingsSeed extends AbstractSeed
 {
@@ -45,18 +45,5 @@ class ListingsSeed extends AbstractSeed
         }
 
         return $data;
-    }
-
-    private function generateConstantData()
-    {
-        return [
-            [
-                'email' => 'nisse.hult@test.com',
-                'subcategory_id' => 1,
-                'unit_price' => 21,
-                'quantity' => 1,
-                'removal_code' => 'AAAAA'
-            ]
-        ];
     }
 }

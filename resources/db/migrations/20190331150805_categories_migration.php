@@ -3,7 +3,7 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class Users extends AbstractMigration
+class CategoriesMigration extends AbstractMigration
 {
     /**
      * Change Method.
@@ -25,19 +25,15 @@ class Users extends AbstractMigration
      *    addForeignKey
      *
      * Any other destructive changes will result in an error when trying to
-     * rollback the migration.
+     * rollback the migration.a
      *
      * Remember to call "create()" or "update()" and NOT "save()" when working
      * with the Table class.
      */
     public function change()
     {
-        $users = $this->table('users');
-        $users->addColumn('email', 'string', ['limit' => 75])
-            ->addColumn('username', 'string', ['limit' => 128])
-            ->addColumn('password', 'string', ['limit' => 128])
-            ->addColumn('active', 'integer', ['limit' =>  1, 'signed' => false, 'default' => 0])
-            ->addColumn('created_at', 'datetime')
+        $categories = $this->table('categories');
+        $categories->addColumn('category_name', 'string', ['limit' => 128])
             ->create();
     }
 }

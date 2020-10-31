@@ -1,4 +1,4 @@
-# Startplats
+# Market Board
 
 ## Installation for Apache
 Enable mod_rewrite module `sudo a2enmod rewrite`
@@ -6,12 +6,12 @@ Enable mod_rewrite module `sudo a2enmod rewrite`
 Setup a virtual host in /etc/apache2/sites-enabled/000-default.conf
 ```
 <VirtualHost *:80>
-	DocumentRoot /var/www/html/startplats/public
+	DocumentRoot /var/www/html/market-board/public
 	ServerName localhost
 	ErrorLog ${APACHE_LOG_DIR}/error.log
 	CustomLog ${APACHE_LOG_DIR}/access.log combined
 
-	<Directory "/var/www/html/startplats/public">
+	<Directory "/var/www/html/market-board/public">
 		AllowOverride All
         Order allow,deny
         Allow from all

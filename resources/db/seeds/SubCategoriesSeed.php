@@ -28,11 +28,11 @@ class SubCategoriesSeed extends AbstractSeed
     private function generateConstantData()
     {
         return [
-            ['subcategory_name' => 'Göteborgsvarvet', 'category_id' => 1],
-            ['subcategory_name' => 'Lidingöloppet', 'category_id' => 1],
-            ['subcategory_name' => 'Vasaloppet', 'category_id' => 5],
-            ['subcategory_name' => 'Vätternrundan', 'category_id' => 4],
-            ['subcategory_name' => 'Vansbrosimningen', 'category_id' => 2]
+            ['subcategory_name' => 'Screwdrivers', 'category_id' => 1],
+            ['subcategory_name' => 'Cell phones', 'category_id' => 2],
+            ['subcategory_name' => 'Computers', 'category_id' => 2],
+            ['subcategory_name' => 'Cars', 'category_id' => 3],
+            ['subcategory_name' => 'Motorcycles', 'category_id' => 3]
         ];
     }
 }

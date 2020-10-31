@@ -1,6 +1,6 @@
 <?php
 
-namespace Startplats;
+namespace MarketBoard;
 
 class Utils
 {

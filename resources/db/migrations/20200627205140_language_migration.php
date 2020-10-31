@@ -2,7 +2,7 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class Language extends AbstractMigration
+class LanguageMigration extends AbstractMigration
 {
     /**
      * Change Method.

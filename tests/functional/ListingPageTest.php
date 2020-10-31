@@ -1,6 +1,6 @@
 <?php
 
-namespace Startplats\Tests\Functional;
+namespace MarketBoard\Tests\Functional;
 
 class ListingPageTest extends BaseTestCase
 {
