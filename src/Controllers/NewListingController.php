@@ -59,7 +59,6 @@ class NewListingController extends BaseController
             }
 
             $categories = new Categories($this->db);
-
             return $this->view->render($response, 'new_listing.html.twig', [
                 'categories' => $categories->getMainCategories(),
                 'subcategories' => $categories->getSubcategories(),

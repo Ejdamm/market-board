@@ -10,8 +10,8 @@ class Listings
     private $db;
     private $whereFilter;
     private $params;
-    private $sorting_column;
-    private $sorting_order;
+    private $sortingColumn;
+    private $sortingOrder;
     private $limit;
     private $offset;
 
@@ -20,8 +20,8 @@ class Listings
         $this->db = $db;
         $this->setWhereFilter();
         $this->params = [];
-        $this->sorting_column = "created_at";
-        $this->sorting_order = "DESC";
+        $this->sortingColumn = "created_at";
+        $this->sortingOrder = "DESC";
         $this->limit = 20;
         $this->offset = 0;
     }
@@ -39,17 +39,17 @@ class Listings
         }
     }
 
-    public function setSortingOrder(string $sorting_order)
+    public function setSortingOrder($sortingOrder)
     {
-        if ($sorting_order == "ASC" || $sorting_order == "DESC") {
-            $this->sorting_order = $sorting_order;
+        if ($sortingOrder == "ASC" || $sortingOrder == "DESC") {
+            $this->sortingOrder = $sortingOrder;
         }
     }
 
-    public function setSortingColumn(string $sorting_column)
+    public function setSortingColumn($sortingColumn)
     {
-        if ($sorting_column == "created_at" || $sorting_column == "unit_price") {
-            $this->sorting_column = $sorting_column;
+        if ($sortingColumn == "created_at" || $sortingColumn == "unit_price") {
+            $this->sortingColumn = $sortingColumn;
         }
     }
 
@@ -83,7 +83,7 @@ class Listings
             INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
             INNER JOIN categories ON subcategories.category_id = categories.id
             $this->whereFilter
-            ORDER BY $this->sorting_column $this->sorting_order
+            ORDER BY $this->sortingColumn $this->sortingOrder
             LIMIT ? OFFSET ?;";
         $statement = $this->prepareAndExecute($query, $params);
         $result = $statement->fetchAll();
