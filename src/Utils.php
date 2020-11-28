@@ -31,7 +31,7 @@ class Utils
         return $result;
     }
 
-    public static function generate_removal_code()
+    public static function generateRemovalCode()
     {
         return strtoupper(substr(sha1(mt_rand()), 17, 6));
     }

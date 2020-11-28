@@ -33,7 +33,7 @@ class ShowMultipleListingsController extends BaseController
                 $this->session->set('subcategory_filter', $GET_subcategory_filter);
             }
             $filter['subcategory'] = $this->session->get('subcategory_filter', 0);
-            $listings->setWHEREFilter($filter['category'], $filter['subcategory']);
+            $listings->setWhereFilter($filter['category'], $filter['subcategory']);
 
             // Paging
             $count = $listings->getNrOfListings();

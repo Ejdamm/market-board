@@ -8,7 +8,7 @@ use PDO;
 class Listings
 {
     private $db;
-    private $WHERE_filter;
+    private $whereFilter;
     private $params;
     private $sorting_column;
     private $sorting_order;
@@ -18,7 +18,7 @@ class Listings
     public function __construct($db)
     {
         $this->db = $db;
-        $this->setWHEREFilter();
+        $this->setWhereFilter();
         $this->params = [];
         $this->sorting_column = "created_at";
         $this->sorting_order = "DESC";
@@ -26,16 +26,16 @@ class Listings
         $this->offset = 0;
     }
 
-    public function setWHEREFilter(int $category_id = 0, int $subcategory_id = 0)
+    public function setWhereFilter(int $category_id = 0, int $subcategoryId = 0)
     {
-        $this->WHERE_filter = "WHERE 1=1";
+        $this->whereFilter = "WHERE 1=1";
         if ($category_id > 0) {
-            $this->WHERE_filter .= " AND categories.id = ?";
+            $this->whereFilter .= " AND categories.id = ?";
             $this->params[] = $category_id;
         }
-        if ($subcategory_id > 0) {
-            $this->WHERE_filter .= " AND subcategories.id = ?";
-            $this->params[] = $subcategory_id;
+        if ($subcategoryId > 0) {
+            $this->whereFilter .= " AND subcategories.id = ?";
+            $this->params[] = $subcategoryId;
         }
     }
 
@@ -82,7 +82,7 @@ class Listings
             FROM listings 
             INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
             INNER JOIN categories ON subcategories.category_id = categories.id
-            $this->WHERE_filter
+            $this->whereFilter
             ORDER BY $this->sorting_column $this->sorting_order
             LIMIT ? OFFSET ?;";
         $statement = $this->prepareAndExecute($query, $params);
@@ -90,7 +90,7 @@ class Listings
         return $result;
     }
 
-    public function insertListing($params)
+    public function insertListing($params, $removalCode)
     {
         $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, description) VALUES(?,?,?,?,?,?);";
         $params = array_values([
@@ -98,7 +98,7 @@ class Listings
             $params['subcategory_id'],
             $params['unit_price'],
             $params['quantity'],
-            $params['removal_code'],
+            $removalCode,
             $params['description']
         ]);
         $this->prepareAndExecute($query, $params);
@@ -124,7 +124,7 @@ class Listings
             FROM listings
             INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
             INNER JOIN categories ON subcategories.category_id = categories.id
-            $this->WHERE_filter;";
+            $this->whereFilter;";
         $statement = $this->prepareAndExecute($query, $this->params);
 
         $count = $statement->fetch();
