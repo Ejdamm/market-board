@@ -27,6 +27,7 @@ class DefaultLanguage extends AbstractSeed
             [
                 'language' => 'default',
                 'title' => 'Market Board',
+                'listings' => 'Listings',
                 'subcategory' => 'Subcategory',
                 'category' => 'Category',
                 'all_categories' => 'All categories',

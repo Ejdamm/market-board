@@ -34,6 +34,7 @@ class LanguageMigration extends AbstractMigration
         $users = $this->table('language', ['id' => false, 'primary_key' => 'language']);
         $users->addColumn('language', 'string')
             ->addColumn('title', 'string', ['default' => 'Market Board'])
+            ->addColumn('listings', 'string', ['default' => 'Listings'])
             ->addColumn('subcategory', 'string', ['default' => 'Subcategory'])
             ->addColumn('category', 'string', ['default' => 'Category'])
             ->addColumn('all_categories', 'string', ['default' => 'All categories'])
