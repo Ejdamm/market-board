@@ -30,7 +30,7 @@ class NewListingController extends BaseController
                 'captcha' => Utils::createCaptcha($this->session),
             ]);
         } catch (Exception $e) {
-            $this->logger->addError("/listings/new GET threw exception: " . $e);
+            $this->logger->addError(get_class($this) ." GET threw exception: " . $e);
             return $this->view->render($response->withStatus(500), 'errors/error500.html.twig', [
                 'language' => $this->language,
             ]);
@@ -67,7 +67,7 @@ class NewListingController extends BaseController
                 'params' => $params,
             ]);
         } catch (Exception $e) {
-            $this->logger->addError("/listings/new POST threw exception: " . $e);
+            $this->logger->addError(get_class($this) ." POST threw exception: " . $e);
             return $this->view->render($response->withStatus(500), 'errors/error500.html.twig', [
                 'language' => $this->language,
             ]);

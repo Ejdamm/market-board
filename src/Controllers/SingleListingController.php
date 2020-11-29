@@ -26,7 +26,7 @@ class SingleListingController extends BaseController
         try {
             $listing = $this->listings->getSingleListing($args['id']);
             if ($listing == null) {
-                $this->logger->addInfo("/listings/" . $args['id'] . " 404 Tried to access non-existing listing");
+                $this->logger->addInfo(get_class($this) . " 404 Tried to access non-existing listing: " . $args['id']);
                 return $this->view->render($response->withStatus(404), 'errors/error404.html.twig', [
                     'language' => $this->language,
                 ]);
@@ -38,7 +38,7 @@ class SingleListingController extends BaseController
                 'captcha' => Utils::createCaptcha($this->session),
             ]);
         } catch (Exception $e) {
-            $this->logger->addError("/listings/" . $args['id'] . " GET threw exception: " . $e);
+            $this->logger->addError(get_class($this) . " id: " . $args['id'] . " GET threw exception: " . $e);
             return $this->view->render($response->withStatus(500), 'errors/error500.html.twig', [
                 'language' => $this->language,
             ]);
@@ -60,7 +60,7 @@ class SingleListingController extends BaseController
                 throw new Exception("Neither email_form nor removal_form was set.");
             }
         } catch (Exception $e) {
-            $this->logger->addError("/listings/" . $args['id'] . " POST threw exception: " . $e);
+            $this->logger->addError(get_class($this) . " id: " . $args['id'] . " POST threw exception: " . $e);
             return $this->view->render($response->withStatus(500), 'errors/error500.html.twig', [
                 'language' => $this->language,
             ]);

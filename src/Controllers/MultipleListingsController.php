@@ -41,7 +41,7 @@ class MultipleListingsController extends BaseController
                 'language' => $this->language,
             ]);
         } catch (Exception $e) {
-            $this->logger->addError("/listings/ GET threw exception: " . $e);
+            $this->logger->addError(get_class($this) . " GET threw exception: " . $e);
             return $this->view->render($response->withStatus(500), 'errors/error500.html.twig', [
                 'language' => $this->language,
             ]);
@@ -50,7 +50,7 @@ class MultipleListingsController extends BaseController
 
     public function post($request, $response, $args): ResponseInterface
     {
-        $this->logger->addError("/listings/ POST not implemented");
+        $this->logger->addError(get_class($this) . " POST not implemented");
         return $this->view->render($response->withStatus(501), 'errors/error501.html.twig', [
             'language' => $this->language,
         ]);
