@@ -82,6 +82,8 @@ class LanguageMigration extends AbstractMigration
             ->addColumn('error500_text', 'string', ['default' => 'An internal server error occurred. Please try again later.'])
             ->addColumn('error501_title', 'string', ['default' => '501 Not Implemented'])
             ->addColumn('error501_text', 'string', ['default' => 'The functionality you tried to use is not yet implemented.'])
+            ->addColumn('email_contact_seller_subject', 'string', ['default' => 'You have got a message from Market Board'])
+            ->addColumn('email_new_listing_subject', 'string', ['default' => 'Market Board - Your removal code'])
             ->create();
     }
 }

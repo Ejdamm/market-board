@@ -75,6 +75,8 @@ class DefaultLanguage extends AbstractSeed
                 'error500_text' => 'An internal server error occurred. Please try again later.',
                 'error501_title' => '501 Not Implemented',
                 'error501_text' => 'The functionality you tried to use is not yet implemented.',
+                'email_contact_seller_subject' => 'You have got a message from Market Board',
+                'email_new_listing_subject' => 'Market Board - Your removal code',
             ]
         ];
     }

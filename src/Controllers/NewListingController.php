@@ -97,7 +97,7 @@ class NewListingController extends BaseController
         $emailParams->removalCode = $removalCode;
         // E-mail function is excluded if run in Travis since it's a closed environment and tests will fail
         if (getenv('TRAVIS') != 'true') {
-            $this->mailer->setTo($address)->sendMessage(new EmailNewListing($emailParams));
+            $this->mailer->setTo($address)->sendMessage(new EmailNewListing($emailParams, $this->language['email_new_listing_subject']));
             $this->logger->addInfo("Sent email to " . $address);
         }
     }

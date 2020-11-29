@@ -7,18 +7,18 @@ use Anddye\Mailer\Mailable;
 
 class EmailNewListing extends Mailable
 {
-    protected $email_variables;
+    private $emailFields;
 
-    public function __construct($email_variables)
+    public function __construct($emailFields, $subject)
     {
-        $this->email_variables = $email_variables;
+        $this->emailFields = $emailFields;
+        $this->setSubject($subject);
     }
 
     public function build()
     {
-        $this->setSubject('Market Board - Your removal code');
         $this->setView('emails/new_listing_confirmation.html.twig', [
-            'params' => $this->email_variables
+            'params' => $this->emailFields
         ]);
 
         return $this;
