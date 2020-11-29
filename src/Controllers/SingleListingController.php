@@ -72,12 +72,12 @@ class SingleListingController extends BaseController
         $listing = $this->listings->getSingleListing($listingId);
 
         if (!$params['captcha'] || $this->session->get('captcha') != $params['captcha']) {
-            $alert_text = $this->language['wrong_captcha'];
-            $alert = ['level' => 'warning', 'text' => $alert_text];
+            $alertText = $this->language['wrong_captcha'];
+            $alert = ['level' => 'warning', 'text' => $alertText];
         } else {
             $this->sendEmail($listingId, $params['email_from'], $listing['email'], $params["email_text"]);
-            $alert_text = "<strong>" . $this->language['success'] . "</strong> " . $this->language['your_email_was_sent'];
-            $alert = ['level' => 'info', 'text' => $alert_text];
+            $alertText = "<strong>" . $this->language['success'] . "</strong> " . $this->language['your_email_was_sent'];
+            $alert = ['level' => 'info', 'text' => $alertText];
 
             //We only refill form if it was unsuccessful
             $params = null;
@@ -94,10 +94,10 @@ class SingleListingController extends BaseController
 
     private function processRemove($listingId, $removalCode)
     {
-        $affected_rows = $this->listings->removeListing($listingId, $removalCode);
+        $affectedRows = $this->listings->removeListing($listingId, $removalCode);
 
         $alert = [];
-        if ($affected_rows >= 1) {
+        if ($affectedRows >= 1) {
             $alert['text'] = "<strong>" . $this->language['success'] . "</strong> "
                 . $this->language['listing_removed_success'] . " <a href=\"/\">" . $this->language['go_back_to_start'] . "</a>";
             $alert['level'] = "success";
