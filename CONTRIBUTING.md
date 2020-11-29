@@ -13,6 +13,8 @@
 * Run single test: `composer test tests/Functional/HomepageTest.php`
 * Git hooks should be used to prevent untested code to be pushed.
 * Email tests can be done with [mailtrap.io](https://mailtrap.io)
+* Migrate test database `bin/phinx.sh migrate -e test -t 0` 
+* Populate the database with default language `bin/phinx.sh seed:run -s DefaultLanguage -e test`
 
 ### Troubleshooting for test
 * `Error: Class 'path/to/class' not found`
