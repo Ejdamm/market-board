@@ -8,7 +8,6 @@ use MarketBoard\Categories;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use MarketBoard\Listings;
-use MarketBoard\Utils;
 
 class MultipleListingsController extends BaseController
 {

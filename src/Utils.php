@@ -2,6 +2,8 @@
 
 namespace MarketBoard;
 
+use Gregwar\Captcha\CaptchaBuilder;
+
 class Utils
 {
     public static function generateRemovalCode()
@@ -12,5 +14,13 @@ class Utils
     public static function dump($array)
     {
         echo "<pre>" . print_r($array, true) . "</pre>";
+    }
+
+    public static function createCaptcha($session)
+    {
+        $captcha = new CaptchaBuilder;
+        $captcha->build();
+        $session->set('captcha', $captcha->getPhrase());
+        return $captcha->inline();
     }
 }

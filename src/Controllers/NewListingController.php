@@ -11,7 +11,6 @@ use MarketBoard\Listings;
 use MarketBoard\EmailNewListing;
 use MarketBoard\Utils;
 use stdClass;
-use Gregwar\Captcha\CaptchaBuilder;
 
 class NewListingController extends BaseController
 {
@@ -28,7 +27,7 @@ class NewListingController extends BaseController
                 'categories' => $categories->getMainCategories(),
                 'subcategories' => $categories->getSubcategories(),
                 'language' => $this->language,
-                'captcha' => $this->createCaptcha(),
+                'captcha' => Utils::createCaptcha($this->session),
             ]);
         } catch (Exception $e) {
             $this->logger->addError("/listings/new GET threw exception: " . $e);
@@ -64,7 +63,7 @@ class NewListingController extends BaseController
                 'subcategories' => $categories->getSubcategories(),
                 'alert' => ['level' => $alertLevel, 'text' => $alertText],
                 'language' => $this->language,
-                'captcha' => $this->createCaptcha(),
+                'captcha' => Utils::createCaptcha($this->session),
                 'params' => $params,
             ]);
         } catch (Exception $e) {
@@ -101,13 +100,5 @@ class NewListingController extends BaseController
             $this->mailer->setTo($address)->sendMessage(new EmailNewListing($emailParams));
             $this->logger->addInfo("Sent email to " . $address);
         }
-    }
-
-    private function createCaptcha()
-    {
-        $captcha = new CaptchaBuilder;
-        $captcha->build();
-        $this->session->set('captcha', $captcha->getPhrase());
-        return $captcha->inline();
     }
 }
