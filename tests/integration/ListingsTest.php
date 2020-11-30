@@ -11,13 +11,14 @@ class ListingsTest extends TestCase
 {
     use ArraySubsetAsserts;
 
+    private const REMOVAL_CODE = "AAAAAA";
     private static $listing_data = [
         [
             "email" => "test@test.com",
             "subcategory_id" => null,
             "unit_price" => "123",
             "quantity" => "2",
-            "removal_code" => "AAAAAA",
+            "removal_code" => self::REMOVAL_CODE,
             "description" => "Lorem Ipsum1",
             "created_at" => "2020-06-18 23:14:18",
         ],
@@ -26,7 +27,7 @@ class ListingsTest extends TestCase
             "subcategory_id" => null,
             "unit_price" => "789",
             "quantity" => "1",
-            "removal_code" => "AAAAAA",
+            "removal_code" => self::REMOVAL_CODE,
             "description" => "Lorem Ipsum2",
             "created_at" => "2020-06-18 23:14:17",
         ],
@@ -35,7 +36,7 @@ class ListingsTest extends TestCase
             "subcategory_id" => null,
             "unit_price" => "456",
             "quantity" => "3",
-            "removal_code" => "AAAAAA",
+            "removal_code" => self::REMOVAL_CODE,
             "description" => "Lorem Ipsum3",
             "created_at" => "2020-06-18 23:14:16",
         ]
@@ -139,7 +140,7 @@ class ListingsTest extends TestCase
 
     public function testInsertListing()
     {
-        $insert_id = self::$listings->insertListing(self::$listing_data[0]);
+        $insert_id = self::$listings->insertListing(self::$listing_data[0], self::REMOVAL_CODE);
         $this->assertNotNull($insert_id);
     }
 
@@ -251,7 +252,7 @@ class ListingsTest extends TestCase
     public function testGetNrOfListingsIncrements()
     {
         $before = self::$listings->getNrOfListings();
-        self::$listings->insertListing(self::$listing_data[0]);
+        self::$listings->insertListing(self::$listing_data[0], self::REMOVAL_CODE);
         $after = self::$listings->getNrOfListings();
         $this->assertGreaterThan($before, $after);
     }
@@ -294,7 +295,7 @@ class ListingsTest extends TestCase
 
     public function testGetMultipleListingsWhereNotCategory()
     {
-        self::$listings->setWHEREFilter(0, 0);
+        self::$listings->setWhereFilter(0, 0);
 
         $actual = self::$listings->getMultipleListings();
 
@@ -303,7 +304,7 @@ class ListingsTest extends TestCase
 
     public function testGetMultipleListingsWhereSubCategory()
     {
-        self::$listings->setWHEREFilter(0, self::$listing_data[0]["subcategory_id"] + 1);
+        self::$listings->setWhereFilter(0, self::$listing_data[0]["subcategory_id"] + 1);
 
         $actual = self::$listings->getMultipleListings();
 

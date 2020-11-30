@@ -7,18 +7,18 @@ use Anddye\Mailer\Mailable;
 
 class EmailSeller extends Mailable
 {
-    protected $email_variables;
+    private $emailFields;
 
-    public function __construct($email_variables)
+    public function __construct($emailFields, $subject)
     {
-        $this->email_variables = $email_variables;
+        $this->emailFields = $emailFields;
+        $this->setSubject($subject);
     }
 
     public function build()
     {
-        $this->setSubject('You have got a message from Market Board');
         $this->setView('emails/email_seller.html.twig', [
-            'params' => $this->email_variables,
+            'params' => $this->emailFields,
         ]);
 
         return $this;

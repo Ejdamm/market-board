@@ -4,13 +4,13 @@
 namespace MarketBoard\Controllers;
 
 use Exception;
+use MarketBoard\Categories;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use MarketBoard\Listings;
 use MarketBoard\EmailNewListing;
 use MarketBoard\Utils;
 use stdClass;
-use Gregwar\Captcha\CaptchaBuilder;
 
 class NewListingController extends BaseController
 {
@@ -22,20 +22,15 @@ class NewListingController extends BaseController
     public function get($request, $response, $args) : ResponseInterface
     {
         try {
-            $categories = Utils::get_categories($this->db);
-            $subcategories = Utils::get_subcategories($this->db);
-            $captcha = new CaptchaBuilder;
-            $captcha->build();
-            $this->session->set('captcha', $captcha->getPhrase());
-
+            $categories = new Categories($this->db);
             return $this->view->render($response, 'new_listing.html.twig', [
-                'categories' => $categories,
-                'subcategories' => $subcategories,
+                'categories' => $categories->getMainCategories(),
+                'subcategories' => $categories->getSubcategories(),
                 'language' => $this->language,
-                'captcha' => $captcha->inline(),
+                'captcha' => Utils::createCaptcha($this->session),
             ]);
         } catch (Exception $e) {
-            $this->logger->addError("/listings/new GET threw exception: " . $e);
+            $this->logger->addError(get_class($this) ." GET threw exception: " . $e);
             return $this->view->render($response->withStatus(500), 'errors/error500.html.twig', [
                 'language' => $this->language,
             ]);
@@ -49,52 +44,61 @@ class NewListingController extends BaseController
             $this->logger->addInfo("Received post params:" . print_r($params, true));
 
             if (!$params['captcha'] || $this->session->get('captcha') != $params['captcha']) {
-                $alert_text = $this->language['wrong_captcha'];
-                $alert = ['level' => 'warning', 'text' => $alert_text];
+                $alertText = $this->language['wrong_captcha'];
+                $alertLevel =  'warning';
             } else {
-                $removal_code = Utils::generate_removal_code();
-                $params['removal_code'] = $removal_code;
-                $listings = new Listings($this->db);
-                $inserted_id = $listings->insertListing($params);
-                $this->logger->addInfo("Parameters inserted:", $params);
+                $removalCode = Utils::generateRemovalCode();
+                $insertedId = $this->insertNewListing($params, $removalCode);
+                $this->sendEmail($insertedId, $removalCode, $params['email']);
+                $alertText = $this->getSuccessHtmlMessage($insertedId, $removalCode);
+                $alertLevel = 'success';
 
-                $email_variables = new stdClass;
-                $email_variables->insertedId = $inserted_id;
-                $email_variables->removal_code = $removal_code;
-                // E-mail function is excluded if run in Travis since it's a closed environment and tests will fail
-                if (getenv('TRAVIS') != 'true') {
-                    $this->mailer->setTo($params['email'])->sendMessage(new EmailNewListing($email_variables));
-                }
-
-                $alert_text = "<strong>" . $this->language['success'] . "</strong> "
-                    . $this->language['new_listing_inserted_message']
-                    . " <a href=\"/listings/$inserted_id\">" . $this->language['here'] . "</a>. "
-                    .$this->language['removal_code'] . ": $removal_code";
-                $alert = ['level' => 'success', 'text' => $alert_text];
-
-                //We only refill form if it was unsuccessful
+                // We only refill form if it was unsuccessful
                 $params = null;
             }
 
-            $categories = Utils::get_categories($this->db);
-            $subcategories = Utils::get_subcategories($this->db);
-            $captcha = new CaptchaBuilder;
-            $captcha->build();
-            $this->session->set('captcha', $captcha->getPhrase());
-
+            $categories = new Categories($this->db);
             return $this->view->render($response, 'new_listing.html.twig', [
-                'categories' => $categories,
-                'subcategories' => $subcategories,
-                'alert' => $alert,
+                'categories' => $categories->getMainCategories(),
+                'subcategories' => $categories->getSubcategories(),
+                'alert' => ['level' => $alertLevel, 'text' => $alertText],
                 'language' => $this->language,
-                'captcha' => $captcha->inline(),
+                'captcha' => Utils::createCaptcha($this->session),
                 'params' => $params,
             ]);
         } catch (Exception $e) {
-            $this->logger->addError("/listings/new POST threw exception: " . $e);
+            $this->logger->addError(get_class($this) ." POST threw exception: " . $e);
             return $this->view->render($response->withStatus(500), 'errors/error500.html.twig', [
                 'language' => $this->language,
             ]);
+        }
+    }
+
+    private function insertNewListing($params, $removalCode)
+    {
+        $listings = new Listings($this->db);
+        $insertedId = $listings->insertListing($params, $removalCode);
+        $this->logger->addInfo("Parameters inserted:", $params);
+        return $insertedId;
+    }
+
+    private function getSuccessHtmlMessage($insertedId, $removalCode)
+    {
+        return "<strong>" . $this->language['success'] . "</strong> "
+            . $this->language['new_listing_inserted_message']
+            . " <a href=\"/listings/$insertedId\">" . $this->language['here'] . "</a>. "
+            .$this->language['removal_code'] . ": $removalCode";
+    }
+
+    private function sendEmail($insertedId, $removalCode, $address)
+    {
+        $emailParams = new stdClass;
+        $emailParams->insertedId = $insertedId;
+        $emailParams->removalCode = $removalCode;
+        // E-mail function is excluded if run in Travis since it's a closed environment and tests will fail
+        if (getenv('TRAVIS') != 'true') {
+            $this->mailer->setTo($address)->sendMessage(new EmailNewListing($emailParams, $this->language['email_new_listing_subject']));
+            $this->logger->addInfo("Sent email to " . $address);
         }
     }
 }
