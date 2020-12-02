@@ -7,18 +7,18 @@
       <input type="email" class="form-control" id="new_listing_email" value="{{ params.email }}" placeholder="{{ language.enter_your_email }}" name="email" required>
     </div>
     <div class="form-group">
-      <label for="new_listing_category">{{ language.category }}</label>
-      <select class="form-control" id="new_listing_category" name="category_id" required>
-        <option value="">{{ language.choose_category }}</option>
+      <label for="category_dropdown">{{ language.category }}</label>
+      <select class="form-control" id="category_dropdown" name="category_id" required>
+        <option value="0">{{ language.choose_category }}</option>
         {% for category in categories %}
           <option value="{{ category.id }}" class="{{ category.category_name }}" {% if category.id == params.category_id %}selected{% endif %}>{{ category.category_name }}</option>
         {% endfor %}
       </select>
     </div>
     <div class="form-group">
-      <label for="new_listing_subcategory">{{ language.subcategory }}</label>
-      <select class="form-control" id="new_listing_subcategory" name="subcategory_id" required>
-        <option value="">{{ language.choose_subcategory }}</option>
+      <label for="subcategory_dropdown">{{ language.subcategory }}</label>
+      <select class="form-control" id="subcategory_dropdown" name="subcategory_id" required>
+        <option value="0">{{ language.choose_subcategory }}</option>
         {% for subcategory in subcategories %}
           <option value="{{ subcategory.id }}" class="{{ subcategory.category_name }}" {% if subcategory.id == params.subcategory_id %}selected{% endif %}>{{ subcategory.subcategory_name }}</option>
         {% endfor %}
@@ -50,39 +50,45 @@
   <!-- https://stackoverflow.com/a/20478291/5318606-->
   <script >
   $(document).ready(function () {
-    var subCatOptions = $('#new_listing_sub_category option');
+      let subCatOptions = $('#subcategory_dropdown option');
 
-    // Subcategory filtering depending on category
-    $('#new_listing_category').change(function () {
-      filterSubCategoryOptions(subCatOptions);
-      $('#new_listing_sub_category option[value=""]').prop('selected', true);
-    });
+      // Subcategory filtering depending on category
+      $('#category_dropdown').change(function () {
+          let selectedSubcategory = $('#subcategory_dropdown option:selected');
+          let selectedCategory = $('#category_dropdown option:selected');
+          filterSubCategoryOptions(subCatOptions, selectedCategory);
+          if (selectedSubcategory.prop('class') === selectedCategory.prop('class') || selectedCategory.prop('value') === "0") {
+              $('#subcategory_dropdown option[value=' + selectedSubcategory.prop('value') + ']').prop('selected', true);
+          } else {
+              $('#subcategory_dropdown option[value=0]').prop('selected', true);
+          }
+      });
 
-    // Subcategory filtering depending on subcategory
-    $('#new_listing_sub_category').change(function () {
-      var selectedSubCategory = $('#new_listing_sub_category option:selected');
-      var subCatClass = selectedSubCategory.prop('class');
+      // Subcategory filtering depending on subcategory
+      $('#subcategory_dropdown').change(function () {
+          let selectedSubCategory = $('#subcategory_dropdown option:selected');
+          let selectedCategory = $('#category_dropdown option:selected');
 
-      // Make sure the category corresponds to chosen subcategory
-      if ($('#new_listing_category option:selected').prop('class') != subCatClass) {
-        $('#new_listing_category .' + subCatClass).prop('selected', true);
-      }
-      filterSubCategoryOptions(subCatOptions);
-      // Reselect the selected option because it was lost in the filtering
-      selectedSubCategory.prop('selected', true);
-    });
+          // Make sure the category corresponds to chosen subcategory
+          if (selectedCategory.prop('class') !== selectedSubCategory.prop('class')) {
+              $('#category_dropdown .' + selectedSubCategory.prop('class')).prop('selected', true);
+          }
+
+          // Since we changed the category we can remove the subcategories not belonging to that category
+          filterSubCategoryOptions(subCatOptions, selectedCategory);
+          // Reselect the selected option because it was lost in the filtering
+          selectedSubCategory.prop('selected', true);
+      });
   });
 
-  function filterSubCategoryOptions(options){
-    var categoryClass = $('#new_listing_category option:selected').prop('class');
+  function filterSubCategoryOptions(options, selectedCategory){
+      // Always reset subcategory options
+      $('#subcategory_dropdown').append(options);
 
-    // Always reset subcategory options
-    $('#new_listing_sub_category option').remove();
-    $('#new_listing_sub_category').append(options);
-
-    if (categoryClass != "") {
-      $('#new_listing_sub_category :not(.' + categoryClass + ',option[value=""])').remove();
-    }
+      if (selectedCategory.prop('value') !== "0") {
+          // Remove all options which are not the default option or belonging to categoryClass
+          $('#subcategory_dropdown :not(.' + selectedCategory.prop('class') + ',option[value="0"])').remove();
+      }
   }
   </script>
 
