@@ -103,6 +103,24 @@ $container['language'] = function (Container $container) {
     return $language;
 };
 
+$container['errorHandler'] = function ($container) {
+    return function ($request, $response, $exception) use ($container) {
+        $container->logger->addError("Exception thrown. Stacktrace: " . $exception);
+        return $container->view->render($response->withStatus(500), 'errors/error500.html.twig', [
+            'language' => $container->language,
+        ]);
+    };
+};
+
+$container['phpErrorHandler'] = function ($container) {
+    return function ($request, $response, $exception) use ($container) {
+        $container->logger->addError("Exception thrown. Stacktrace: " . $exception);
+        return $container->view->render($response->withStatus(500), 'errors/error500.html.twig', [
+            'language' => $container->language,
+        ]);
+    };
+};
+
 // Register routes
 require __DIR__ . '/../src/routes.php';
 

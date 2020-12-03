@@ -3,13 +3,12 @@
 
 namespace MarketBoard\Controllers;
 
-use Exception;
 use MarketBoard\Categories;
+use MarketBoard\EmailNewListing;
+use MarketBoard\Listings;
+use MarketBoard\Utils;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
-use MarketBoard\Listings;
-use MarketBoard\EmailNewListing;
-use MarketBoard\Utils;
 use stdClass;
 
 class NewListingController extends BaseController
@@ -21,57 +20,43 @@ class NewListingController extends BaseController
 
     public function get($request, $response, $args) : ResponseInterface
     {
-        try {
-            $categories = new Categories($this->db);
-            return $this->view->render($response, 'new_listing.html.twig', [
-                'categories' => $categories->getMainCategories(),
-                'subcategories' => $categories->getSubcategories(),
-                'language' => $this->language,
-                'captcha' => Utils::createCaptcha($this->session),
-            ]);
-        } catch (Exception $e) {
-            $this->logger->addError(get_class($this) ." GET threw exception: " . $e);
-            return $this->view->render($response->withStatus(500), 'errors/error500.html.twig', [
-                'language' => $this->language,
-            ]);
-        }
+        $categories = new Categories($this->db);
+        return $this->view->render($response, 'new_listing.html.twig', [
+            'categories' => $categories->getMainCategories(),
+            'subcategories' => $categories->getSubcategories(),
+            'language' => $this->language,
+            'captcha' => Utils::createCaptcha($this->session),
+        ]);
     }
 
     public function post($request, $response, $args) : ResponseInterface
     {
-        try {
-            $params = $request->getParams();
-            $this->logger->addInfo("Received post params:" . print_r($params, true));
+        $params = $request->getParams();
+        $this->logger->addInfo("Received post params:" . print_r($params, true));
 
-            if (!$params['captcha'] || $this->session->get('captcha') != $params['captcha']) {
-                $alertText = $this->language['wrong_captcha'];
-                $alertLevel =  'warning';
-            } else {
-                $removalCode = Utils::generateRemovalCode();
-                $insertedId = $this->insertNewListing($params, $removalCode);
-                $this->sendEmail($insertedId, $removalCode, $params['email']);
-                $alertText = $this->getSuccessHtmlMessage($insertedId, $removalCode);
-                $alertLevel = 'success';
+        if (!$params['captcha'] || $this->session->get('captcha') != $params['captcha']) {
+            $alertText = $this->language['wrong_captcha'];
+            $alertLevel =  'warning';
+        } else {
+            $removalCode = Utils::generateRemovalCode();
+            $insertedId = $this->insertNewListing($params, $removalCode);
+            $this->sendEmail($insertedId, $removalCode, $params['email']);
+            $alertText = $this->getSuccessHtmlMessage($insertedId, $removalCode);
+            $alertLevel = 'success';
 
-                // We only refill form if it was unsuccessful
-                $params = null;
-            }
-
-            $categories = new Categories($this->db);
-            return $this->view->render($response, 'new_listing.html.twig', [
-                'categories' => $categories->getMainCategories(),
-                'subcategories' => $categories->getSubcategories(),
-                'alert' => ['level' => $alertLevel, 'text' => $alertText],
-                'language' => $this->language,
-                'captcha' => Utils::createCaptcha($this->session),
-                'params' => $params,
-            ]);
-        } catch (Exception $e) {
-            $this->logger->addError(get_class($this) ." POST threw exception: " . $e);
-            return $this->view->render($response->withStatus(500), 'errors/error500.html.twig', [
-                'language' => $this->language,
-            ]);
+            // We only refill form if it was unsuccessful
+            $params = null;
         }
+
+        $categories = new Categories($this->db);
+        return $this->view->render($response, 'new_listing.html.twig', [
+            'categories' => $categories->getMainCategories(),
+            'subcategories' => $categories->getSubcategories(),
+            'alert' => ['level' => $alertLevel, 'text' => $alertText],
+            'language' => $this->language,
+            'captcha' => Utils::createCaptcha($this->session),
+            'params' => $params,
+        ]);
     }
 
     private function insertNewListing($params, $removalCode)

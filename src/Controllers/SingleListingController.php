@@ -4,11 +4,11 @@
 namespace MarketBoard\Controllers;
 
 use Exception;
-use Psr\Container\ContainerInterface;
-use Psr\Http\Message\ResponseInterface;
 use MarketBoard\EmailSeller;
 use MarketBoard\Listings;
 use MarketBoard\Utils;
+use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface;
 use stdClass;
 
 class SingleListingController extends BaseController
@@ -23,47 +23,33 @@ class SingleListingController extends BaseController
 
     public function get($request, $response, $args): ResponseInterface
     {
-        try {
-            $listing = $this->listings->getSingleListing($args['id']);
-            if ($listing == null) {
-                $this->logger->addInfo(get_class($this) . " 404 Tried to access non-existing listing: " . $args['id']);
-                return $this->view->render($response->withStatus(404), 'errors/error404.html.twig', [
-                    'language' => $this->language,
-                ]);
-            }
-
-            return $this->view->render($response, 'single_listing.html.twig', [
-                'listing' => $listing,
-                'language' => $this->language,
-                'captcha' => Utils::createCaptcha($this->session),
-            ]);
-        } catch (Exception $e) {
-            $this->logger->addError(get_class($this) . " id: " . $args['id'] . " GET threw exception: " . $e);
-            return $this->view->render($response->withStatus(500), 'errors/error500.html.twig', [
+        $listing = $this->listings->getSingleListing($args['id']);
+        if ($listing == null) {
+            $this->logger->addInfo(get_class($this) . " 404 Tried to access non-existing listing: " . $args['id']);
+            return $this->view->render($response->withStatus(404), 'errors/error404.html.twig', [
                 'language' => $this->language,
             ]);
         }
+
+        return $this->view->render($response, 'single_listing.html.twig', [
+            'listing' => $listing,
+            'language' => $this->language,
+            'captcha' => Utils::createCaptcha($this->session),
+        ]);
     }
 
     public function post($request, $response, $args): ResponseInterface
     {
-        try {
-            $params = $request->getParams();
+        $params = $request->getParams();
 
-            if (array_key_exists("removal_form", $params)) {
-                $responseParams = $this->processRemove($args['id'], $params['removal_code']);
-                return $this->view->render($response, 'remove_listing.html.twig', $responseParams);
-            } elseif (array_key_exists("email_form", $params)) {
-                $responseParams = $this->processContact($args['id'], $params);
-                return $this->view->render($response, 'single_listing.html.twig', $responseParams);
-            } else {
-                throw new Exception("Neither email_form nor removal_form was set.");
-            }
-        } catch (Exception $e) {
-            $this->logger->addError(get_class($this) . " id: " . $args['id'] . " POST threw exception: " . $e);
-            return $this->view->render($response->withStatus(500), 'errors/error500.html.twig', [
-                'language' => $this->language,
-            ]);
+        if (array_key_exists("removal_form", $params)) {
+            $responseParams = $this->processRemove($args['id'], $params['removal_code']);
+            return $this->view->render($response, 'remove_listing.html.twig', $responseParams);
+        } elseif (array_key_exists("email_form", $params)) {
+            $responseParams = $this->processContact($args['id'], $params);
+            return $this->view->render($response, 'single_listing.html.twig', $responseParams);
+        } else {
+            throw new Exception("Neither email_form nor removal_form was set.");
         }
     }
 
