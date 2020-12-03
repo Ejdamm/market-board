@@ -3,11 +3,10 @@
 
 namespace MarketBoard\Controllers;
 
-use Exception;
 use MarketBoard\Categories;
+use MarketBoard\Listings;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
-use MarketBoard\Listings;
 
 class MultipleListingsController extends BaseController
 {
@@ -22,30 +21,23 @@ class MultipleListingsController extends BaseController
 
     public function get($request, $response, $args): ResponseInterface
     {
-        try {
-            $this->request = $request;
+        $this->request = $request;
 
-            // These must be called before getMultipleListings()
-            $filter = $this->getFilter();
-            $sorting = $this->getSorting();
-            $paging = $this->getPaging();
+        // These must be called before getMultipleListings()
+        $filter = $this->getFilter();
+        $sorting = $this->getSorting();
+        $paging = $this->getPaging();
 
-            $categories = new Categories($this->db);
-            return $this->view->render($response, 'all_listings.html.twig', [
-                'listings' => $this->listings->getMultipleListings(),
-                'pagination' => $paging,
-                'sorting' => $sorting,
-                'categories' => $categories->getMainCategories(),
-                'subcategories' => $categories->getSubcategories(),
-                'filter' => $filter,
-                'language' => $this->language,
-            ]);
-        } catch (Exception $e) {
-            $this->logger->addError(get_class($this) . " GET threw exception: " . $e);
-            return $this->view->render($response->withStatus(500), 'errors/error500.html.twig', [
-                'language' => $this->language,
-            ]);
-        }
+        $categories = new Categories($this->db);
+        return $this->view->render($response, 'all_listings.html.twig', [
+            'listings' => $this->listings->getMultipleListings(),
+            'pagination' => $paging,
+            'sorting' => $sorting,
+            'categories' => $categories->getMainCategories(),
+            'subcategories' => $categories->getSubcategories(),
+            'filter' => $filter,
+            'language' => $this->language,
+        ]);
     }
 
     public function post($request, $response, $args): ResponseInterface

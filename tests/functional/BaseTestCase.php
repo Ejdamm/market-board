@@ -144,6 +144,24 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
             return $language;
         };
 
+        self::$container['errorHandler'] = function ($container) {
+            return function ($request, $response, $exception) use ($container) {
+                $container->logger->addError("Exception thrown. Stacktrace: " . $exception);
+                return $container->view->render($response->withStatus(500), 'errors/error500.html.twig', [
+                    'language' => $container->language,
+                ]);
+            };
+        };
+
+        self::$container['phpErrorHandler'] = function ($container) {
+            return function ($request, $response, $exception) use ($container) {
+                $container->logger->addError("Exception thrown. Stacktrace: " . $exception);
+                return $container->view->render($response->withStatus(500), 'errors/error500.html.twig', [
+                    'language' => $container->language,
+                ]);
+            };
+        };
+
         // To make sure the log is empty at the start of the run
         $this->clearLog();
 
