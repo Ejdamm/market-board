@@ -10,8 +10,6 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Slim\App;
 use Slim\Container;
-use Slim\Exception\MethodNotAllowedException;
-use Slim\Exception\NotFoundException;
 use Slim\Http\Environment;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -20,6 +18,7 @@ use Slim\Middleware\Session;
 use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
 use SlimSession\Helper;
+use Throwable;
 use Twig\TwigFilter;
 
 /**
@@ -38,6 +37,45 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
     protected $app;
     protected static $container;
 
+    protected static $listing_data = [
+        [
+            "email" => "test@test.com",
+            "subcategory_id" => null,
+            "unit_price" => "123",
+            "quantity" => "2",
+            "removal_code" => "AAAAAA",
+            "description" => "Lorem Ipsum1",
+            "created_at" => "2020-06-18 23:14:18",
+        ],
+        [
+            "email" => "test3@test.com",
+            "subcategory_id" => null,
+            "unit_price" => "789",
+            "quantity" => "1",
+            "removal_code" => "AAAAAA",
+            "description" => "Lorem Ipsum2",
+            "created_at" => "2020-06-18 23:14:17",
+        ],
+        [
+            "email" => "test2@test.com",
+            "subcategory_id" => null,
+            "unit_price" => "456",
+            "quantity" => "3",
+            "removal_code" => "AAAAAA",
+            "description" => "Lorem Ipsum3",
+            "created_at" => "2020-06-18 23:14:16",
+        ]
+    ];
+
+    protected static $category = [
+        "category_name" => "category_test"
+    ];
+
+    protected static $subcategory = [
+        "subcategory_name" => "subcategory_test",
+        "category_id" => null
+    ];
+
     public function __construct(string $logFile = null)
     {
         parent::__construct();
@@ -48,6 +86,45 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
             $this->logFile = $logFile;
         }
         $this->app = $this->runApp();
+    }
+
+    public static function setUpBeforeClass(): void
+    {
+        $query = "INSERT INTO categories(category_name) VALUES(?);";
+        $statement1 = self::$container['db']->prepare($query);
+        $statement1->execute([self::$category['category_name']]);
+        $categoryId = self::$container['db']->lastInsertId();
+        self::$category["id"] = $categoryId; // Set id so clearDatabaseOf() only removes one entry
+
+        self::$subcategory["category_id"] = $categoryId;
+        $query = "INSERT INTO subcategories(subcategory_name, category_id) VALUES(?, ?);";
+        $statement2 = self::$container['db']->prepare($query);
+        $statement2->execute(array_values(self::$subcategory));
+        $subcategoryId = self::$container['db']->lastInsertId();
+
+        self::$listing_data[0]["subcategory_id"] = $subcategoryId;
+        self::$listing_data[1]["subcategory_id"] = $subcategoryId;
+    }
+
+    public function setUp(): void
+    {
+        $this->clearLog();
+    }
+
+    public function tearDown(): void
+    {
+        $this->clearLog();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        self::clearListingsTable();
+
+        unset(self::$subcategory['category_id']);
+        self::clearDatabaseOf("subcategories", self::$subcategory);
+        unset(self::$category['id']);
+        self::clearDatabaseOf("categories", self::$category);
+        self::$category['id'] = null;
     }
 
     private static function createPDOPreparedConditions($data)
@@ -178,8 +255,7 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
      * @param string $requestUri the request URI
      * @param array|object|null $requestData the request data
      * @return ResponseInterface
-     * @throws MethodNotAllowedException
-     * @throws NotFoundException
+     * @throws Throwable
      */
     public function processRequest($requestMethod, $requestUri, $requestData = null)
     {
