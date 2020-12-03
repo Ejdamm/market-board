@@ -5,7 +5,7 @@
   <form method="get">
     <div class="form-row">
       <div class="form-group col-5">
-        <select class="form-control" id="category_filter" name="category_filter">
+        <select class="form-control" id="category_dropdown" name="category_filter">
           <option value="0">{{ language.all_categories }}</option>
           {% for category in categories %}
           <option value="{{ category.id }}" class="{{ category.category_name }}" {% if category.id == filter.category %}selected{% endif %}>{{ category.category_name }}</option>
@@ -14,7 +14,7 @@
       </div>
 
       <div class="form-group col-5">
-        <select class="form-control" id="subcategory_filter" name="subcategory_filter">
+        <select class="form-control" id="subcategory_dropdown" name="subcategory_filter">
           <option value="0">{{ language.all_subcategories }}</option>
           {% for subcategory in subcategories %}
             <option value="{{ subcategory.id }}" class="{{ subcategory.category_name }}" {% if subcategory.id == filter.subcategory %}selected{% endif %}>{{ subcategory.subcategory_name }}</option>
@@ -91,24 +91,34 @@
   <!-- https://stackoverflow.com/a/20478291/5318606-->
   <script >
       $(document).ready(function () {
-          var subCatOptions = $('#subcategory_filter option');
+          let subCatOptions = $('#subcategory_dropdown option');
+
+          // Filter subcategories on load and then reselect the selected option
+          let selectedSubcategoryValue = $('#subcategory_dropdown option:selected').prop('value');
+          let selectedCategory = $('#category_dropdown option:selected');
+          filterSubCategoryOptions(subCatOptions, selectedCategory);
+          $('#subcategory_dropdown option[value=' + selectedSubcategoryValue + ']').prop('selected', true);
 
           // Subcategory filtering depending on category
-          $('#category_filter').change(function () {
-              filterSubCategoryOptions(subCatOptions);
-              $('#subcategory_filter option[value="0"]').prop('selected', true);
+          $('#category_dropdown').change(function () {
+              let selectedSubcategory = $('#subcategory_dropdown option:selected');
+              let selectedCategory = $('#category_dropdown option:selected');
+              filterSubCategoryOptions(subCatOptions, selectedCategory);
+              if (selectedSubcategory.prop('class') === selectedCategory.prop('class') || selectedCategory.prop('value') === "0") {
+                  $('#subcategory_dropdown option[value=' + selectedSubcategory.prop('value') + ']').prop('selected', true);
+              } else {
+                  $('#subcategory_dropdown option[value=0]').prop('selected', true);
+              }
           });
       });
 
-      function filterSubCategoryOptions(options){
-          var categoryClass = $('#category_filter option:selected').prop('class');
-
+      function filterSubCategoryOptions(options, selectedCategory){
           // Always reset subcategory options
-          $('#subcategory_filter option').remove();
-          $('#subcategory_filter').append(options);
+          $('#subcategory_dropdown').append(options);
 
-          if (categoryClass != "") {
-              $('#subcategory_filter :not(.' + categoryClass + ',option[value="0"])').remove();
+          if (selectedCategory.prop('value') !== "0") {
+              // Remove all options which are not the default option or belonging to categoryClass
+              $('#subcategory_dropdown :not(.' + selectedCategory.prop('class') + ',option[value="0"])').remove();
           }
       }
   </script>
