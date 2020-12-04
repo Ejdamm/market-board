@@ -1,6 +1,6 @@
 <h1>Hello</h1>
 
-<p>Your new listing can be found here: <a href='http://market-board/listings/{{ params.insertedId }}'>http://market-board/listings/{{ params.insertedId }}</a></p>
+<p>Your new listing can be found here: <a href='{{ server_address }}{{ path_for('single_listing', { 'id': params.insertedId }) }}'>{{ server_address }}{{ path_for('single_listing', { 'id': params.insertedId }) }}</a></p>
 
 <p>To remove it, use your removal code: {{ params.removalCode }}</p>
 
