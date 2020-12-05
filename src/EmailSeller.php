@@ -19,6 +19,7 @@ class EmailSeller extends Mailable
     {
         $this->setView('emails/email_seller.html.twig', [
             'params' => $this->emailFields,
+            'server_address' => $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['SERVER_NAME'],
         ]);
 
         return $this;

@@ -1,4 +1,4 @@
-<p>You have received a message for your listing on Market Board. The listing in question is: <a href='http://market-board/listings/{{ params.listingId }}'>http://market-board/listings/{{ params.listingId }}</a></p>
+<p>You have received a message for your listing on Market Board. The listing in question is: <a href='{{ server_address }}{{ path_for('single_listing', { 'id': params.listingId }) }}'>{{ server_address }}{{ path_for('single_listing', { 'id': params.listingId }) }}</a></p>
 
 <h3>The message:</h3>
 

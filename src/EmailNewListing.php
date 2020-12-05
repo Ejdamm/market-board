@@ -18,7 +18,8 @@ class EmailNewListing extends Mailable
     public function build()
     {
         $this->setView('emails/new_listing_confirmation.html.twig', [
-            'params' => $this->emailFields
+            'params' => $this->emailFields,
+            'server_address' => $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['SERVER_NAME'],
         ]);
 
         return $this;
