@@ -28,6 +28,7 @@ class SingleListingController extends BaseController
             $this->logger->addInfo(get_class($this) . " 404 Tried to access non-existing listing: " . $args['id']);
             return $this->view->render($response->withStatus(404), 'errors/error404.html.twig', [
                 'language' => $this->language,
+                'settings' => $this->container->get("settings"),
             ]);
         }
 
@@ -35,6 +36,7 @@ class SingleListingController extends BaseController
             'listing' => $listing,
             'language' => $this->language,
             'captcha' => Utils::createCaptcha($this->session),
+            'settings' => $this->container->get("settings"),
         ]);
     }
 

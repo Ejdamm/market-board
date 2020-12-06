@@ -17,6 +17,7 @@ class HomepageController extends BaseController
     {
         return $this->view->render($response, 'homepage.html.twig', [
             'language' => $this->language,
+            'settings' => $this->container->get("settings"),
         ]);
     }
 
@@ -25,6 +26,7 @@ class HomepageController extends BaseController
         $this->logger->addError(get_class($this) . " POST not implemented");
         return $this->view->render($response->withStatus(501), 'errors/error501.html.twig', [
             'language' => $this->language,
+            'settings' => $this->container->get("settings"),
         ]);
     }
 }

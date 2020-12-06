@@ -26,6 +26,7 @@ class NewListingController extends BaseController
             'subcategories' => $categories->getSubcategories(),
             'language' => $this->language,
             'captcha' => Utils::createCaptcha($this->session),
+            'settings' => $this->container->get("settings"),
         ]);
     }
 
@@ -56,6 +57,7 @@ class NewListingController extends BaseController
             'language' => $this->language,
             'captcha' => Utils::createCaptcha($this->session),
             'params' => $params,
+            'settings' => $this->container->get("settings"),
         ]);
     }
 
