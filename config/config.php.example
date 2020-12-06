@@ -4,8 +4,10 @@ use Monolog\Logger;
 
 return [
     'settings' => [
+        'contactEmail' => "info@example.se",
+
         # Display errors, true in dev mode and false in prod mode.
-        'displayErrorDetails' => true,
+        'displayErrorDetails' => false,
 
         # Allows the web server to set the Content-Length header which makes Slim behave more predictably.
         'addContentLengthHeader' => false,

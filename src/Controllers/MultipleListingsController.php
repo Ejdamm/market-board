@@ -37,6 +37,7 @@ class MultipleListingsController extends BaseController
             'subcategories' => $categories->getSubcategories(),
             'filter' => $filter,
             'language' => $this->language,
+            'settings' => $this->container->get("settings"),
         ]);
     }
 
@@ -45,6 +46,7 @@ class MultipleListingsController extends BaseController
         $this->logger->addError(get_class($this) . " POST not implemented");
         return $this->view->render($response->withStatus(501), 'errors/error501.html.twig', [
             'language' => $this->language,
+            'settings' => $this->container->get("settings"),
         ]);
     }
 

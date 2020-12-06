@@ -10,9 +10,10 @@
   </head>
   <body>
     {% include 'templates/navbar.html.twig'%}
-    <div class="container my-5">
+    <div class="container mt-5">
       {% include 'templates/alert.html.twig'%}
       {% block content %}{% endblock %}
     </div>
+    {% include 'templates/footer.html.twig'%}
   </body>
 </html>
