@@ -20,14 +20,15 @@
             <textarea class="form-control" id="email_seller" name="email_text" placeholder="{{ language.write_your_message_here }}" rows="4" required>{{ params.email_text }}</textarea>
           </div>
 
-
           <div class="form-group">
             <label for="new_listing_captcha">{{ language.captcha }}</label>
-            <input type="text" class="form-control" id="new_listing_captcha" placeholder="{{ language.enter_captcha }}" name="captcha" required>
+            <div class="form-inline">
+              <input type="text" class="form-control" id="new_listing_captcha" placeholder="{{ language.enter_captcha }}" name="captcha" required>
+              <img class="mx-2" alt="captcha_image" src="{{ captcha }}" />
+            </div>
           </div>
-          <img alt="captcha_image" src="{{ captcha }}" />
 
-          <button type="submit" class="btn btn-primary float-right" name="email_form">{{ language.send }}</button>
+          <button type="submit" class="btn btn-primary" name="email_form">{{ language.send }}</button>
         </form>
 
         <hr/>
