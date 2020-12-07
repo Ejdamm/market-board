@@ -43,11 +43,18 @@
 
     <div class="form-group">
       <label for="new_listing_captcha">{{ language.captcha }}</label>
-      <input type="text" class="form-control" id="new_listing_captcha" placeholder="{{ language.enter_captcha }}" name="captcha" required>
+      <div class="form-inline">
+        <input type="text" class="form-control" id="new_listing_captcha" placeholder="{{ language.enter_captcha }}" name="captcha" required>
+        <img class="mx-2" alt="captcha_image" src="{{ captcha }}" />
+      </div>
     </div>
-    <img alt="captcha_image" src="{{ captcha }}" />
 
-    <button type="submit" class="btn btn-primary float-right">{{ language.create_listing }}</button>
+
+    <div class="alert alert-info" role="alert">
+      {% include 'templates/gdpr.html.twig'%}
+    </div>
+
+    <button type="submit" class="btn btn-primary">{{ language.create_listing }}</button>
   </form>
 
   <!-- query to filter second dropdown -->
