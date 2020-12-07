@@ -33,13 +33,14 @@ class ListingsMigration extends AbstractMigration
     public function change()
     {
         $listings = $this->table('listings');
-        $listings->addColumn('email', 'string', ['limit' => 75])
+        $listings->addColumn('email', 'string', ['limit' => 256])
             ->addColumn('subcategory_id', 'integer')
             ->addColumn('unit_price', 'decimal', ['signed' => true])
             ->addColumn('quantity', 'integer')
             ->addColumn('removal_code', 'string', ['limit' => 6, 'null' => true])
             ->addColumn('created_at', 'timestamp', ['default' => 'CURRENT_TIMESTAMP'])
             ->addColumn('description', 'text')
+            ->addColumn('title', 'string', ['limit' => 40])
             ->addForeignKey('subcategory_id', 'subcategories', 'id')
             ->create();
     }

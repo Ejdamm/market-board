@@ -10,7 +10,7 @@ class MultipleListingsPageTest extends BaseTestCase
      */
     public function testGETAllListings()
     {
-        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, description, created_at) VALUES(?,?,?,?,?,?,?);";
+        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, description, title, created_at) VALUES(?,?,?,?,?,?,?,?);";
         $statement1 = self::$container['db']->prepare($query);
         $statement1->execute(array_values(self::$listing_data[0]));
         $statement2 = self::$container['db']->prepare($query);

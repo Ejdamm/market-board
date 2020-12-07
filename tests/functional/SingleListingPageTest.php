@@ -11,7 +11,7 @@ class SingleListingPageTest extends BaseTestCase
      */
     public function testGETSingleListing()
     {
-        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, description, created_at) VALUES(?,?,?,?,?,?,?);";
+        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, description, title, created_at) VALUES(?,?,?,?,?,?,?,?);";
         $statement1 = self::$container['db']->prepare($query);
         $statement1->execute(array_values(self::$listing_data[0]));
         $inserted_id = self::$container['db']->lastInsertId();
@@ -52,7 +52,7 @@ class SingleListingPageTest extends BaseTestCase
      */
     public function testRemoveSingleListing()
     {
-        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, description, created_at) VALUES(?,?,?,?,?,?,?);";
+        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, description, title, created_at) VALUES(?,?,?,?,?,?,?,?);";
         $statement = self::$container['db']->prepare($query);
         $statement->execute(array_values(self::$listing_data[0]));
         $inserted_id = self::$container['db']->lastInsertId();
@@ -77,7 +77,7 @@ class SingleListingPageTest extends BaseTestCase
      */
     public function testFailedRemoveSingleListing()
     {
-        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, description, created_at) VALUES(?,?,?,?,?,?,?);";
+        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, description, title, created_at) VALUES(?,?,?,?,?,?,?,?);";
         $statement = self::$container['db']->prepare($query);
         $statement->execute(array_values(self::$listing_data[0]));
         $inserted_id = self::$container['db']->lastInsertId();
@@ -103,7 +103,7 @@ class SingleListingPageTest extends BaseTestCase
      */
     public function testWrongRemovalCode()
     {
-        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, description, created_at) VALUES(?,?,?,?,?,?,?);";
+        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, description, title, created_at) VALUES(?,?,?,?,?,?,?,?);";
         $statement = self::$container['db']->prepare($query);
         $statement->execute(array_values(self::$listing_data[0]));
         $inserted_id = self::$container['db']->lastInsertId();
@@ -129,7 +129,7 @@ class SingleListingPageTest extends BaseTestCase
      */
     public function testSendMail()
     {
-        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, description, created_at) VALUES(?,?,?,?,?,?,?);";
+        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, description, title, created_at) VALUES(?,?,?,?,?,?,?,?);";
         $statement = self::$container['db']->prepare($query);
         $statement->execute(array_values(self::$listing_data[0]));
         $inserted_id = self::$container['db']->lastInsertId();

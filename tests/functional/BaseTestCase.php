@@ -45,6 +45,7 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
             "quantity" => "2",
             "removal_code" => "AAAAAA",
             "description" => "Lorem Ipsum1",
+            "title" => "Title1",
             "created_at" => "2020-06-18 23:14:18",
         ],
         [
@@ -54,6 +55,7 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
             "quantity" => "1",
             "removal_code" => "AAAAAA",
             "description" => "Lorem Ipsum2",
+            "title" => "Title2",
             "created_at" => "2020-06-18 23:14:17",
         ],
         [
@@ -63,6 +65,7 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
             "quantity" => "3",
             "removal_code" => "AAAAAA",
             "description" => "Lorem Ipsum3",
+            "title" => "Title3",
             "created_at" => "2020-06-18 23:14:16",
         ]
     ];

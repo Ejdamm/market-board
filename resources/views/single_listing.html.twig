@@ -3,8 +3,8 @@
 {% block content %}
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title">{{ listing.subcategory_name }}</h5>
-        <h6 class="card-subtitle mb-2 text-muted">{{ listing.category_name }}</h6>
+        <h4 class="card-title">{{ listing.title }}</h4>
+        <h6 class="card-subtitle mb-2 text-muted">{{ listing.category_name }} > {{ listing.subcategory_name }}</h6>
         <div><strong>{{ language.unit_price }}:</strong> {{ listing.unit_price }}</div>
         <div><strong>{{ language.quantity }}:</strong> {{ listing.quantity }}</div>
         <div><strong>{{ language.created }}:</strong> {{ listing.created_at }}</div>
@@ -20,13 +20,14 @@
             <textarea class="form-control" id="email_seller" name="email_text" placeholder="{{ language.write_your_message_here }}" rows="4" required>{{ params.email_text }}</textarea>
           </div>
 
-          <img class="my-2" alt="captcha_image" src="{{ captcha }}" />
+
           <div class="form-group">
             <label for="new_listing_captcha">{{ language.captcha }}</label>
             <input type="text" class="form-control" id="new_listing_captcha" placeholder="{{ language.enter_captcha }}" name="captcha" required>
           </div>
+          <img alt="captcha_image" src="{{ captcha }}" />
 
-          <button type="submit" class="btn btn-primary" name="email_form">{{ language.send }}</button>
+          <button type="submit" class="btn btn-primary float-right" name="email_form">{{ language.send }}</button>
         </form>
 
         <hr/>

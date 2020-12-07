@@ -2,8 +2,8 @@
 
 
 use Faker\Factory;
-use Phinx\Seed\AbstractSeed;
 use MarketBoard\Utils;
+use Phinx\Seed\AbstractSeed;
 
 class ListingsSeed extends AbstractSeed
 {
@@ -40,6 +40,7 @@ class ListingsSeed extends AbstractSeed
                 'quantity' =>  $faker->numberBetween(1, 2),
                 'removal_code' => Utils::generateRemovalCode(),
                 'description' => $faker->text(100),
+                'title' => $faker->text(30),
                 'created_at' => $faker->date($format = 'Y-m-d H:i:s', $max = 'now'),
             ];
         }
