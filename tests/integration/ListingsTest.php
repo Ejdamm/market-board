@@ -2,10 +2,10 @@
 
 namespace MarketBoard\Tests\Integration;
 
-use PHPUnit\Framework\TestCase;
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use MarketBoard\Listings;
 use PDO;
-use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
+use PHPUnit\Framework\TestCase;
 
 class ListingsTest extends TestCase
 {
@@ -20,6 +20,7 @@ class ListingsTest extends TestCase
             "quantity" => "2",
             "removal_code" => self::REMOVAL_CODE,
             "description" => "Lorem Ipsum1",
+            "title" => "Title1",
             "created_at" => "2020-06-18 23:14:18",
         ],
         [
@@ -29,6 +30,7 @@ class ListingsTest extends TestCase
             "quantity" => "1",
             "removal_code" => self::REMOVAL_CODE,
             "description" => "Lorem Ipsum2",
+            "title" => "Title1",
             "created_at" => "2020-06-18 23:14:17",
         ],
         [
@@ -38,6 +40,7 @@ class ListingsTest extends TestCase
             "quantity" => "3",
             "removal_code" => self::REMOVAL_CODE,
             "description" => "Lorem Ipsum3",
+            "title" => "Title1",
             "created_at" => "2020-06-18 23:14:16",
         ]
     ];
@@ -91,7 +94,7 @@ class ListingsTest extends TestCase
         self::$listings = new Listings(self::$db);
 
         foreach (self::$listing_data as $listing) {
-            $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, description, created_at) VALUES(?,?,?,?,?,?,?);";
+            $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, description, title, created_at) VALUES(?,?,?,?,?,?,?,?);";
             $statement = self::$db->prepare($query);
             $statement->execute(array_values($listing));
             $this->last_inserted_id = self::$db->lastInsertId();

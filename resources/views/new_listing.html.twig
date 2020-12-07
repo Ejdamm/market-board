@@ -3,10 +3,6 @@
 {% block content %}
   <form method="post">
     <div class="form-group">
-      <label for="new_listing_email">{{ language.email_address }}</label>
-      <input type="email" class="form-control" id="new_listing_email" value="{{ params.email }}" placeholder="{{ language.enter_your_email }}" name="email" required>
-    </div>
-    <div class="form-group">
       <label for="category_dropdown">{{ language.category }}</label>
       <select class="form-control" id="category_dropdown" name="category_id" required>
         <option value="0">{{ language.choose_category }}</option>
@@ -25,6 +21,14 @@
       </select>
     </div>
     <div class="form-group">
+      <label for="new_listing_title">{{ language.listing_title }}</label>
+      <input type="text" class="form-control" id="new_listing_title" value="{{ params.title }}" placeholder="{{ language.enter_title }}" name="title" maxlength="40" required>
+    </div>
+    <div class="form-group">
+      <label for="new_listing_email">{{ language.email_address }}</label>
+      <input type="email" class="form-control" id="new_listing_email" value="{{ params.email }}" placeholder="{{ language.enter_your_email }}" name="email" required>
+    </div>
+    <div class="form-group">
       <label for="new_listing_price">{{ language.unit_price }}</label>
       <input type="number" class="form-control" id="new_listing_price" value="{{ params.unit_price }}" placeholder="{{ language.enter_unit_price }}" name="unit_price" required>
     </div>
@@ -37,13 +41,13 @@
       <textarea class="form-control" id="new_listing_description" name="description" rows="4">{{ params.description }}</textarea>
     </div>
 
-    <img class="my-2" alt="captcha_image" src="{{ captcha }}" />
     <div class="form-group">
       <label for="new_listing_captcha">{{ language.captcha }}</label>
       <input type="text" class="form-control" id="new_listing_captcha" placeholder="{{ language.enter_captcha }}" name="captcha" required>
     </div>
+    <img alt="captcha_image" src="{{ captcha }}" />
 
-    <button type="submit" class="btn btn-primary">{{ language.create_listing }}</button>
+    <button type="submit" class="btn btn-primary float-right">{{ language.create_listing }}</button>
   </form>
 
   <!-- query to filter second dropdown -->
