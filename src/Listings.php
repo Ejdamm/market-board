@@ -71,7 +71,11 @@ class Listings
             WHERE listings.id = ?;";
         $statement = $this->prepareAndExecute($query, [$id]);
         $result = $statement->fetch();
-        return $result;
+        if ($result) {
+            return $result;
+        } else {
+            return [];
+        }
     }
 
     public function getMultipleListings()
@@ -87,7 +91,11 @@ class Listings
             LIMIT ? OFFSET ?;";
         $statement = $this->prepareAndExecute($query, $params);
         $result = $statement->fetchAll();
-        return $result;
+        if ($result) {
+            return $result;
+        } else {
+            return [];
+        }
     }
 
     public function insertListing($params, $removalCode)
@@ -129,7 +137,11 @@ class Listings
         $statement = $this->prepareAndExecute($query, $this->params);
 
         $count = $statement->fetch();
-        return intval($count['count']);
+        if ($count) {
+            return intval($count['count']);
+        } else {
+            return 0;
+        }
     }
 
     private function prepareAndExecute($query, $params=[])

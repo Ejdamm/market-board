@@ -23,8 +23,9 @@
           <div class="form-group">
             <label for="new_listing_captcha">{{ language.captcha }}</label>
             <div class="form-inline">
-              <input type="text" class="form-control" id="new_listing_captcha" placeholder="{{ language.enter_captcha }}" name="captcha" required>
+              <input type="text" class="form-control" id="new_listing_captcha" placeholder="{{ language.enter_captcha }}" name="captcha">
               <img class="mx-2" alt="captcha_image" src="{{ captcha }}" />
+              <button type="submit" class="btn btn-dark" name="refresh_captcha">{{ language.refresh }}</button>
             </div>
           </div>
 

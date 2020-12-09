@@ -331,11 +331,16 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
      */
     public function assertLogContains($expectedContent = array())
     {
-        $actualLogging = file_get_contents($this->logFile);
+        $actualLogging = $this->getLogContent();
 
         foreach ($expectedContent as $singleContent) {
             $this->assertStringContainsString($singleContent, $actualLogging);
         }
+    }
+
+    public function getLogContent()
+    {
+        return file_get_contents($this->logFile);
     }
 
     /**

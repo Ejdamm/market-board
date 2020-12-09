@@ -147,7 +147,6 @@ class SingleListingPageTest extends BaseTestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertLogDoesNotContain(['ERROR']);
-        $this->assertLogContains(["INFO: Sending email from: " . $email_from . " to: " . self::$listing_data[0]['email']]);
         $this->assertStringContainsString("Your E-mail was sent.", $htmlBody);
     }
 }

@@ -23,7 +23,7 @@ class HomepageController extends BaseController
 
     public function post($request, $response, $args): ResponseInterface
     {
-        $this->logger->addError(get_class($this) . " POST not implemented");
+        $this->logger->addWarning(get_class($this) . " POST not implemented");
         return $this->view->render($response->withStatus(501), 'errors/error501.html.twig', [
             'language' => $this->language,
             'settings' => $this->container->get("settings"),

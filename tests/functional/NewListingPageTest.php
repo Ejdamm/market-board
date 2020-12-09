@@ -32,12 +32,13 @@ class NewListingPageTest extends BaseTestCase
         unset($listing_data['removal_code']);
         unset($listing_data['created_at']);
         $listing_data['captcha'] = self::$container['session']->get('captcha');
+        $listing_data['new_listing_form'] = null;
         $response = $this->processRequest('POST', '/listings/new', $listing_data);
         unset($listing_data['captcha']);
-        $this->assertEquals(200, $response->getStatusCode());
+        unset($listing_data['new_listing_form']);
+        $this->assertEquals(200, $response->getStatusCode(), $this->getLogContent());
 
         $this->assertLogDoesNotContain(['ERROR']);
-        $this->assertLogContains(["INFO: Parameters inserted"]);
 
         $this->verifyEntryInserted("listings", $listing_data);
     }

@@ -35,6 +35,7 @@ class DefaultLanguage extends AbstractSeed
                 'all_subcategories' => 'All subcategories',
                 'filter' => 'Filter',
                 'new' => 'New',
+                'refresh' => 'Refresh',
                 'unit_price' => 'Unit price',
                 'created' => 'Created',
                 'first' => 'First',

@@ -163,7 +163,7 @@ class ListingsTest extends TestCase
     public function testGetSingleListingThatDontExist()
     {
         $actual = self::$listings->getSingleListing($this->last_inserted_id + 1);
-        $this->assertFalse($actual);
+        $this->assertEmpty($actual);
     }
 
     public function testRemoveListingThatExists()
