@@ -15,7 +15,7 @@ return [
         # Monolog logger config. Log folder and file must be writable
         'logger' => [
             'name' => 'market-board',
-            'level' => Logger::DEBUG,
+            'level' => Logger::INFO,
             'path' => __DIR__ . '/../logs/app.log',
             'test_path' => __DIR__ . '/../logs/apptest.log',
         ],

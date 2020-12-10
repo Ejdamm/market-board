@@ -3,6 +3,7 @@
 
 namespace MarketBoard\Controllers;
 
+use Exception;
 use MarketBoard\Categories;
 use MarketBoard\EmailNewListing;
 use MarketBoard\Listings;
@@ -33,7 +34,28 @@ class NewListingController extends BaseController
     public function post($request, $response, $args) : ResponseInterface
     {
         $params = $request->getParams();
-        $this->logger->addInfo("Received post params:" . print_r($params, true));
+
+        if (array_key_exists("new_listing_form", $params)) {
+            $responseParams = $this->processNewListing($params);
+        } elseif (array_key_exists("refresh_captcha", $params)) {
+            $categories = new Categories($this->db);
+            $responseParams = [
+                'categories' => $categories->getMainCategories(),
+                'subcategories' => $categories->getSubcategories(),
+                'language' => $this->language,
+                'captcha' => Utils::createCaptcha($this->session),
+                'params' => $params,
+                'settings' => $this->container->get("settings"),
+            ];
+        } else {
+            throw new Exception("Unknown post request was sent.");
+        }
+        return $this->view->render($response, 'new_listing.html.twig', $responseParams);
+    }
+
+    private function processNewListing($params)
+    {
+        $this->logger->addDebug("Received post params:" . print_r($params, true));
 
         if (!$params['captcha'] || $this->session->get('captcha') != $params['captcha']) {
             $alertText = $this->language['wrong_captcha'];
@@ -50,7 +72,7 @@ class NewListingController extends BaseController
         }
 
         $categories = new Categories($this->db);
-        return $this->view->render($response, 'new_listing.html.twig', [
+        return [
             'categories' => $categories->getMainCategories(),
             'subcategories' => $categories->getSubcategories(),
             'alert' => ['level' => $alertLevel, 'text' => $alertText],
@@ -58,14 +80,14 @@ class NewListingController extends BaseController
             'captcha' => Utils::createCaptcha($this->session),
             'params' => $params,
             'settings' => $this->container->get("settings"),
-        ]);
+        ];
     }
 
     private function insertNewListing($params, $removalCode)
     {
         $listings = new Listings($this->db);
         $insertedId = $listings->insertListing($params, $removalCode);
-        $this->logger->addInfo("Parameters inserted:", $params);
+        $this->logger->addDebug("Parameters inserted:", $params);
         return $insertedId;
     }
 
@@ -85,7 +107,7 @@ class NewListingController extends BaseController
         // E-mail function is excluded if run in Travis since it's a closed environment and tests will fail
         if (getenv('TRAVIS') != 'true') {
             $this->mailer->setTo($address)->sendMessage(new EmailNewListing($emailParams, $this->language['email_new_listing_subject']));
-            $this->logger->addInfo("Sent email to " . $address);
+            $this->logger->addDebug("Sent email to " . $address);
         }
     }
 }

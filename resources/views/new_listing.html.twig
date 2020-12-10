@@ -5,7 +5,7 @@
     <div class="form-group">
       <label for="category_dropdown">{{ language.category }}</label>
       <select class="form-control" id="category_dropdown" name="category_id" required>
-        <option value="0">{{ language.choose_category }}</option>
+        <option value="">{{ language.choose_category }}</option>
         {% for category in categories %}
           <option value="{{ category.id }}" class="{{ category.category_name }}" {% if category.id == params.category_id %}selected{% endif %}>{{ category.category_name }}</option>
         {% endfor %}
@@ -14,7 +14,7 @@
     <div class="form-group">
       <label for="subcategory_dropdown">{{ language.subcategory }}</label>
       <select class="form-control" id="subcategory_dropdown" name="subcategory_id" required>
-        <option value="0">{{ language.choose_subcategory }}</option>
+        <option value="">{{ language.choose_subcategory }}</option>
         {% for subcategory in subcategories %}
           <option value="{{ subcategory.id }}" class="{{ subcategory.category_name }}" {% if subcategory.id == params.subcategory_id %}selected{% endif %}>{{ subcategory.subcategory_name }}</option>
         {% endfor %}
@@ -44,8 +44,9 @@
     <div class="form-group">
       <label for="new_listing_captcha">{{ language.captcha }}</label>
       <div class="form-inline">
-        <input type="text" class="form-control" id="new_listing_captcha" placeholder="{{ language.enter_captcha }}" name="captcha" required>
+        <input type="text" class="form-control" id="new_listing_captcha" placeholder="{{ language.enter_captcha }}" name="captcha">
         <img class="mx-2" alt="captcha_image" src="{{ captcha }}" />
+        <button type="submit" class="btn btn-dark" name="refresh_captcha">{{ language.refresh }}</button>
       </div>
     </div>
 
@@ -54,7 +55,7 @@
       {% include 'templates/gdpr.html.twig'%}
     </div>
 
-    <button type="submit" class="btn btn-primary">{{ language.create_listing }}</button>
+    <button type="submit" class="btn btn-primary" name="new_listing_form">{{ language.create_listing }}</button>
   </form>
 
   <!-- query to filter second dropdown -->
@@ -68,10 +69,10 @@
           let selectedSubcategory = $('#subcategory_dropdown option:selected');
           let selectedCategory = $('#category_dropdown option:selected');
           filterSubCategoryOptions(subCatOptions, selectedCategory);
-          if (selectedSubcategory.prop('class') === selectedCategory.prop('class') || selectedCategory.prop('value') === "0") {
-              $('#subcategory_dropdown option[value=' + selectedSubcategory.prop('value') + ']').prop('selected', true);
+          if (selectedSubcategory.prop('class') === selectedCategory.prop('class') || selectedCategory.prop('value') === "") {
+              $('#subcategory_dropdown option[value="' + selectedSubcategory.prop('value') + '"]').prop('selected', true);
           } else {
-              $('#subcategory_dropdown option[value=0]').prop('selected', true);
+              $('#subcategory_dropdown option[value=""]').prop('selected', true);
           }
       });
 
@@ -96,9 +97,9 @@
       // Always reset subcategory options
       $('#subcategory_dropdown').append(options);
 
-      if (selectedCategory.prop('value') !== "0") {
+      if (selectedCategory.prop('value') !== "") {
           // Remove all options which are not the default option or belonging to categoryClass
-          $('#subcategory_dropdown :not(.' + selectedCategory.prop('class') + ',option[value="0"])').remove();
+          $('#subcategory_dropdown :not(.' + selectedCategory.prop('class') + ',option[value=""])').remove();
       }
   }
   </script>

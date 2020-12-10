@@ -42,6 +42,7 @@ class LanguageMigration extends AbstractMigration
             ->addColumn('all_subcategories', 'string', ['default' => 'All subcategories'])
             ->addColumn('filter', 'string', ['default' => 'Filter'])
             ->addColumn('new', 'string', ['default' => 'New'])
+            ->addColumn('refresh', 'string', ['default' => 'Refresh'])
             ->addColumn('unit_price', 'string', ['default' => 'Unit price'])
             ->addColumn('created', 'string', ['default' => 'Created'])
             ->addColumn('first', 'string', ['default' => 'First'])

@@ -50,8 +50,16 @@ class SingleListingController extends BaseController
         } elseif (array_key_exists("email_form", $params)) {
             $responseParams = $this->processContact($args['id'], $params);
             return $this->view->render($response, 'single_listing.html.twig', $responseParams);
+        } elseif (array_key_exists("refresh_captcha", $params)) {
+            return $this->view->render($response, 'single_listing.html.twig', [
+                'listing' => $this->listings->getSingleListing($args['id']),
+                'language' => $this->language,
+                'captcha' => Utils::createCaptcha($this->session),
+                'params' => $params,
+                'settings' => $this->container->get("settings"),
+            ]);
         } else {
-            throw new Exception("Neither email_form nor removal_form was set.");
+            throw new Exception("Unknown post request was sent.");
         }
     }
 
@@ -77,6 +85,7 @@ class SingleListingController extends BaseController
             'language' => $this->language,
             'captcha' =>Utils::createCaptcha($this->session),
             'params' => $params,
+            'settings' => $this->container->get("settings"),
         ];
     }
 
@@ -102,12 +111,13 @@ class SingleListingController extends BaseController
             'alert' => $alert,
             'language' => $this->language,
             'captcha' => Utils::createCaptcha($this->session),
+            'settings' => $this->container->get("settings"),
         ];
     }
 
     private function sendEmail($listingId, $sender, $receiver, $text)
     {
-        $this->logger->addInfo("Sending email from: " . $sender . " to: " . $receiver);
+        $this->logger->addDebug("Sending email from: " . $sender . " to: " . $receiver);
         $message = new stdClass;
         $message->listingId = $listingId;
         $message->message = $text;
