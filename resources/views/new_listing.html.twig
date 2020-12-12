@@ -50,10 +50,8 @@
       </div>
     </div>
 
+    {% include 'templates/gdpr.html.twig'%}
 
-    <div class="alert alert-info" role="alert">
-      {% include 'templates/gdpr.html.twig'%}
-    </div>
 
     <button type="submit" class="btn btn-primary" name="new_listing_form">{{ language.create_listing }}</button>
   </form>
