@@ -25,6 +25,7 @@ Restart apache2 `systemctl restart apache2`
 ### Install
 * Run `composer install` inside the git repository root folder.
 * copy /config/config.php.example to /config/config.php and change the credentials to your database setup. The same goes for phinx.php.example.
+* Create logfile and give apache permssion to write to it e.g. `chown www-data:www-data logs/app.log`
 
 ## Database migration
 Database migration is done with phinx. Usage:
