@@ -28,10 +28,10 @@ Restart apache2 `systemctl restart apache2`
 * Create logfile and give apache permssion to write to it e.g. `chown www-data:www-data logs/app.log`
 
 ## Database migration
-Database migration is done with phinx. Usage:
+Database migration is done with phinx. First create your database manually. Then migrates will take care of tables. Usage:
 * Migrate
     * `bin/phinx.sh create <MyTable>` (Note CamelCase)
-        * Will create a file for migration under db/migration. This file will be used to create/migrate/rollback tables.
+        * Will create a new migration under db/migration. This file will be used to create/migrate/rollback tables.
     * `bin/phinx.sh migrate` will migrate whatever config that is written under the function `create()` in `db/migrate`
     * `bin/phinx.sh rollback` will rollback whatever config that is written `create()` in `resources/db/migrate`
     * `bin/phinx.sh migrate -e dev -t 0` will reset all migrations
