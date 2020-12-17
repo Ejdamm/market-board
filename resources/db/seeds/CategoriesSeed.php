@@ -29,7 +29,8 @@ class CategoriesSeed extends AbstractSeed
         return [
             ['category_name' => 'Tools'],
             ['category_name' => 'Electronics'],
-            ['category_name' => 'Vehicles']
+            ['category_name' => 'Vehicles'],
+            ['category_name' => 'Sport equipment'],
         ];
     }
 }

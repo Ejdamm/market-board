@@ -32,7 +32,8 @@ class SubCategoriesSeed extends AbstractSeed
             ['subcategory_name' => 'Cell phones', 'category_id' => 2],
             ['subcategory_name' => 'Computers', 'category_id' => 2],
             ['subcategory_name' => 'Cars', 'category_id' => 3],
-            ['subcategory_name' => 'Motorcycles', 'category_id' => 3]
+            ['subcategory_name' => 'Motorcycles', 'category_id' => 3],
+            ['subcategory_name' => 'Scuba diving', 'category_id' => 4],
         ];
     }
 }

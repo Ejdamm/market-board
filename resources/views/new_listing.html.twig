@@ -7,7 +7,7 @@
       <select class="form-control" id="category_dropdown" name="category_id" required>
         <option value="">{{ language.choose_category }}</option>
         {% for category in categories %}
-          <option value="{{ category.id }}" class="{{ category.category_name }}" {% if category.id == params.category_id %}selected{% endif %}>{{ category.category_name }}</option>
+          <option value="{{ category.id }}" class="{{ category.category_name|replace({" ": "_"}) }}" {% if category.id == params.category_id %}selected{% endif %}>{{ category.category_name }}</option>
         {% endfor %}
       </select>
     </div>
@@ -16,7 +16,7 @@
       <select class="form-control" id="subcategory_dropdown" name="subcategory_id" required>
         <option value="">{{ language.choose_subcategory }}</option>
         {% for subcategory in subcategories %}
-          <option value="{{ subcategory.id }}" class="{{ subcategory.category_name }}" {% if subcategory.id == params.subcategory_id %}selected{% endif %}>{{ subcategory.subcategory_name }}</option>
+          <option value="{{ subcategory.id }}" class="{{ subcategory.category_name|replace({" ": "_"}) }}" {% if subcategory.id == params.subcategory_id %}selected{% endif %}>{{ subcategory.subcategory_name }}</option>
         {% endfor %}
       </select>
     </div>
