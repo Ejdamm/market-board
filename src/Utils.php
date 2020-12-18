@@ -3,6 +3,7 @@
 namespace MarketBoard;
 
 use Gregwar\Captcha\CaptchaBuilder;
+use Gregwar\Captcha\PhraseBuilder;
 
 class Utils
 {
@@ -18,7 +19,8 @@ class Utils
 
     public static function createCaptcha($session)
     {
-        $captcha = new CaptchaBuilder;
+        $phraseBuilder = new PhraseBuilder(5, '23456789ABCDEFGHJKLMNPQRSTUVWXYZ');
+        $captcha = new CaptchaBuilder(null, $phraseBuilder);
         $captcha->build();
         $session->set('captcha', $captcha->getPhrase());
         return $captcha->inline();
