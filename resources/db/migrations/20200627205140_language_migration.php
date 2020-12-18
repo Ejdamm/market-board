@@ -87,6 +87,8 @@ class LanguageMigration extends AbstractMigration
             ->addColumn('error501_text', 'string', ['default' => 'The functionality you tried to use is not yet implemented.'])
             ->addColumn('email_contact_seller_subject', 'string', ['default' => 'You have got a message from Market Board'])
             ->addColumn('email_new_listing_subject', 'string', ['default' => 'Market Board - Your removal code'])
+            ->addColumn('footer_contact', 'string', ['default' => 'Contact'])
+            ->addColumn('footer_made_with', 'string', ['default' => 'Made with Market Board'])
             ->create();
     }
 }

@@ -80,6 +80,8 @@ class DefaultLanguage extends AbstractSeed
                 'error501_text' => 'The functionality you tried to use is not yet implemented.',
                 'email_contact_seller_subject' => 'You have got a message from Market Board',
                 'email_new_listing_subject' => 'Market Board - Your removal code',
+                'footer_contact' => 'Contact',
+                'footer_made_with' => 'Made with Market Board',
             ]
         ];
     }
