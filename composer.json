@@ -13,7 +13,7 @@
         "monolog/monolog": "^1.24",
         "fzaninotto/faker": "^1.8",
         "ext-pdo": "*",
-        "andrewdyer/slim3-mailer": "^1.1",
+        "andrewdyer/slim3-mailer": "^1.2.0",
         "bryanjhv/slim-session": "~3.0",
         "gregwar/captcha": "^1.1"
     },

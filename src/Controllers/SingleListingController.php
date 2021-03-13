@@ -125,7 +125,7 @@ class SingleListingController extends BaseController
         // E-mail function is excluded if run in Travis since it's a closed environment and tests will fail
         if (getenv('TRAVIS') != 'true') {
             $emailSeller = new EmailSeller($message, $this->language['email_contact_seller_subject']);
-            $emailSeller->setFrom($sender);
+            $emailSeller->setReplyTo($sender);
             $this->mailer->setTo($receiver)->sendMessage($emailSeller);
         }
     }
