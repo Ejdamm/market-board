@@ -22,6 +22,7 @@ class ListingsTest extends TestCase
             "description" => "Lorem Ipsum1",
             "title" => "Title1",
             "created_at" => "2020-06-18 23:14:18",
+            "type" => "selling",
         ],
         [
             "email" => "test3@test.com",
@@ -32,6 +33,7 @@ class ListingsTest extends TestCase
             "description" => "Lorem Ipsum2",
             "title" => "Title1",
             "created_at" => "2020-06-18 23:14:17",
+            "type" => "buying",
         ],
         [
             "email" => "test2@test.com",
@@ -42,6 +44,7 @@ class ListingsTest extends TestCase
             "description" => "Lorem Ipsum3",
             "title" => "Title1",
             "created_at" => "2020-06-18 23:14:16",
+            "type" => "listing",
         ]
     ];
 
@@ -94,7 +97,7 @@ class ListingsTest extends TestCase
         self::$listings = new Listings(self::$db);
 
         foreach (self::$listing_data as $listing) {
-            $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, description, title, created_at) VALUES(?,?,?,?,?,?,?,?);";
+            $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, description, title, created_at, type) VALUES(?,?,?,?,?,?,?,?,?);";
             $statement = self::$db->prepare($query);
             $statement->execute(array_values($listing));
             $this->last_inserted_id = self::$db->lastInsertId();
@@ -296,9 +299,9 @@ class ListingsTest extends TestCase
         $this->assertGreaterThanOrEqual($actual[2]['created_at'], $actual[1]['created_at']);
     }
 
-    public function testGetMultipleListingsWhereNotCategory()
+    public function testGetMultipleListingsWhereCategory()
     {
-        self::$listings->setWhereFilter(0, 0);
+        self::$listings->addWhereFilter(self::$listings->CATEGORIES_ID_FIELD, self::$subcategory["category_id"]);
 
         $actual = self::$listings->getMultipleListings();
 
@@ -307,10 +310,10 @@ class ListingsTest extends TestCase
 
     public function testGetMultipleListingsWhereSubCategory()
     {
-        self::$listings->setWhereFilter(0, self::$listing_data[0]["subcategory_id"] + 1);
+        self::$listings->addWhereFilter(self::$listings->SUBCATEGORIES_ID_FIELD, self::$listing_data[0]["subcategory_id"]);
 
         $actual = self::$listings->getMultipleListings();
 
-        $this->assertEquals(0, sizeof($actual));
+        $this->assertEquals(3, sizeof($actual));
     }
 }

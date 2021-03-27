@@ -11,14 +11,10 @@ class SingleListingPageTest extends BaseTestCase
      */
     public function testGETSingleListing()
     {
-        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, description, title, created_at) VALUES(?,?,?,?,?,?,?,?);";
-        $statement1 = self::$container['db']->prepare($query);
-        $statement1->execute(array_values(self::$listing_data[0]));
-        $inserted_id = self::$container['db']->lastInsertId();
-        $statement2 = self::$container['db']->prepare($query);
-        $statement2->execute(array_values(self::$listing_data[1]));
+        $inserted_id1 = $this->insertListing(self::$listing_data[0]);
+        $inserted_id2 = $this->insertListing(self::$listing_data[1]);
 
-        $response = $this->processRequest('GET', "/listings/$inserted_id");
+        $response = $this->processRequest('GET', "/listings/$inserted_id1");
         $this->assertEquals(200, $response->getStatusCode());
 
         $this->assertLogDoesNotContain(['ERROR']);
@@ -52,10 +48,7 @@ class SingleListingPageTest extends BaseTestCase
      */
     public function testRemoveSingleListing()
     {
-        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, description, title, created_at) VALUES(?,?,?,?,?,?,?,?);";
-        $statement = self::$container['db']->prepare($query);
-        $statement->execute(array_values(self::$listing_data[0]));
-        $inserted_id = self::$container['db']->lastInsertId();
+        $inserted_id = $this->insertListing(self::$listing_data[0]);
 
         $post_params = [
             'removal_code' => self::$listing_data[0]['removal_code'],
@@ -77,10 +70,7 @@ class SingleListingPageTest extends BaseTestCase
      */
     public function testFailedRemoveSingleListing()
     {
-        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, description, title, created_at) VALUES(?,?,?,?,?,?,?,?);";
-        $statement = self::$container['db']->prepare($query);
-        $statement->execute(array_values(self::$listing_data[0]));
-        $inserted_id = self::$container['db']->lastInsertId();
+        $inserted_id = $this->insertListing(self::$listing_data[0]);
 
         $post_params = [
             'removal_code' => self::$listing_data[0]['removal_code'],
@@ -103,10 +93,7 @@ class SingleListingPageTest extends BaseTestCase
      */
     public function testWrongRemovalCode()
     {
-        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, description, title, created_at) VALUES(?,?,?,?,?,?,?,?);";
-        $statement = self::$container['db']->prepare($query);
-        $statement->execute(array_values(self::$listing_data[0]));
-        $inserted_id = self::$container['db']->lastInsertId();
+        $inserted_id = $this->insertListing(self::$listing_data[0]);
 
         $post_params = [
             'removal_code' => "BBBBBB",
@@ -129,10 +116,7 @@ class SingleListingPageTest extends BaseTestCase
      */
     public function testSendMail()
     {
-        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, description, title, created_at) VALUES(?,?,?,?,?,?,?,?);";
-        $statement = self::$container['db']->prepare($query);
-        $statement->execute(array_values(self::$listing_data[0]));
-        $inserted_id = self::$container['db']->lastInsertId();
+        $inserted_id = $this->insertListing(self::$listing_data[0]);
 
         $email_from = "hillary.clinton@us.gov";
         $post_params = [
@@ -148,5 +132,14 @@ class SingleListingPageTest extends BaseTestCase
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertLogDoesNotContain(['ERROR']);
         $this->assertStringContainsString("Your E-mail was sent.", $htmlBody);
+    }
+
+    private function insertListing($listingData)
+    {
+        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, description, title, created_at, type) VALUES(?,?,?,?,?,?,?,?,?);";
+        $statement = self::$container['db']->prepare($query);
+        $statement->execute(array_values($listingData));
+        $inserted_id = self::$container['db']->lastInsertId();
+        return $inserted_id;
     }
 }

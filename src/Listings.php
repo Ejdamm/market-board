@@ -7,6 +7,10 @@ use PDO;
 
 class Listings
 {
+    public $CATEGORIES_ID_FIELD = "categories.id";
+    public $SUBCATEGORIES_ID_FIELD = "subcategories.id";
+    public $TYPE_FIELD = "type";
+
     private $db;
     private $whereFilter;
     private $params;
@@ -18,7 +22,7 @@ class Listings
     public function __construct($db)
     {
         $this->db = $db;
-        $this->setWhereFilter();
+        $this->whereFilter = "WHERE 1=1";
         $this->params = [];
         $this->sortingColumn = "created_at";
         $this->sortingOrder = "DESC";
@@ -26,17 +30,10 @@ class Listings
         $this->offset = 0;
     }
 
-    public function setWhereFilter(int $category_id = 0, int $subcategoryId = 0)
+    public function addWhereFilter($field, $value)
     {
-        $this->whereFilter = "WHERE 1=1";
-        if ($category_id > 0) {
-            $this->whereFilter .= " AND categories.id = ?";
-            $this->params[] = $category_id;
-        }
-        if ($subcategoryId > 0) {
-            $this->whereFilter .= " AND subcategories.id = ?";
-            $this->params[] = $subcategoryId;
-        }
+        $this->whereFilter .= " AND $field = ?";
+        $this->params[] = $value;
     }
 
     public function setSortingOrder($sortingOrder)
@@ -65,7 +62,7 @@ class Listings
 
     public function getSingleListing(int $id)
     {
-        $query = "SELECT subcategory_name, category_name, email, unit_price, quantity, created_at, description, title FROM listings
+        $query = "SELECT subcategory_name, category_name, email, unit_price, quantity, created_at, description, title, type FROM listings
             INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
             INNER JOIN categories ON subcategories.category_id = categories.id
             WHERE listings.id = ?;";
@@ -82,7 +79,7 @@ class Listings
     {
         $params = array_merge($this->params, [$this->limit, $this->offset]);
 
-        $query = "SELECT listings.id, subcategory_name, category_name, email, unit_price, quantity, created_at, title
+        $query = "SELECT listings.id, subcategory_name, category_name, email, unit_price, quantity, created_at, title, type
             FROM listings 
             INNER JOIN subcategories ON listings.subcategory_id = subcategories.id
             INNER JOIN categories ON subcategories.category_id = categories.id
@@ -100,7 +97,7 @@ class Listings
 
     public function insertListing($params, $removalCode)
     {
-        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, description, title) VALUES(?,?,?,?,?,?,?);";
+        $query = "INSERT INTO listings(email, subcategory_id, unit_price, quantity, removal_code, description, title, type) VALUES(?,?,?,?,?,?,?,?);";
         $params = array_values([
             $params['email'],
             $params['subcategory_id'],
@@ -109,6 +106,7 @@ class Listings
             $removalCode,
             $params['description'],
             $params['title'],
+            $params['type'],
         ]);
         $this->prepareAndExecute($query, $params);
         $inserted_id = $this->db->lastInsertId();

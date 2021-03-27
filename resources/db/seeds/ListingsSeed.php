@@ -42,6 +42,7 @@ class ListingsSeed extends AbstractSeed
                 'description' => $faker->text(100),
                 'title' => $faker->text(30),
                 'created_at' => $faker->date($format = 'Y-m-d H:i:s', $max = 'now'),
+                'type' => $i % 2 == 0 ? 'selling' : 'buying',
             ];
         }
 
