@@ -3,7 +3,13 @@
 {% block content %}
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title">{{ listing.title }}</h4>
+        {% if listing.type == "buying" %}
+          <h4 class="card-title">[{{ language.buying }}] {{ listing.title }}</h4>
+        {% elseif listing.type == "selling" %}
+          <h4 class="card-title">[{{ language.selling }}] {{ listing.title }}</h4>
+        {% else %}
+          <h4 class="card-title">{{ listing.title }}</h4>
+        {% endif %}
         <h6 class="card-subtitle mb-2 text-muted">{{ listing.category_name }} > {{ listing.subcategory_name }}</h6>
         <div><strong>{{ language.unit_price }}:</strong> {{ listing.unit_price }}</div>
         <div><strong>{{ language.quantity }}:</strong> {{ listing.quantity }}</div>
@@ -12,12 +18,12 @@
 
         <hr/>
         <form method="post">
-          <h5>{{ language.contact_the_seller }}</h5>
+          <h5>{{ language.contact_the_advertiser }}</h5>
           <div class="form-group">
             <input type="email" class="form-control" id="email_from" value="{{ params.email_from }}" placeholder="{{ language.enter_your_email }}" name="email_from" required>
           </div>
           <div class="form-group">
-            <textarea class="form-control" id="email_seller" name="email_text" placeholder="{{ language.write_your_message_here }}" rows="4" required>{{ params.email_text }}</textarea>
+            <textarea class="form-control" id="email_advertiser" name="email_text" placeholder="{{ language.write_your_message_here }}" rows="4" required>{{ params.email_text }}</textarea>
           </div>
 
           <div class="form-group">
@@ -34,7 +40,7 @@
 
         <hr/>
         <details>
-          <summary>{{ language.are_you_the_seller }}</summary>
+          <summary>{{ language.are_you_the_advertiser }}</summary>
           <form class="form-inline" method="post">
             <input class="form-control my-2 mr-2" id="removal_code" name="removal_code" placeholder="{{ language.removal_code }}" required>
             <button type="submit" class="btn btn-danger" name="removal_form">{{ language.remove }}</button>

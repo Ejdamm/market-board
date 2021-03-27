@@ -5,7 +5,7 @@ namespace MarketBoard;
 
 use Anddye\Mailer\Mailable;
 
-class EmailSeller extends Mailable
+class EmailAdvertiser extends Mailable
 {
     private $emailFields;
 
@@ -17,7 +17,7 @@ class EmailSeller extends Mailable
 
     public function build()
     {
-        $this->setView('emails/email_seller.html.twig', [
+        $this->setView('emails/email_advertiser.html.twig', [
             'params' => $this->emailFields,
             'server_address' => $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['SERVER_NAME'],
         ]);

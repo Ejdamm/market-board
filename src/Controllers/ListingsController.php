@@ -8,15 +8,17 @@ use MarketBoard\Listings;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class MultipleListingsController extends BaseController
+class ListingsController extends BaseController
 {
-    private $listings;
+    protected $listings;
     private $request;
+    protected $type;
 
     public function __construct(ContainerInterface $container)
     {
         parent::__construct($container);
         $this->listings = new Listings($this->db);
+        $this->type = 'listings';
     }
 
     public function get($request, $response, $args): ResponseInterface
@@ -29,7 +31,7 @@ class MultipleListingsController extends BaseController
         $paging = $this->getPaging();
 
         $categories = new Categories($this->db);
-        return $this->view->render($response, 'all_listings.html.twig', [
+        return $this->view->render($response, 'listings.html.twig', [
             'listings' => $this->listings->getMultipleListings(),
             'pagination' => $paging,
             'sorting' => $sorting,
@@ -38,6 +40,7 @@ class MultipleListingsController extends BaseController
             'filter' => $filter,
             'language' => $this->language,
             'settings' => $this->container->get("settings"),
+            'type' => $this->type,
         ]);
     }
 
@@ -55,7 +58,12 @@ class MultipleListingsController extends BaseController
         $categoryFilter = $this->setAndGetIntSession("category_filter", 0, 0);
         $subcategoryFilter = $this->setAndGetIntSession("subcategory_filter", 0, 0);
 
-        $this->listings->setWhereFilter($categoryFilter, $subcategoryFilter);
+        if ($categoryFilter > 0) {
+            $this->listings->addWhereFilter($this->listings->CATEGORIES_ID_FIELD, $categoryFilter);
+        }
+        if ($subcategoryFilter > 0) {
+            $this->listings->addWhereFilter($this->listings->SUBCATEGORIES_ID_FIELD, $subcategoryFilter);
+        }
 
         return [
             'category' => $categoryFilter,
@@ -111,22 +119,24 @@ class MultipleListingsController extends BaseController
         ];
     }
 
-    private function setAndGetIntSession($sessionName, $default, $minValue = null)
+    private function setAndGetIntSession($paramName, $default, $minValue = null)
     {
-        $paramValue = $this->request->getParam($sessionName, null);
+        $paramValue = $this->request->getParam($paramName, null);
         $isBigEnough = true;
         if ($minValue != null) {
             $isBigEnough = intval($paramValue) >= $minValue;
         }
+        $sessionName = $this->type . "_" . $paramName;
         if ($paramValue != null && is_numeric($paramValue) && $isBigEnough) {
             $this->session->set($sessionName, $paramValue);
         }
         return $this->session->get($sessionName, $default);
     }
 
-    private function setAndGetStringSession($sessionName, $default)
+    private function setAndGetStringSession($paramName, $default)
     {
-        $paramValue = $this->request->getParam($sessionName, null);
+        $paramValue = $this->request->getParam($paramName, null);
+        $sessionName = $this->type . "_" . $paramName;
         if ($paramValue != null) {
             $this->session->set($sessionName, $paramValue);
         }

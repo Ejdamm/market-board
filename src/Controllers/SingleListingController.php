@@ -4,7 +4,7 @@
 namespace MarketBoard\Controllers;
 
 use Exception;
-use MarketBoard\EmailSeller;
+use MarketBoard\EmailAdvertiser;
 use MarketBoard\Listings;
 use MarketBoard\Utils;
 use Psr\Container\ContainerInterface;
@@ -124,9 +124,9 @@ class SingleListingController extends BaseController
 
         // E-mail function is excluded if run in Travis since it's a closed environment and tests will fail
         if (getenv('TRAVIS') != 'true') {
-            $emailSeller = new EmailSeller($message, $this->language['email_contact_seller_subject']);
-            $emailSeller->setReplyTo($sender);
-            $this->mailer->setTo($receiver)->sendMessage($emailSeller);
+            $emailAdvertiser = new EmailAdvertiser($message, $this->language['email_contact_advertiser_subject']);
+            $emailAdvertiser->setReplyTo($sender);
+            $this->mailer->setTo($receiver)->sendMessage($emailAdvertiser);
         }
     }
 }

@@ -1,6 +1,13 @@
 {% extends 'templates/base.html.twig' %}
 
 {% block content %}
+  {% if type == "buying" %}
+    <h1>{{ language.buying }}</h1>
+  {% elseif type == "selling" %}
+    <h1>{{ language.selling }}</h1>
+  {% else %}
+    <h1>{{ language.listings }}</h1>
+  {% endif %}
 
   <form method="get">
     <div class="form-row">
