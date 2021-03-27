@@ -28,7 +28,7 @@ class SingleListingController extends BaseController
             $this->logger->addInfo(get_class($this) . " 404 Tried to access non-existing listing: " . $args['id']);
             return $this->view->render($response->withStatus(404), 'errors/error404.html.twig', [
                 'language' => $this->language,
-                'settings' => $this->container->get("settings"),
+                'settings' =>$this->settings,
             ]);
         }
 
@@ -36,7 +36,7 @@ class SingleListingController extends BaseController
             'listing' => $listing,
             'language' => $this->language,
             'captcha' => Utils::createCaptcha($this->session),
-            'settings' => $this->container->get("settings"),
+            'settings' => $this->settings,
         ]);
     }
 
@@ -56,7 +56,7 @@ class SingleListingController extends BaseController
                 'language' => $this->language,
                 'captcha' => Utils::createCaptcha($this->session),
                 'params' => $params,
-                'settings' => $this->container->get("settings"),
+                'settings' => $this->settings,
             ]);
         } else {
             throw new Exception("Unknown post request was sent.");
@@ -85,7 +85,7 @@ class SingleListingController extends BaseController
             'language' => $this->language,
             'captcha' =>Utils::createCaptcha($this->session),
             'params' => $params,
-            'settings' => $this->container->get("settings"),
+            'settings' => $this->settings,
         ];
     }
 
@@ -111,7 +111,7 @@ class SingleListingController extends BaseController
             'alert' => $alert,
             'language' => $this->language,
             'captcha' => Utils::createCaptcha($this->session),
-            'settings' => $this->container->get("settings"),
+            'settings' => $this->settings,
         ];
     }
 
@@ -124,7 +124,7 @@ class SingleListingController extends BaseController
 
         // E-mail function is excluded if run in Travis since it's a closed environment and tests will fail
         if (getenv('TRAVIS') != 'true') {
-            $emailSeller = new EmailSeller($message, $this->language['email_contact_seller_subject']);
+            $emailSeller = new EmailSeller($message, $this->language['email_contact_seller_subject'], $this->settings['domain']);
             $emailSeller->setReplyTo($sender);
             $this->mailer->setTo($receiver)->sendMessage($emailSeller);
         }

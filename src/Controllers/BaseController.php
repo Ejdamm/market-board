@@ -15,6 +15,7 @@ abstract class BaseController
     protected $db;
     protected $mailer;
     protected $session;
+    protected $settings;
 
     public function __construct(ContainerInterface $container)
     {
@@ -25,6 +26,7 @@ abstract class BaseController
         $this->db = $container->get('db');
         $this->mailer = $container->get('mailer');
         $this->session = $container->get('session');
+        $this->settings = $container->get('settings');
     }
 
     abstract public function get($request, $response, $args) : ResponseInterface;

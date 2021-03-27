@@ -27,7 +27,7 @@ class NewListingController extends BaseController
             'subcategories' => $categories->getSubcategories(),
             'language' => $this->language,
             'captcha' => Utils::createCaptcha($this->session),
-            'settings' => $this->container->get("settings"),
+            'settings' => $this->settings,
         ]);
     }
 
@@ -45,7 +45,7 @@ class NewListingController extends BaseController
                 'language' => $this->language,
                 'captcha' => Utils::createCaptcha($this->session),
                 'params' => $params,
-                'settings' => $this->container->get("settings"),
+                'settings' => $this->settings,
             ];
         } else {
             throw new Exception("Unknown post request was sent.");
@@ -79,7 +79,7 @@ class NewListingController extends BaseController
             'language' => $this->language,
             'captcha' => Utils::createCaptcha($this->session),
             'params' => $params,
-            'settings' => $this->container->get("settings"),
+            'settings' => $this->settings,
         ];
     }
 
@@ -106,7 +106,8 @@ class NewListingController extends BaseController
         $emailParams->removalCode = $removalCode;
         // E-mail function is excluded if run in Travis since it's a closed environment and tests will fail
         if (getenv('TRAVIS') != 'true') {
-            $this->mailer->setTo($address)->sendMessage(new EmailNewListing($emailParams, $this->language['email_new_listing_subject']));
+            $newListingEmail = new EmailNewListing($emailParams, $this->language['email_new_listing_subject'], $this->settings['domain']);
+            $this->mailer->setTo($address)->sendMessage($newListingEmail);
             $this->logger->addDebug("Sent email to " . $address);
         }
     }
