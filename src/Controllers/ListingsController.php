@@ -39,7 +39,7 @@ class ListingsController extends BaseController
             'subcategories' => $categories->getSubcategories(),
             'filter' => $filter,
             'language' => $this->language,
-            'settings' => $this->container->get("settings"),
+            'settings' => $this->settings,
             'type' => $this->type,
         ]);
     }
@@ -49,7 +49,7 @@ class ListingsController extends BaseController
         $this->logger->addWarning(get_class($this) . " POST not implemented");
         return $this->view->render($response->withStatus(501), 'errors/error501.html.twig', [
             'language' => $this->language,
-            'settings' => $this->container->get("settings"),
+            'settings' => $this->settings,
         ]);
     }
 
@@ -74,7 +74,7 @@ class ListingsController extends BaseController
     private function getPaging()
     {
         $nrOfListings = $this->listings->getNrOfListings();
-        $listingLimit = $this->container->get('settings')['listings_limit'];
+        $listingLimit = $this->settings['listings_limit'];
         $currentPage = $this->setAndGetIntSession("paging", 1, 1);
         $lastPage = (ceil($nrOfListings / $listingLimit) == 0 ? 1 : ceil($nrOfListings / $listingLimit));
         $currentPage = $currentPage <= $lastPage ? $currentPage : $lastPage;
