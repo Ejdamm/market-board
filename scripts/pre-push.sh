@@ -14,11 +14,11 @@ else
 fi
 
 # Make sure PSR-2 code style standard is followed
-./bin/psr-2.sh --dry-run
+./scripts/psr-2.sh --dry-run
 if [ $? -ne 0 ]; then
     echo -e "\e[31mSomething is wrong with the code style!\e[0m"
-    echo "To see what is wrong, run bin/psr-2.sh -v --dry-run --diff"
-    echo "To automatically fix it, run bin/psr-2.sh"
+    echo "To see what is wrong, run scripts/psr-2.sh -v --dry-run --diff"
+    echo "To automatically fix it, run scripts/psr-2.sh"
     exit 1
 else
     echo -e "\e[32mCode style OK!\e[0m"
