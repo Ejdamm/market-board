@@ -2,8 +2,7 @@
 if (isset($argc) && isset($argv[1]) && is_numeric($argv[1])) {
     $days = intval($argv[1]);
     $date = date('Y-m-d', strtotime("-$days days", strtotime("now")));
-}
-else {
+} else {
     exit("Usage: php `scripts/ListingsHelper.php DAYS`. All listings older than the number of days ago will be removed\n");
 }
 
