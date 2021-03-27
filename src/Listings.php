@@ -155,4 +155,15 @@ class Listings
         $statement->execute();
         return $statement;
     }
+
+    public function removeListingsOlderThan($date)
+    {
+        $query = "DELETE FROM listings WHERE created_at < ?;";
+        $params = array_values([
+            $date,
+        ]);
+        $statement = $this->prepareAndExecute($query, $params);
+        $affected_rows = $statement->rowCount();
+        return intval($affected_rows);
+    }
 }

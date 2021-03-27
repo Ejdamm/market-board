@@ -13,8 +13,8 @@
 * Run single test: `composer test tests/Functional/HomepageTest.php`
 * Git hooks should be used to prevent untested code to be pushed.
 * Email tests can be done with [mailtrap.io](https://mailtrap.io)
-* Migrate test database `bin/phinx.sh migrate -e test -t 0` 
-* Populate the database with default language `bin/phinx.sh seed:run -s DefaultLanguage -e test`
+* Migrate test database `scripts/phinx.sh migrate -e test -t 0` 
+* Populate the database with default language `scripts/phinx.sh seed:run -s DefaultLanguage -e test`
 
 ### Troubleshooting for test
 * `Error: Class 'path/to/class' not found`
@@ -24,10 +24,10 @@
 
 ### Git hooks
 * To enable that all tests are executed and green before every push is done (`git push`).
-* run the script: `./bin/install-hooks.sh`
-  * This will create a symlink from your .git-directory to the ./bin/pre-push.sh script.
+* run the script: `./scripts/install-hooks.sh`
+  * This will create a symlink from your .git-directory to the ./scripts/pre-push.sh script.
     * Reason for the symlink is to ease the maintenance of the script since the content of the .git-folder is not included in the repository.
-  * Under your .git/hooks there should after executed `ìnstall-hooks.sh` be a symlink like this: ` pre-push -> ../../bin/pre-push.sh`
+  * Under your .git/hooks there should after executed `ìnstall-hooks.sh` be a symlink like this: ` pre-push -> ../../scripts/pre-push.sh`
 * "But, I really need to push my changes, a testcase is failing and its not my fault!"
   * Cheating is not allowed, but having that said, `git push --no-verify` will ignore the git hook.
 
