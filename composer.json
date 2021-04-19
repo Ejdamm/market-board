@@ -1,6 +1,7 @@
 {
     "name": "market-board/market-board",
     "homepage": "https://github.com/Ejdamm/market-board",
+    "description": "A lightweight online marketplace",
     "config": {
         "platform": {
             "php": "7.2"
@@ -31,7 +32,8 @@
     "autoload-dev": {
         "psr-4": {
             "MarketBoard\\Tests\\Functional\\": "tests/functional/",
-            "MarketBoard\\Tests\\Unit\\": "tests/unit/"
+            "MarketBoard\\Tests\\Unit\\": "tests/unit/",
+            "MarketBoard\\Tests\\Integration\\": "tests/integration/"
         }
     },
     "scripts":{

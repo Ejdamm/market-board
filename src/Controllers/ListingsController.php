@@ -31,15 +31,13 @@ class ListingsController extends BaseController
         $paging = $this->getPaging();
 
         $categories = new Categories($this->db);
-        return $this->view->render($response, 'listings.html.twig', [
+        return $this->render($response, 'listings.html.twig', [
             'listings' => $this->listings->getMultipleListings(),
             'pagination' => $paging,
             'sorting' => $sorting,
             'categories' => $categories->getMainCategories(),
             'subcategories' => $categories->getSubcategories(),
             'filter' => $filter,
-            'language' => $this->language,
-            'settings' => $this->settings,
             'type' => $this->type,
         ]);
     }
@@ -47,10 +45,7 @@ class ListingsController extends BaseController
     public function post($request, $response, $args): ResponseInterface
     {
         $this->logger->addWarning(get_class($this) . " POST not implemented");
-        return $this->view->render($response->withStatus(501), 'errors/error501.html.twig', [
-            'language' => $this->language,
-            'settings' => $this->settings,
-        ]);
+        return $this->render501($response);
     }
 
     private function getFilter()

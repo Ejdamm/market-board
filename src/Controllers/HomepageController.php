@@ -15,18 +15,12 @@ class HomepageController extends BaseController
 
     public function get($request, $response, $args) : ResponseInterface
     {
-        return $this->view->render($response, 'homepage.html.twig', [
-            'language' => $this->language,
-            'settings' => $this->settings,
-        ]);
+        return $this->render($response, 'homepage.html.twig');
     }
 
     public function post($request, $response, $args): ResponseInterface
     {
         $this->logger->addWarning(get_class($this) . " POST not implemented");
-        return $this->view->render($response->withStatus(501), 'errors/error501.html.twig', [
-            'language' => $this->language,
-            'settings' => $this->settings,
-        ]);
+        return $this->render501($response);
     }
 }

@@ -16,7 +16,7 @@ class DefaultLanguage extends AbstractSeed
     public function run()
     {
         $table = $this->table('language');
-        $this->execute('DELETE FROM language WHERE language = \'default\'');
+        $this->execute('DELETE FROM language WHERE code = \'en\'');
         $data = $this->generateConstantData();
         $table->insert($data)->save();
     }
@@ -25,7 +25,8 @@ class DefaultLanguage extends AbstractSeed
     {
         return [
             [
-                'language' => 'default',
+                'language' => 'English',
+                'code' => 'en',
                 'title' => 'Market Board',
                 'listings' => 'Listings',
                 'subcategory' => 'Subcategory',

@@ -25,4 +25,15 @@ class Utils
         $session->set('captcha', $captcha->getPhrase());
         return $captcha->inline();
     }
+
+    public static function localizeUrl($url, $newLocale, $currentLocale)
+    {
+        $explodedUrl = explode("/", $url);
+        if (isset($explodedUrl[1]) && ($explodedUrl[1] == $currentLocale || $explodedUrl[1] == $newLocale)) {
+            $explodedUrl[1] = $newLocale;
+        } else {
+            array_splice( $explodedUrl, 1, 0, $newLocale);
+        }
+        return implode("/", $explodedUrl);
+    }
 }

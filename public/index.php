@@ -31,6 +31,7 @@ $container['notFoundHandler'] = function (Container $container) {
     return function ($request, $response) use ($container) {
         return $container['view']->render($response->withStatus(404), 'errors/error404.html.twig', [
             "language" => $container['language'],
+            "settings" => $container['settings'],
         ]);
     };
 };
@@ -95,12 +96,20 @@ $container['session'] = function (Container $container) {
 
 $container['language'] = function (Container $container) {
     // Set default language
-    $language_code = $container['session']->get('language', 'default');
-    $query = "SELECT * FROM language WHERE language = ?;";
+    $language_code = $container['session']->get('language', $container->get('settings')['defaultLocale']);
+    $query = "SELECT * FROM language WHERE code = ?;";
     $statement = $container['db']->prepare($query);
     $statement->execute([$language_code]);
     $language = $statement->fetch();
     return $language;
+};
+
+$container['locales'] = function (Container $container) {
+    $query = "SELECT language as language, code as code FROM language;";
+    $statement = $container['db']->prepare($query);
+    $statement->execute();
+    $locales = $statement->fetchAll();
+    return $locales;
 };
 
 $container['errorHandler'] = function ($container) {
@@ -108,6 +117,7 @@ $container['errorHandler'] = function ($container) {
         $container->logger->addError("Exception thrown. Stacktrace: " . $exception);
         return $container->view->render($response->withStatus(500), 'errors/error500.html.twig', [
             'language' => $container->language,
+            'settings' => $container->settings,
         ]);
     };
 };
@@ -117,6 +127,7 @@ $container['phpErrorHandler'] = function ($container) {
         $container->logger->addError("Exception thrown. Stacktrace: " . $exception);
         return $container->view->render($response->withStatus(500), 'errors/error500.html.twig', [
             'language' => $container->language,
+            "settings" => $container->settings,
         ]);
     };
 };
