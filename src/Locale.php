@@ -3,7 +3,6 @@
 
 namespace MarketBoard;
 
-
 class Locale
 {
     private $code;

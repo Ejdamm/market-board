@@ -32,7 +32,7 @@ class Utils
         if (isset($explodedUrl[1]) && ($explodedUrl[1] == $currentLocale || $explodedUrl[1] == $newLocale)) {
             $explodedUrl[1] = $newLocale;
         } else {
-            array_splice( $explodedUrl, 1, 0, $newLocale);
+            array_splice($explodedUrl, 1, 0, $newLocale);
         }
         return implode("/", $explodedUrl);
     }

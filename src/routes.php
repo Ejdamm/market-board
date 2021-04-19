@@ -7,7 +7,7 @@ $app->get('/', Controllers\HomepageController::class . ':get');
 
 
 $container = $app->getContainer();
-$app->group('/{lang}', function() use($container) {
+$app->group('/{lang}', function () use ($container) {
     $this->get('/', Controllers\HomepageController::class . ':get')->setName('homepage');
     $this->get('/listings/new', Controllers\NewListingController::class . ':get')->setName('new_listing');
     $this->post('/listings/new', Controllers\NewListingController::class . ':post');

@@ -57,7 +57,7 @@ abstract class BaseController
 
     protected function render404($response)
     {
-        return $this->render($response->withStatus(501), 'errors/error404.html.twig');
+        return $this->render($response->withStatus(404), 'errors/error404.html.twig');
     }
 
     protected function render501($response)

@@ -11,7 +11,6 @@ use Slim\Http\Response;
  */
 class UriLanguagePrefixMiddleware
 {
-
     private $router;
     private $session;
     private $locales;

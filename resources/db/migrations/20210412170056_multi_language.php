@@ -12,7 +12,6 @@ class MultiLanguage extends AbstractMigration
 
         $language->changePrimaryKey(['code'])
             ->save();
-
     }
 
     public function down()
@@ -24,5 +23,4 @@ class MultiLanguage extends AbstractMigration
         $language->removeColumn('code')
             ->save();
     }
-
 }

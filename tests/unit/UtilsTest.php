@@ -3,7 +3,6 @@
 
 namespace MarketBoard\Tests\Unit;
 
-
 use MarketBoard\Utils;
 use PHPUnit\Framework\TestCase;
 
@@ -16,5 +15,4 @@ class UtilsTest extends TestCase
         $this->assertEquals(Utils::localizeUrl("/de", "de", "de"), "/de");
         $this->assertEquals(Utils::localizeUrl("/en/listings", "de", "en"), "/de/listings");
     }
-
 }
