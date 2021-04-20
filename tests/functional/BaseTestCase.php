@@ -219,12 +219,20 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
 
         self::$container['language'] = function (Container $container) {
             // Set default language
-            $language_code = $container->get('session')->get('language', 'default');
-            $query = "SELECT * FROM language WHERE language = ?;";
-            $statement = $container->get('db')->prepare($query);
+            $language_code = $container['session']->get('language', $container->get('settings')['defaultLocale']);
+            $query = "SELECT * FROM language WHERE code = ?;";
+            $statement = $container['db']->prepare($query);
             $statement->execute([$language_code]);
             $language = $statement->fetch();
             return $language;
+        };
+
+        self::$container['locales'] = function (Container $container) {
+            $query = "SELECT language as language, code as code FROM language;";
+            $statement = $container['db']->prepare($query);
+            $statement->execute();
+            $locales = $statement->fetchAll();
+            return $locales;
         };
 
         self::$container['errorHandler'] = function ($container) {
@@ -269,7 +277,7 @@ class BaseTestCase extends TestCase // https://github.com/symfony/symfony/issues
         $environment = Environment::mock(
             [
                 'REQUEST_METHOD' => $requestMethod,
-                'REQUEST_URI' => $requestUri
+                'REQUEST_URI' => "/en" . $requestUri
             ]
         );
 

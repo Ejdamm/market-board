@@ -14,6 +14,9 @@ return [
         # Allows the web server to set the Content-Length header which makes Slim behave more predictably.
         'addContentLengthHeader' => false,
 
+        # A locale code to which the language defaults to. It must be present in the language seeds
+        'defaultLocale' => 'en',
+
         # Monolog logger config. Log folder and file must be writable
         'logger' => [
             'name' => 'market-board',

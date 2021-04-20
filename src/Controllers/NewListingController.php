@@ -22,12 +22,10 @@ class NewListingController extends BaseController
     public function get($request, $response, $args) : ResponseInterface
     {
         $categories = new Categories($this->db);
-        return $this->view->render($response, 'new_listing.html.twig', [
+        return $this->render($response, 'new_listing.html.twig', [
             'categories' => $categories->getMainCategories(),
             'subcategories' => $categories->getSubcategories(),
-            'language' => $this->language,
             'captcha' => Utils::createCaptcha($this->session),
-            'settings' => $this->settings,
         ]);
     }
 
@@ -42,30 +40,27 @@ class NewListingController extends BaseController
             $responseParams = [
                 'categories' => $categories->getMainCategories(),
                 'subcategories' => $categories->getSubcategories(),
-                'language' => $this->language,
                 'captcha' => Utils::createCaptcha($this->session),
                 'params' => $params,
-                'settings' => $this->settings,
             ];
         } else {
             throw new Exception("Unknown post request was sent.");
         }
-        return $this->view->render($response, 'new_listing.html.twig', $responseParams);
+        return $this->render($response, 'new_listing.html.twig', $responseParams);
     }
 
     private function processNewListing($params)
     {
         $this->logger->addDebug("Received post params:" . print_r($params, true));
+        $removalCode = Utils::generateRemovalCode();
+        $insertedId = null;
 
         if (!$params['captcha'] || $this->session->get('captcha') != $params['captcha']) {
-            $alertText = $this->language['wrong_captcha'];
-            $alertLevel =  'warning';
+            $alert = 'alerts/wrong_captcha.html.twig';
         } else {
-            $removalCode = Utils::generateRemovalCode();
             $insertedId = $this->insertNewListing($params, $removalCode);
             $this->sendEmail($insertedId, $removalCode, $params['email']);
-            $alertText = $this->getSuccessHtmlMessage($insertedId, $removalCode);
-            $alertLevel = 'success';
+            $alert = 'alerts/listing_added.html.twig';
 
             // We only refill form if it was unsuccessful
             $params = null;
@@ -75,11 +70,11 @@ class NewListingController extends BaseController
         return [
             'categories' => $categories->getMainCategories(),
             'subcategories' => $categories->getSubcategories(),
-            'alert' => ['level' => $alertLevel, 'text' => $alertText],
-            'language' => $this->language,
+            'alert' => $alert,
             'captcha' => Utils::createCaptcha($this->session),
+            'removalCode' => $removalCode,
+            'listingId' => $insertedId,
             'params' => $params,
-            'settings' => $this->settings,
         ];
     }
 
@@ -91,19 +86,12 @@ class NewListingController extends BaseController
         return $insertedId;
     }
 
-    private function getSuccessHtmlMessage($insertedId, $removalCode)
-    {
-        return "<strong>" . $this->language['success'] . "</strong> "
-            . $this->language['new_listing_inserted_message']
-            . " <a href=\"/listings/$insertedId\">" . $this->language['here'] . "</a>. "
-            .$this->language['removal_code'] . ": $removalCode";
-    }
-
     private function sendEmail($insertedId, $removalCode, $address)
     {
         $emailParams = new stdClass;
         $emailParams->insertedId = $insertedId;
         $emailParams->removalCode = $removalCode;
+        $emailParams->language = $this->language;
         // E-mail function is excluded if run in Travis since it's a closed environment and tests will fail
         if (getenv('TRAVIS') != 'true') {
             $newListingEmail = new EmailNewListing($emailParams, $this->language['email_new_listing_subject'], $this->settings['domain']);
